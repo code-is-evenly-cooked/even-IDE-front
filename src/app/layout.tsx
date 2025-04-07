@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Layout from "@/component/layout/Layout";
+import Layout from "@/components/layout/Layout";
 
 export const metadata: Metadata = {
 	title: "Even IDE",
