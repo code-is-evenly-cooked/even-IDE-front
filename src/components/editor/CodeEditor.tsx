@@ -17,6 +17,11 @@ const CodeEditor = () => {
         defaultLanguage="javascript" 
         defaultValue={code}
         theme="vs-dark" 
+        options={{
+          fontSize: 14, // 글자 크기 설정
+          minimap: {enabled: false}, // 에디터 우측 미니맵
+          automaticLayout: true // 에디터 반응형 (자동 크기 재조정)
+        }}
         onChange={handleEditorChange}
         />
     </div>
