@@ -46,9 +46,10 @@ const BaseInput = memo(
 					default: `
             border border-gray200
             focus:border-violet600
+						focus:shadow-violetGlow
           `,
 					invalid: `
-            border border-violet600
+            border border-violet600 shadow-violetGlow
           `,
 				}[styleState];
 
@@ -58,20 +59,12 @@ const BaseInput = memo(
 					className || ""
 				}`;
 			};
-
-			// drop-shadow는 wrapper에 적용
-			const wrapperGlowClass =
-				styleState === "invalid"
-					? "drop-shadow-violetGlow"
-					: "focus-within:drop-shadow-violetGlow";
-
 			return (
 				<div
 					className={`
             relative
             ${fullWidth ? "w-full" : "w-auto"}
             ${containerClassName || ""}
-            ${wrapperGlowClass}
             transition-all duration-300 rounded-lg
           `}
 				>
