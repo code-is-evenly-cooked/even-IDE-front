@@ -1,34 +1,28 @@
-name: git push into another repo to deploy to vercel
+name: Sync from upstream
 
 on:
-  push:
-    branches: [main]
+  schedule:
+    - cron: "0 * * * *" # 매 시간마다 자동 실행 (UTC 기준)
+  workflow_dispatch: # 수동 실행도 가능
 
 jobs:
-  build:
+  sync:
     runs-on: ubuntu-latest
-    container: pandoc/latex
+
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Install mustache (to update the date)
-        run: apk add ruby && gem install mustache
-
-      - name: creates output
-        run: sh ./build.sh
-
-      - name: Pushes to another repository
-        id: push_directory
-        uses: cpina/github-action-push-to-another-repository@main
-        env:
-          API_TOKEN_GITHUB: ${{ secrets.AUTO_ACTION }}
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
-          source-directory: "output"
-          destination-github-username: "mini0212"
-          destination-repository-name: "even-IDE-front"
-          user-email: ${{ secrets.EMAIL }}
-          commit-message: ${{ github.event.commits[0].message }}
-          target-branch: main
+          persist-credentials: false
 
-      - name: Test get variable exported by push-to-another-repository
-        run: echo $DESTINATION_CLONED_DIRECTORY
+      - name: Setup Git Identity
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Add upstream and fetch
+        run: |
+          git remote add upstream https://github.com/code-is-evenly-cooked/even-IDE-front.git
+          git fetch upstream
+          git merge upstream/main --allow-unrelated-histories -m "🔄 Sync with upstream"
+          git push https://${{ secrets.AUTO_ACTION }}@github.com/mini0212/even-IDE-front.git HEAD:main
