@@ -18,6 +18,9 @@ module.exports = {
 				gray500: "#3F3F46",
 				gray200: "#A9ABB8",
 			},
+			dropShadow: {
+				violetGlow: "0 0 6px rgba(116, 76, 235, 0.6)",
+			},
 		},
 	},
 	plugins: [],
