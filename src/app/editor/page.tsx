@@ -1,11 +1,12 @@
 "use client";
 
-import CodeEditor from "@/components/editor/CodeEditor";
-import TerminalView from "@/components/editor/Terminal";
 import RunButton from "@/components/editor/RunButton";
-
 import { useRef } from "react";
 import type { Terminal as XtermType } from "xterm";
+import dynamic from "next/dynamic";
+
+const CodeEditor = dynamic(() => import('@/components/editor/CodeEditor'), { ssr: false });
+const TerminalView = dynamic(() => import('@/components/editor/Terminal'), { ssr: false });
 
 export default function EditorPage() {
   const terminalRef = useRef<XtermType | null>(null);
