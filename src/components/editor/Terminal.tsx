@@ -1,17 +1,21 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { Terminal } from 'xterm';
+import { Terminal as Xterm } from 'xterm';
 import 'xterm/css/xterm.css';
 
-const TerminalView = () => {
-    const terminalRef = useRef<HTMLDivElement>(null);
+type TerminalProps = {
+    terminalRef: React.RefObject<Xterm | null>;
+  };
 
-    const xterm = useRef<Terminal>();
+const TerminalView = ({ terminalRef }: TerminalProps) => {
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    const xterm = useRef<Xterm | null>(null);
 
     useEffect(() => {
-        if (terminalRef.current) {
-          xterm.current = new Terminal({
+        if (containerRef.current) {
+          xterm.current = new Xterm({
             cols: 80,
             rows: 20,
             cursorBlink: true,
@@ -20,8 +24,8 @@ const TerminalView = () => {
             },
           });
 
-          xterm.current.open(terminalRef.current);
-          xterm.current.write('Web IDE Terminal \r\n');
+          xterm.current.open(containerRef.current);
+          xterm.current.write('even IDE Terminal \r\n');
         }
 
         return () => {
@@ -29,10 +33,16 @@ const TerminalView = () => {
         };
     }, []);
 
+    useEffect(() => {
+        if (terminalRef && xterm.current) {
+          terminalRef.current = xterm.current;
+        }
+      }, [terminalRef]);
+
     return (
         <div
-        ref={terminalRef}
-        className="w-full h-60 overflow-hidden"
+        ref={containerRef}
+        className="w-full h-[300px] overflow-hidden"
       /> 
     );
 };
