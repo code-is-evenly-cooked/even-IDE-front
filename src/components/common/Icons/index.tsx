@@ -3,6 +3,18 @@ import Image from "next/image";
 interface IconProps {
 	className?: string;
 }
+export const EyeIcon = ({ className }: IconProps) => {
+	return (
+		<Image
+			src="/icons/eye.svg"
+			alt="비밀번호 보기"
+			width={24}
+			height={24}
+			className={className}
+			priority
+		/>
+	);
+};
 
 export const GoogleIcon = ({ className }: IconProps) => {
 	return (
