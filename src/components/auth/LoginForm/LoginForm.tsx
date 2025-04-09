@@ -31,37 +31,38 @@ const LoginForm = () => {
 
 			<div className="flex flex-col gap-5 px-12 py-6">
 				{/* 로그인 */}
-				<form onSubmit={handleSubmit} className="flex flex-col gap-5">
-					<div className="flex flex-col gap-2">
-						<TextInput
-							placeholder="이메일을 입력하세요"
-							size="xl"
-							value={formState.email}
-							onChange={handleFormChange("email")}
-						/>
-						<PasswordInput
-							placeholder="비밀번호를 입력하세요"
-							size="xl"
-							value={formState.password}
-							onChange={handleFormChange("password")}
-						/>
-					</div>
+				<div className="flex flex-col gap-1.5">
+					<form onSubmit={handleSubmit} className="flex flex-col gap-5">
+						<div className="flex flex-col gap-2">
+							<TextInput
+								placeholder="이메일을 입력하세요"
+								size="xl"
+								value={formState.email}
+								onChange={handleFormChange("email")}
+							/>
+							<PasswordInput
+								placeholder="비밀번호를 입력하세요"
+								size="xl"
+								value={formState.password}
+								onChange={handleFormChange("password")}
+							/>
+						</div>
 
-					<BaseButton type="submit" size="xl" isLoading={isLoading}>
-						로그인
+						<BaseButton type="submit" size="xl" isLoading={isLoading}>
+							로그인
+						</BaseButton>
+					</form>
+
+					{/* 회원가입 */}
+					<BaseButton
+						type="button"
+						size="xl"
+						textColor="violet300"
+						style="outline"
+					>
+						회원가입
 					</BaseButton>
-				</form>
-
-				{/* 회원가입 */}
-				<BaseButton
-					type="button"
-					size="xl"
-					textColor="violet300"
-					style="outline"
-				>
-					회원가입
-				</BaseButton>
-
+				</div>
 				{/* 비밀번호 재설정 */}
 				<div className="flex flex-col items-center font-thin text-md text-white">
 					<Link
