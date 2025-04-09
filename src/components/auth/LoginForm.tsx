@@ -16,7 +16,7 @@ const LoginForm = () => {
 				<h1 className="text-4xl">even ide</h1>
 			</div>
 
-			<div className="flex flex-col gap-5 px-16 py-6">
+			<div className="flex flex-col gap-5 px-12 py-6">
 				<div className="flex flex-col gap-2">
 					<TextInput placeholder="이메일을 입력하세요" size="xl" />
 					<PasswordInput placeholder="비밀먼호를 입력하세요" size="xl" />
