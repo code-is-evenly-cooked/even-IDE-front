@@ -1,5 +1,3 @@
-// components/styles.ts
-
 export const BASE_BUTTON_STYLES = `
   inline-flex items-center justify-center
   rounded-lg font-bold text-lg
@@ -35,4 +33,10 @@ export const BORDER_COLOR: Record<string, string> = {
 		"border border-violet300 hover:text-violet300/80 active:text-violet300/60",
 	gray700: "border border-gray700 hover:text-gray700/80 active:text-gray700/60",
 	kakao: "",
+};
+
+export const ICON_BUTTON_SIZE_MAP: Record<string, string> = {
+	sm: "w-8 h-8",
+	md: "w-10 h-10",
+	lg: "w-12 h-12",
 };
