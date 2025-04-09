@@ -20,6 +20,8 @@ const LoginForm = () => {
 		handleKakaoLogin,
 	} = useLoginForm();
 
+	console.log(errors);
+
 	return (
 		<div className="w-full max-w-[30rem] border border-white mt-16">
 			<div className="flex justify-center items-center pt-8 pb-4 gap-4">
@@ -28,11 +30,8 @@ const LoginForm = () => {
 			</div>
 
 			<div className="flex flex-col gap-5 px-12 py-6">
-				{/* ✅ form 시작 */}
-				<form
-					onSubmit={handleSubmit} // ⬅️ 로그인 submit 핸들러
-					className="flex flex-col gap-5"
-				>
+				{/* 로그인 */}
+				<form onSubmit={handleSubmit} className="flex flex-col gap-5">
 					<div className="flex flex-col gap-2">
 						<TextInput
 							placeholder="이메일을 입력하세요"
@@ -52,7 +51,6 @@ const LoginForm = () => {
 						로그인
 					</BaseButton>
 				</form>
-				{/* ✅ form 끝 */}
 
 				{/* 회원가입 */}
 				<BaseButton
