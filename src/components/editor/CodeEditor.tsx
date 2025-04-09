@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { Editor } from '@monaco-editor/react';
-import { useCodeStore } from '@/stores/useCodeStore';
+import { Editor } from "@monaco-editor/react";
+import { useCodeStore } from "@/stores/useCodeStore";
 
 const CodeEditor = () => {
   const code = useCodeStore((state) => state.code);
   const setCode = useCodeStore((state) => state.setCode);
   const handleEditorChange = (value: string | undefined) => {
-    setCode(value ?? '');
+    setCode(value ?? "");
   };
 
   return (

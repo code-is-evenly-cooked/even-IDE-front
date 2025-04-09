@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 type CodeStore = {
   code: string;
@@ -6,6 +6,6 @@ type CodeStore = {
 };
 
 export const useCodeStore = create<CodeStore>((set) => ({
-  code: '',
+  code: "",
   setCode: (newCode: string) => set({ code: newCode }),
 }));

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useRef } from 'react';
-import { Terminal as Xterm } from 'xterm';
-import 'xterm/css/xterm.css';
+import { useEffect, useRef } from "react";
+import { Terminal as Xterm } from "xterm";
+import "xterm/css/xterm.css";
 
 type TerminalProps = {
   terminalRef: React.RefObject<Xterm | null>;
@@ -20,12 +20,12 @@ const TerminalView = ({ terminalRef }: TerminalProps) => {
         rows: 20,
         cursorBlink: true,
         theme: {
-          background: '#1e1e1e',
+          background: "#1e1e1e",
         },
       });
 
       xterm.current.open(containerRef.current);
-      xterm.current.write('even IDE Terminal \r\n');
+      xterm.current.write("even IDE Terminal \r\n");
     }
 
     return () => {

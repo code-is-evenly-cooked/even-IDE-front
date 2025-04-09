@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import RunButton from '@/components/editor/RunButton';
-import { useRef } from 'react';
-import type { Terminal as XtermType } from 'xterm';
-import dynamic from 'next/dynamic';
+import RunButton from "@/components/editor/RunButton";
+import { useRef } from "react";
+import type { Terminal as XtermType } from "xterm";
+import dynamic from "next/dynamic";
 
-const CodeEditor = dynamic(() => import('@/components/editor/CodeEditor'), {
+const CodeEditor = dynamic(() => import("@/components/editor/CodeEditor"), {
   ssr: false,
 });
-const TerminalView = dynamic(() => import('@/components/editor/Terminal'), {
+const TerminalView = dynamic(() => import("@/components/editor/Terminal"), {
   ssr: false,
 });
 
