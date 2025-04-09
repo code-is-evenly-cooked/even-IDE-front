@@ -1,8 +1,12 @@
 export type ButtonSize = "sm" | "md" | "lg" | "xl";
 export type ButtonStyle = "primary" | "outline" | "icon";
-
-export type ButtonColor = keyof typeof BUTTON_BG_COLORS;
-export type ButtonTextColor = keyof typeof BUTTON_TEXT_COLORS;
+export type ButtonColor = "primary" | "violet300" | "gray700" | "kakao";
+export type ButtonTextColor =
+	| "white"
+	| "gray700"
+	| "violet300"
+	| "kakao"
+	| "primary";
 
 export interface BaseButtonProps
 	extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -13,4 +17,16 @@ export interface BaseButtonProps
 	leftIcon?: React.ReactNode;
 	rightIcon?: React.ReactNode;
 	isLoading?: boolean;
+}
+
+interface IconButtonProps
+	extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "children"> {
+	icon: React.ReactNode;
+	label: string;
+	size?: ButtonSize;
+	color?: ButtonColor;
+	textColor?: ButtonTextColor;
+	isLoading?: boolean;
+	className?: string;
+	transparent?: boolean;
 }
