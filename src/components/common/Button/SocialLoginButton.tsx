@@ -26,14 +26,14 @@ const PROVIDER_CONFIG: Record<
 	google: {
 		label: "구글 로그인",
 		icon: <GoogleIcon />,
-		color: "gray700",
+		color: "gray500",
 		textColor: "white",
 	},
 	kakao: {
 		label: "카카오 로그인",
 		icon: <KakaoIcon />,
 		color: "kakao",
-		textColor: "gray700",
+		textColor: "gray500",
 	},
 };
 

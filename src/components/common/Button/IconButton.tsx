@@ -15,7 +15,7 @@ const IconButton = memo(
 				icon,
 				label,
 				size = "md",
-				color = "gray700",
+				color = "gray500",
 				textColor = "white",
 				isLoading,
 				disabled,

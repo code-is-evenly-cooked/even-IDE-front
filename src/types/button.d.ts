@@ -1,9 +1,9 @@
 export type ButtonSize = "sm" | "md" | "lg" | "xl";
 export type ButtonStyle = "primary" | "outline" | "icon";
-export type ButtonColor = "primary" | "violet300" | "gray700" | "kakao";
+export type ButtonColor = "primary" | "violet300" | "gray500" | "kakao";
 export type ButtonTextColor =
 	| "white"
-	| "gray700"
+	| "gray500"
 	| "violet300"
 	| "kakao"
 	| "primary";
