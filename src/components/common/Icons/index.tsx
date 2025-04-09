@@ -16,6 +16,19 @@ export const EyeIcon = ({ className }: IconProps) => {
 	);
 };
 
+export const EyeCloseIcon = ({ className }: IconProps) => {
+	return (
+		<Image
+			src="/icons/eyeClose.svg"
+			alt="비밀번호 숨기기"
+			width={24}
+			height={24}
+			className={className}
+			priority
+		/>
+	);
+};
+
 export const GoogleIcon = ({ className }: IconProps) => {
 	return (
 		<Image
