@@ -54,3 +54,16 @@ export const KakaoIcon = ({ className }: IconProps) => {
 		/>
 	);
 };
+
+export const EvenIcon = ({ className }: IconProps) => {
+	return (
+		<Image
+			src="/icons/even.svg"
+			alt="이븐"
+			width={40}
+			height={40}
+			className={className}
+			priority
+		/>
+	);
+};
