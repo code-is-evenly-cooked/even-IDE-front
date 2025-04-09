@@ -11,6 +11,7 @@ module.exports = {
 				red500: "#F5535E",
 				blue500: "#5094FA",
 				tonedown: "#3E3655",
+				kakao: "#FEE500",
 
 				gray900: "#1E1E1E",
 				gray800: "#2A2A2A",
