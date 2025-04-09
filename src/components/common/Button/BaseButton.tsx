@@ -1,16 +1,25 @@
-import { BaseButtonProps } from "@/types/button";
-import { forwardRef, memo } from "react";
+import { forwardRef, memo, useMemo } from "react";
+import type { BaseButtonProps } from "@/types/button";
+import {
+	BASE_BUTTON_STYLES,
+	BUTTON_SIZE_STYLES,
+	TEXT_COLOR,
+	BG_COLOR,
+	BORDER_COLOR,
+} from "./styles";
 
 const BaseButton = memo(
 	forwardRef<HTMLButtonElement, BaseButtonProps>(
 		(
 			{
+				type = "button",
 				size = "md",
 				style = "primary",
 				color = "violet300",
 				textColor = "white",
 				leftIcon,
 				rightIcon,
+				isLoading,
 				disabled,
 				className,
 				children,
@@ -18,38 +27,38 @@ const BaseButton = memo(
 			},
 			ref
 		) => {
-			const baseStyles = `
-        inline-flex items-center justify-center
-        rounded-lg font-bold text-lg
-        transition-all duration-200 gap-2
-        relative
-      `;
+			const stateStyles = useMemo(() => {
+				if (style === "primary") {
+					return `text-white ${BG_COLOR[color] || ""}`;
+				}
 
-			const sizeStyles = {
-				sm: "h-[1.5rem] px-[8px] py-[5px]",
-				md: "h-[2rem] px-[12px] py-[5px]",
-				lg: "h-[2.5rem] px-[16px] py-[9px]",
-				xl: "h-[3.25rem] px-[24px] py-[14px]",
-			}[size];
+				if (style === "outline") {
+					return `${TEXT_COLOR[textColor] || ""} bg-white ${
+						BORDER_COLOR[color] || ""
+					}`;
+				}
 
-			const stateStyles =
-				style === "primary"
-					? `text-white bg-violet300`
-					: style === "outline"
-					? `text-violet300 bg-white border border-violet300`
-					: style === "icon"
-					? `text-${textColor} bg-${color} hover:bg-${color}/80 active:bg-${color}/60`
-					: "";
+				if (style === "icon") {
+					return `${TEXT_COLOR[textColor] || ""} ${BG_COLOR[color] || ""}`;
+				}
 
-			const mergedClassName = `${baseStyles} ${sizeStyles} ${stateStyles} ${
-				className || ""
-			}`;
+				return "";
+			}, [style, color, textColor]);
+
+			const mergedClassName = useMemo(() => {
+				const sizeStyles = BUTTON_SIZE_STYLES[size] || BUTTON_SIZE_STYLES.md;
+				const loadingStyle = isLoading ? "cursor-wait" : "";
+				return `${BASE_BUTTON_STYLES} ${sizeStyles} ${stateStyles} ${loadingStyle} ${
+					className || ""
+				}`;
+			}, [size, stateStyles, isLoading, className]);
 
 			return (
 				<button
 					ref={ref}
+					type={type}
+					disabled={disabled || isLoading}
 					className={mergedClassName}
-					disabled={disabled}
 					{...props}
 				>
 					{style === "icon" ? (
@@ -59,7 +68,16 @@ const BaseButton = memo(
 									{leftIcon}
 								</span>
 							)}
-							<span className="w-full text-center">{children}</span>
+							<span className="w-full text-center">
+								{isLoading ? (
+									<span className="inline-flex items-center gap-2">
+										<LoadingSpinner />
+										로딩중...
+									</span>
+								) : (
+									children
+								)}
+							</span>
 							{rightIcon && (
 								<span className="absolute right-4 top-1/2 -translate-y-1/2">
 									{rightIcon}
@@ -69,7 +87,14 @@ const BaseButton = memo(
 					) : (
 						<>
 							{leftIcon && <span className="inline-flex mr-1">{leftIcon}</span>}
-							{children}
+							{isLoading ? (
+								<span className="inline-flex items-center gap-2">
+									<LoadingSpinner />
+									로딩중...
+								</span>
+							) : (
+								children
+							)}
 							{rightIcon && (
 								<span className="inline-flex ml-1">{rightIcon}</span>
 							)}
@@ -79,6 +104,25 @@ const BaseButton = memo(
 			);
 		}
 	)
+);
+
+const LoadingSpinner = () => (
+	<svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+		<circle
+			className="opacity-25"
+			cx="12"
+			cy="12"
+			r="10"
+			stroke="currentColor"
+			strokeWidth="4"
+			fill="none"
+		/>
+		<path
+			className="opacity-75"
+			fill="currentColor"
+			d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+		/>
+	</svg>
 );
 
 BaseButton.displayName = "BaseButton";
