@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useCodeStore } from "@/stores/useCodeStore";
+import { useCodeStore } from '@/stores/useCodeStore';
 
 type RunButtonProps = {
   onRun: (code: string) => void;
