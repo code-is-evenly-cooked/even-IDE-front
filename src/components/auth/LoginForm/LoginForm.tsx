@@ -29,7 +29,7 @@ const LoginForm = () => {
 				<h1 className="text-4xl">even ide</h1>
 			</div>
 
-			<div className="flex flex-col gap-5 px-12 py-6">
+			<div className="flex flex-col gap-5 px-6 sm:px-12 py-6">
 				{/* 로그인 */}
 				<div className="flex flex-col gap-1.5">
 					<form onSubmit={handleSubmit} className="flex flex-col gap-5">
@@ -63,8 +63,9 @@ const LoginForm = () => {
 						회원가입
 					</BaseButton>
 				</div>
+
 				{/* 비밀번호 재설정 */}
-				<div className="flex flex-col items-center font-thin text-md text-white">
+				<div className="flex justify-center text-sm text-white font-light">
 					<Link
 						href="/reset-password"
 						className="underline hover:opacity-80 transition"
@@ -73,12 +74,10 @@ const LoginForm = () => {
 					</Link>
 				</div>
 
-				{/* 또는 */}
+				{/* 또는 구분선 */}
 				<div className="flex items-center w-full text-gray200">
 					<div className="flex-1 h-px bg-gray200" />
-					<span className="px-4 text-white text-md whitespace-nowrap">
-						또는
-					</span>
+					<span className="px-4 text-gray200 text-sm leading-none">또는</span>
 					<div className="flex-1 h-px bg-gray200" />
 				</div>
 
