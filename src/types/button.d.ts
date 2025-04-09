@@ -1,14 +1,16 @@
-import { ButtonHTMLAttributes, ReactNode } from "react";
-
 export type ButtonSize = "sm" | "md" | "lg" | "xl";
 export type ButtonStyle = "primary" | "outline" | "icon";
 
+export type ButtonColor = keyof typeof BUTTON_BG_COLORS;
+export type ButtonTextColor = keyof typeof BUTTON_TEXT_COLORS;
+
 export interface BaseButtonProps
-	extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "size"> {
+	extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	size?: ButtonSize;
 	style?: ButtonStyle;
-	color?: string;
-	textColor?: string;
-	leftIcon?: ReactNode;
-	rightIcon?: ReactNode;
+	color?: ButtonColor;
+	textColor?: ButtonTextColor;
+	leftIcon?: React.ReactNode;
+	rightIcon?: React.ReactNode;
+	isLoading?: boolean;
 }

@@ -1,4 +1,6 @@
-import { ButtonSize } from "@/types/button";
+// components/SocialLoginButton.tsx
+
+import { ButtonSize, ButtonColor, ButtonTextColor } from "@/types/button";
 import { GoogleIcon, KakaoIcon } from "../Icons";
 import BaseButton from "./BaseButton";
 
@@ -17,8 +19,8 @@ const PROVIDER_CONFIG: Record<
 	{
 		label: string;
 		icon: React.ReactNode;
-		color: string;
-		textColor: string;
+		color: ButtonColor; // ✅ 타입 제한
+		textColor: ButtonTextColor; // ✅ 타입 제한
 	}
 > = {
 	google: {
