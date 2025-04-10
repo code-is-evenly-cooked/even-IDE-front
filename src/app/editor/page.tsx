@@ -31,7 +31,9 @@ export default function EditorPage() {
           <div className="mt-[20px]">
             <CodeEditor />
           </div>
+          <div className="mt-[20px]">
           <TerminalView terminalRef={terminalRef} />
+          </div>
         </main>
       </div>
     </div>

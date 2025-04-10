@@ -11,7 +11,7 @@ const CodeEditor = () => {
   };
 
   return (
-    <div className="h-[500px]">
+    <div className="h-[45vh] min-h-[300px]">
       <Editor
         height="100%"
         defaultLanguage="javascript"
