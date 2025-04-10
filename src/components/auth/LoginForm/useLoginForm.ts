@@ -1,3 +1,4 @@
+import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 
 type FormType = "email" | "password";
@@ -13,6 +14,7 @@ interface FormErrors {
 }
 
 const useLoginForm = () => {
+	const router = useRouter();
 	const [formState, setFormState] = useState<FormState>({
 		email: "",
 		password: "",
@@ -35,6 +37,10 @@ const useLoginForm = () => {
 		setIsLoading(true);
 	};
 
+	const handleSignup = () => {
+		router.push("/agreement");
+	};
+
 	const handleGoogleLogin = () => {
 		console.log("google Login");
 	};
@@ -49,6 +55,7 @@ const useLoginForm = () => {
 		isLoading,
 		handleFormChange,
 		handleLogin,
+		handleSignup,
 		handleGoogleLogin,
 		handleKakaoLogin,
 	};

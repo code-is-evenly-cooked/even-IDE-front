@@ -16,6 +16,7 @@ const LoginForm = () => {
 		isLoading,
 		handleFormChange,
 		handleLogin,
+		handleSignup,
 		handleGoogleLogin,
 		handleKakaoLogin,
 	} = useLoginForm();
@@ -59,6 +60,7 @@ const LoginForm = () => {
 						size="xl"
 						textColor="violet300"
 						style="outline"
+						onClick={handleSignup}
 					>
 						회원가입
 					</BaseButton>
