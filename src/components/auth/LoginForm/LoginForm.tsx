@@ -15,7 +15,7 @@ const LoginForm = () => {
 		errors,
 		isLoading,
 		handleFormChange,
-		handleSubmit,
+		handleLogin,
 		handleGoogleLogin,
 		handleKakaoLogin,
 	} = useLoginForm();
@@ -32,7 +32,7 @@ const LoginForm = () => {
 			<div className="flex flex-col gap-5 px-6 sm:px-12 py-6">
 				{/* 로그인 */}
 				<div className="flex flex-col gap-1.5">
-					<form onSubmit={handleSubmit} className="flex flex-col gap-5">
+					<form onSubmit={handleLogin} className="flex flex-col gap-5">
 						<div className="flex flex-col gap-2">
 							<TextInput
 								placeholder="이메일을 입력하세요"

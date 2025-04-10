@@ -29,7 +29,7 @@ const useLoginForm = () => {
 		[]
 	);
 
-	const handleSubmit = async (e: FormEvent) => {
+	const handleLogin = async (e: FormEvent) => {
 		e.preventDefault();
 
 		setIsLoading(true);
@@ -48,7 +48,7 @@ const useLoginForm = () => {
 		errors,
 		isLoading,
 		handleFormChange,
-		handleSubmit,
+		handleLogin,
 		handleGoogleLogin,
 		handleKakaoLogin,
 	};
