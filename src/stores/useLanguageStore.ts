@@ -9,5 +9,5 @@ type LanguageState = {
 // Zustand store 생성
 export const useLanguageStore = create<LanguageState>((set) => ({
     language: "JavaScript",  // 기본 언어
-    setLenguage: (lang: string) => ({ language: lang }),
+    setLenguage: (lang: string) => set({ language: lang }),
 })); 
