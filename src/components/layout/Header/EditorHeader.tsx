@@ -3,12 +3,16 @@
 import Link from "next/link";
 import React from "react";
 import RunButton from "@/components/editor/RunButton";
+import { useLanguageStore } from "@/stores/useLanguageStore";
 
 type EditorHeaderProps = {
   onRun: (code: string) => void;
 };
 
 const EditorHeader = ({ onRun }: EditorHeaderProps) => {
+  const language = useLanguageStore((state) => state.language);
+  const setLanguage = useLanguageStore((state) => state.setLenguage);
+
   return (
     <header className="w-main-area ml-[240px] h-[3rem] flex justify-between items-center p-4">
       <div className="flex items-center gap-4">
@@ -16,7 +20,11 @@ const EditorHeader = ({ onRun }: EditorHeaderProps) => {
           ☰
         </button>
 
-        <select className="bg-gray-700 text-white text-sm rounded px-2 py-1">
+        <select
+          value={language}
+          onChange={(e) => setLanguage(e.target.value)}
+          className="bg-gray-700 text-white text-sm rounded px-2 py-1"
+        >
           <option>JavaScript</option>
           <option>TypeScript</option>
           <option>Python</option>
