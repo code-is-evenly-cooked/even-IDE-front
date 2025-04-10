@@ -94,8 +94,8 @@ const BaseInput = memo(
 
 					{(error || helper) && (
 						<p
-							className={`mt-1 text-sm ${
-								error ? "text-violet600" : "text-white"
+							className={`mt-2 mx-2 text-sm ${
+								error ? "text-red500" : "text-white"
 							}`}
 						>
 							{error || helper}
