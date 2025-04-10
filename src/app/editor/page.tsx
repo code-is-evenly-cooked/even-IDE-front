@@ -25,7 +25,7 @@ export default function EditorPage() {
 
   return (
     <div>
-      <EditorHeader />
+      <EditorHeader onRun={handleRun} />
       <div className="flex h-screen w-screen overflow-hidden">
         <Sidebar />
         <main className="min-h-screen flex flex-col bg-[#262626]">
