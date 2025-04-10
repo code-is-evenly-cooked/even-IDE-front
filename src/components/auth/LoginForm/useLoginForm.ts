@@ -38,7 +38,7 @@ const useLoginForm = () => {
 	};
 
 	const handleSignup = () => {
-		router.push("/agreement");
+		router.push("/signup");
 	};
 
 	const handleGoogleLogin = () => {
