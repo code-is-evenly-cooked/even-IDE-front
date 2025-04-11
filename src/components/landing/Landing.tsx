@@ -1,12 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import React from "react";
 import { EvenBigIcon } from "../common/Icons";
 import BaseButton from "../common/Button/BaseButton";
 import { useRouter } from "next/navigation";
 
-const Home = () => {
+const Landing = () => {
 	const router = useRouter();
 
 	const handleStart = () => {
@@ -71,4 +70,4 @@ const Home = () => {
 	);
 };
 
-export default Home;
+export default Landing;
