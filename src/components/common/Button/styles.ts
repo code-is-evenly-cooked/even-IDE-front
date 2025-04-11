@@ -1,6 +1,6 @@
 export const BASE_BUTTON_STYLES = `
   inline-flex items-center justify-center
-  rounded-lg font-bold text-lg
+  rounded-lg font-semibold text-lg
   transition-all duration-200 gap-2
   relative disabled:opacity-50 disabled:cursor-not-allowed
 `;
