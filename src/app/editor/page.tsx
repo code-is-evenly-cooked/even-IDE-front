@@ -1,7 +1,7 @@
 "use client";
 
 import Sidebar from "@/components/layout/Sidebar/Sidebar";
-import EditorHeader from "@/components/layout/Header/EditorHeader";
+import Header from "@/components/layout/Header/Header";
 import { useRef } from "react";
 import type { Terminal as XtermType } from "xterm";
 import dynamic from "next/dynamic";
@@ -44,7 +44,7 @@ export default function EditorPage() {
 
   return (
     <div>
-      <EditorHeader onRun={handleRun} />
+      <Header onRun={handleRun} />
       <div className="flex h-screen w-screen overflow-hidden">
         <Sidebar />
         <main className="min-h-screen flex flex-col bg-[#262626]">
