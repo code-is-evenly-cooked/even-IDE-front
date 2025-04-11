@@ -69,7 +69,7 @@ const LoginForm = () => {
 				</div>
 
 				{/* 비밀번호 재설정 */}
-				<div className="flex justify-center text-sm text-white font-light">
+				<div className="flex justify-center text-sm text-gray200 font-light">
 					<Link
 						href="/reset-password"
 						className="underline hover:opacity-80 transition"
