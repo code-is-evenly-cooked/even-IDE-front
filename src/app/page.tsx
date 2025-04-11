@@ -1,5 +1,9 @@
-import { redirect } from "next/navigation";
+import Landing from "@/components/landing/Landing";
 
 export default function HomePage() {
-	redirect("/editor");
+	return (
+		<>
+			<Landing />
+		</>
+	);
 }
