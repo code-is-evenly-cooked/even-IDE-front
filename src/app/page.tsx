@@ -1,5 +1,9 @@
-import { redirect } from "next/navigation";
+import Home from "@/components/home/Home";
 
 export default function HomePage() {
-	redirect("/editor");
+	return (
+		<>
+			<Home />
+		</>
+	);
 }
