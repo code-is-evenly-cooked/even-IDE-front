@@ -39,9 +39,7 @@ const TerminalView = ({ terminalRef }: TerminalProps) => {
     }
   }, [terminalRef]);
 
-  return (
-    <div ref={containerRef} className="w-full h-[300px] overflow-hidden" />
-  );
+  return <div ref={containerRef} className="w-full h-[35vh] overflow-hidden" />;
 };
 
 export default TerminalView;
