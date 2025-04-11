@@ -1,13 +1,24 @@
 "use client";
 
 import { Editor } from "@monaco-editor/react";
-import { useCodeStore } from "@/stores/useCodeStore";
+import { useIdeStore } from "@/stores/useIdeStore";
 
 const CodeEditor = () => {
-  const code = useCodeStore((state) => state.code);
-  const setCode = useCodeStore((state) => state.setCode);
+  const { files, currentFileId, updateFileContent } = useIdeStore();
+
+  const currentFile = files.find((f) => f.id === currentFileId);
+
+  // 파일이 선택되지 않았을 때 메시지
+  if (!currentFile) {
+    return (
+      <div className="h-[45vh] min-h-[300px] flex items-center justify-center text-gray-400">
+        파일을 선택해주세요 📄
+      </div>
+    );
+  }
+
   const handleEditorChange = (value: string | undefined) => {
-    setCode(value ?? "");
+    updateFileContent(currentFile.id, value ?? "");
   };
 
   return (
@@ -15,12 +26,12 @@ const CodeEditor = () => {
       <Editor
         height="100%"
         defaultLanguage="javascript"
-        defaultValue={code}
+        value={currentFile.content}
         theme="vs-dark"
         options={{
-          fontSize: 14, // 글자 크기 설정
-          minimap: { enabled: false }, // 에디터 우측 미니맵
-          automaticLayout: true, // 에디터 반응형 (자동 크기 재조정)
+          fontSize: 14,
+          minimap: { enabled: false },
+          automaticLayout: true,
         }}
         onChange={handleEditorChange}
       />
