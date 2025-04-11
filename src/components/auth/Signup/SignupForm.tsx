@@ -1,11 +1,27 @@
+"use client";
+
 import BaseButton from "@/components/common/Button/BaseButton";
 import { EvenIcon } from "@/components/common/Icons";
 import PasswordInput from "@/components/common/Input/PasswordInput";
 import TextInput from "@/components/common/Input/TextInput";
 import Link from "next/link";
 import React from "react";
+import useSignupForm from "./useSignupForm";
+import AgreementList from "@/components/common/Button/Agreement/AgreementList";
 
 const SignupForm = () => {
+	const {
+		formState,
+		agreements,
+		errors,
+		isLoading,
+		handleFormChange,
+		handleAgreementToggle,
+		handleSignup,
+	} = useSignupForm();
+
+	console.log(isLoading);
+
 	return (
 		<div className="w-full max-w-[30rem] border border-white mt-16">
 			<div className="flex justify-center items-center pt-8 pb-4 gap-4">
@@ -14,14 +30,42 @@ const SignupForm = () => {
 			</div>
 			<div className="flex flex-col gap-5 px-6 sm:px-12 py-6">
 				{/* 회원가입 */}
-				<form className="flex flex-col gap-5">
+				<form className="flex flex-col gap-5" onSubmit={handleSignup}>
 					<div className="flex flex-col gap-2">
-						<TextInput placeholder="이메일을 입력하세요" size="xl" />
-						<PasswordInput placeholder="비밀번호를 입력하세요" size="xl" />
-						<PasswordInput placeholder="비밀번호 확인" size="xl" />
-						<TextInput placeholder="닉네임을 입력하세요" size="xl" />
+						<TextInput
+							placeholder="이메일을 입력하세요"
+							size="xl"
+							value={formState.email}
+							error={errors.email}
+							onChange={handleFormChange("email")}
+						/>
+						<PasswordInput
+							placeholder="비밀번호를 입력하세요"
+							size="xl"
+							value={formState.password}
+							error={errors.password}
+							onChange={handleFormChange("password")}
+						/>
+						<PasswordInput
+							placeholder="비밀번호 확인"
+							size="xl"
+							value={formState.confirmPassword}
+							error={errors.confirmPassword}
+							onChange={handleFormChange("confirmPassword")}
+						/>
+						<TextInput
+							placeholder="닉네임을 입력하세요"
+							size="xl"
+							value={formState.nickname}
+							error={errors.nickname}
+							onChange={handleFormChange("nickname")}
+						/>
 					</div>
-
+					<div className="flex flex-col"></div>
+					<AgreementList
+						agreements={agreements}
+						onToggle={handleAgreementToggle}
+					/>
 					<BaseButton type="submit" size="xl">
 						회원가입
 					</BaseButton>

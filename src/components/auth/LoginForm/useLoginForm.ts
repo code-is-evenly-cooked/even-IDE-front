@@ -3,11 +3,6 @@ import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 
 type FormType = "email" | "password";
 
-interface FormState {
-	email: string;
-	password: string;
-}
-
 interface FormErrors {
 	email?: string;
 	password?: string;
@@ -15,7 +10,7 @@ interface FormErrors {
 
 const useLoginForm = () => {
 	const router = useRouter();
-	const [formState, setFormState] = useState<FormState>({
+	const [formState, setFormState] = useState({
 		email: "",
 		password: "",
 	});
