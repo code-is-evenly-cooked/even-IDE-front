@@ -20,8 +20,6 @@ const SignupForm = () => {
 		handleSignup,
 	} = useSignupForm();
 
-	console.log(isLoading);
-
 	return (
 		<div className="w-full max-w-[30rem] border border-white mt-16">
 			<div className="flex justify-center items-center pt-8 pb-4 gap-4">
@@ -36,29 +34,33 @@ const SignupForm = () => {
 							placeholder="이메일을 입력하세요"
 							size="xl"
 							value={formState.email}
-							error={errors.email}
 							onChange={handleFormChange("email")}
+							styleState={errors.email ? "invalid" : "default"}
+							error={errors.email}
 						/>
 						<PasswordInput
 							placeholder="비밀번호를 입력하세요"
 							size="xl"
 							value={formState.password}
-							error={errors.password}
 							onChange={handleFormChange("password")}
+							styleState={errors.password ? "invalid" : "default"}
+							error={errors.password}
 						/>
 						<PasswordInput
 							placeholder="비밀번호 확인"
 							size="xl"
 							value={formState.confirmPassword}
-							error={errors.confirmPassword}
 							onChange={handleFormChange("confirmPassword")}
+							styleState={errors.confirmPassword ? "invalid" : "default"}
+							error={errors.confirmPassword}
 						/>
 						<TextInput
 							placeholder="닉네임을 입력하세요"
 							size="xl"
 							value={formState.nickname}
-							error={errors.nickname}
 							onChange={handleFormChange("nickname")}
+							styleState={errors.nickname ? "invalid" : "default"}
+							error={errors.nickname}
 						/>
 					</div>
 					<div className="flex flex-col"></div>
@@ -66,7 +68,7 @@ const SignupForm = () => {
 						agreements={agreements}
 						onToggle={handleAgreementToggle}
 					/>
-					<BaseButton type="submit" size="xl">
+					<BaseButton type="submit" size="xl" isLoading={isLoading}>
 						회원가입
 					</BaseButton>
 				</form>

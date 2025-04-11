@@ -21,8 +21,6 @@ const LoginForm = () => {
 		handleKakaoLogin,
 	} = useLoginForm();
 
-	console.log(errors);
-
 	return (
 		<div className="w-full max-w-[30rem] border border-white mt-16">
 			<div className="flex justify-center items-center pt-8 pb-4 gap-4">
@@ -40,12 +38,16 @@ const LoginForm = () => {
 								size="xl"
 								value={formState.email}
 								onChange={handleFormChange("email")}
+								styleState={errors.email ? "invalid" : "default"}
+								error={errors.email}
 							/>
 							<PasswordInput
 								placeholder="비밀번호를 입력하세요"
 								size="xl"
 								value={formState.password}
 								onChange={handleFormChange("password")}
+								styleState={errors.password ? "invalid" : "default"}
+								error={errors.password}
 							/>
 						</div>
 
@@ -67,7 +69,7 @@ const LoginForm = () => {
 				</div>
 
 				{/* 비밀번호 재설정 */}
-				<div className="flex justify-center text-sm text-white font-light">
+				<div className="flex justify-center text-sm text-gray200 font-light">
 					<Link
 						href="/reset-password"
 						className="underline hover:opacity-80 transition"

@@ -1,9 +1,10 @@
+import { validateEmail, validatePassword } from "@/utils/validate";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 
 type FormType = "email" | "password";
 
-interface FormErrors {
+interface LoginFormErrors {
 	email?: string;
 	password?: string;
 }
@@ -14,8 +15,21 @@ const useLoginForm = () => {
 		email: "",
 		password: "",
 	});
-	const [errors, setErrors] = useState<FormErrors>({});
+	const [errors, setErrors] = useState<LoginFormErrors>({});
 	const [isLoading, setIsLoading] = useState(false);
+
+	const validateForm = useCallback(() => {
+		const newErrors: LoginFormErrors = {};
+
+		const idError = validateEmail(formState.email);
+		if (idError) newErrors.email = idError;
+
+		const passwordError = validatePassword(formState.password);
+		if (passwordError) newErrors.password = passwordError;
+
+		setErrors(newErrors);
+		return Object.keys(newErrors).length === 0;
+	}, [formState.email, formState.password]);
 
 	const handleFormChange = useCallback(
 		(key: FormType) => (e: ChangeEvent<HTMLInputElement>) => {
@@ -28,6 +42,8 @@ const useLoginForm = () => {
 
 	const handleLogin = async (e: FormEvent) => {
 		e.preventDefault();
+
+		if (!validateForm()) return;
 
 		setIsLoading(true);
 	};
