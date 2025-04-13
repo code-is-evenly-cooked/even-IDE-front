@@ -1,8 +1,20 @@
 import FileExplorer from "@/components/editor/FileExplorer";
 import { Plus, Undo2, Trash2, FolderPlus } from "lucide-react";
+import { useIdeStore } from "@/stores/useIdeStore";
 import { EvenIcon } from "../../common/Icons";
 
 export default function Sidebar() {
+  const { addFile, selectFile, files } = useIdeStore();
+
+  const handleAddFile = () => {
+    const name = `newFile${files.length + 1}.js`;
+    addFile(name);
+
+    // 추가한 파일을 바로 선택
+    const lastFile = files[files.length - 1];
+    if (lastFile) selectFile(lastFile.id);
+  };
+
   return (
     <aside className="w-[240px] min-w-[240px] h-screen bg-gray700 text-white flex flex-col">
       {/* 상단 로고 */}
@@ -15,10 +27,10 @@ export default function Sidebar() {
 
       {/* 버튼 영역 */}
       <div className="flex gap-2 px-4 py-3 border-b border-gray-700">
-        <button className="ml-auto" title="프로젝트 추가">
+        <button className="ml-auto" title="파일 추가" onClick={handleAddFile}>
           <Plus className="w-4 h-4 hover:text-blue-400" />
         </button>
-        <button title="파일 추가">
+        <button title="프로젝트 추가">
           <FolderPlus className="w-4 h-4 hover:text-green-400" />
         </button>
         <button title="되돌리기">
