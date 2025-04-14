@@ -46,7 +46,6 @@ const useSignupForm = () => {
 
 		const nicknameError = validateNickname(formState.nickname);
 		if (nicknameError) newErrors.nickname = nicknameError;
-		console.log(newErrors);
 		setErrors(newErrors);
 		return Object.keys(newErrors).length === 0;
 	}, [
@@ -96,12 +95,14 @@ const useSignupForm = () => {
 
 		setIsLoading(true);
 		try {
-			const response: AuthResponse = await userSignup({
+			const response: SignupResponse = await userSignup({
 				email: formState.email,
 				password: formState.password,
 				nickname: formState.nickname,
 			});
 			console.log("회원가입 성공", response);
+
+			// TODO: 자동 로그인 또는 로그인 페이지 이동
 		} catch (err) {
 			if (err instanceof Error) {
 				alert(err.message);
