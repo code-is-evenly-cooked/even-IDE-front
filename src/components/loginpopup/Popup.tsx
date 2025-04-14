@@ -17,9 +17,9 @@ const Popup = () => {
 			</div>
 			<div className="flex flex-col gap-5 px-6 sm:px-12 py-10">
 				<form className="flex flex-col gap-20">
-					<h1 className="text-xl text-white text-center">
+					<h2 className="text-xl text-white text-center">
 						로그인하여 나만의 개발 환경을 시작하세요.
-					</h1>
+					</h2>
 					<BaseButton type="submit" size="xl">
 						로그인 하러가기
 					</BaseButton>
