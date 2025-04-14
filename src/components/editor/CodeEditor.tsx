@@ -22,7 +22,7 @@ const CodeEditor = () => {
   };
 
   return (
-    <div className="h-[45vh] min-h-[300px]">
+    <div className="h-[45vh] min-h-[300px] border-t-[1px] border-t-tonedown">
       <Editor
         height="100%"
         defaultLanguage="javascript"
