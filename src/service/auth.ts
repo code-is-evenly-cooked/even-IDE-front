@@ -10,3 +10,12 @@ export const userSignup = async (
 		body: JSON.stringify(credentials),
 	});
 };
+
+export const userLogin = async (
+	credentials: AuthCredentials
+): Promise<AuthResponse> =>
+	fetchWithJson("/api/auth/login", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(credentials),
+	});

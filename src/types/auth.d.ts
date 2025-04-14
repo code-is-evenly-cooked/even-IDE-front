@@ -9,3 +9,13 @@ interface SignupResponse {
 	nickname: string;
 	email: string;
 }
+
+interface AuthCredentials {
+	email: string;
+	password: string;
+}
+
+interface AuthResponse {
+	accessToken: string;
+	refreshToken: string;
+}
