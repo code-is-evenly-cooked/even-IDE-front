@@ -1,7 +1,6 @@
 import FileExplorer from "@/components/editor/FileExplorer";
-import { Plus, Undo2, Trash2, FolderPlus } from "lucide-react";
 import { useIdeStore } from "@/stores/useIdeStore";
-import { EvenIcon } from "../../common/Icons";
+import { EvenIcon, FileNewIcon, FolderNewIcon, BackIcon, CloseIcon } from "../../common/Icons";
 
 
 export default function Sidebar() {
@@ -27,18 +26,18 @@ export default function Sidebar() {
       </div>
 
       {/* 버튼 영역 */}
-      <div className="flex gap-2 px-4 py-3 border-b border-gray-700">
+      <div className="flex gap-3 px-3 py-3 border-b border-gray-700">
         <button className="ml-auto" title="파일 추가" onClick={handleAddFile}>
-          <Plus className="w-4 h-4 hover:text-blue-400" />
+          <FileNewIcon className="w-4 h-4" />
         </button>
         <button title="프로젝트 추가">
-          <FolderPlus className="w-4 h-4 hover:text-green-400" />
+          <FolderNewIcon className="w-4 h-4" />
         </button>
         <button title="되돌리기">
-          <Undo2 className="w-4 h-4 hover:text-yellow-400" />
+          <BackIcon className="w-4 h-4" />
         </button>
         <button title="삭제">
-          <Trash2 className="w-4 h-4 hover:text-red-400" />
+          <CloseIcon className="w-5 h-5" />
         </button>
       </div>
 
