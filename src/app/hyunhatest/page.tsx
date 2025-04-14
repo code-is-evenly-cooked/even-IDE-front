@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import BaseButton from "@/components/common/Button/BaseButton";
 import { EvenIcon } from "@/components/common/Icons";
-import Popup from "@/components/loginpopup/Popup";
+import Popup from "@/components/loginpopup/Loginpopup";
 
 export default function HyunhaTestPage() {
   // 모달 표시 여부 상태
