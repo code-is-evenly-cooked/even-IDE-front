@@ -2,10 +2,9 @@
 "use client";
 
 import React from "react";
-
 import BaseButton from "@/components/common/Button/BaseButton";
 import { EvenIcon } from "@/components/common/Icons";
-import page from "@/app/hyunhatest/page";
+
 // useLoginPopupForm 혹은 로그인 팝업 전용 파일에서 import
 
 const Popup = () => {
