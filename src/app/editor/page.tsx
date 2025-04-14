@@ -6,6 +6,7 @@ import { useRef } from "react";
 import type { Terminal as XtermType } from "xterm";
 import dynamic from "next/dynamic";
 import { useLanguageStore } from "@/stores/useLanguageStore";
+import Tabbar from "@/components/editor/Tabbar";
 
 const CodeEditor = dynamic(() => import("@/components/editor/CodeEditor"), {
   ssr: false,
@@ -48,7 +49,8 @@ export default function EditorPage() {
       <div className="flex h-screen w-screen overflow-hidden">
         <Sidebar />
         <main className="min-h-screen flex flex-col bg-[#262626]">
-          <div className="mt-[20px]">
+          <div>
+            <Tabbar />
             <CodeEditor />
           </div>
           <div className="mt-[20px]">
