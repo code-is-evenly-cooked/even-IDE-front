@@ -5,6 +5,7 @@ import {
 	validateNickname,
 	validatePassword,
 } from "@/utils/validate";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 
 type SignupFormType = "email" | "password" | "confirmPassword" | "nickname";
@@ -17,6 +18,7 @@ interface SignupFormErrors {
 }
 
 const useSignupForm = () => {
+	const router = useRouter();
 	const [formState, setFormState] = useState({
 		email: "",
 		password: "",
@@ -95,14 +97,14 @@ const useSignupForm = () => {
 
 		setIsLoading(true);
 		try {
-			const response: SignupResponse = await userSignup({
+			await userSignup({
 				email: formState.email,
 				password: formState.password,
 				nickname: formState.nickname,
 			});
-			console.log("회원가입 성공", response);
 
-			// TODO: 자동 로그인 또는 로그인 페이지 이동
+			// TODO: 회원가입 완료 후 ux 수정 필요
+			router.replace("/login");
 		} catch (err) {
 			if (err instanceof Error) {
 				alert(err.message);
