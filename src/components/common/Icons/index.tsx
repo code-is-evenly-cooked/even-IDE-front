@@ -67,3 +67,55 @@ export const EvenIcon = ({ className }: IconProps) => {
 		/>
 	);
 };
+
+export const FileNewIcon = ({ className }: IconProps) => {
+	return (
+		<Image
+			src="/icons/fileNew.svg"
+			alt="새 파일"
+			width={40}
+			height={40}
+			className={className}
+			priority
+		/>
+	);
+};
+
+export const FolderNewIcon = ({ className }: IconProps) => {
+	return (
+		<Image
+			src="/icons/folderNew.svg"
+			alt="새 프로젝트"
+			width={40}
+			height={40}
+			className={className}
+			priority
+		/>
+	);
+};
+
+export const BackIcon = ({ className }: IconProps) => {
+	return (
+		<Image
+			src="/icons/back.svg"
+			alt="되돌리기"
+			width={40}
+			height={40}
+			className={className}
+			priority
+		/>
+	);
+};
+
+export const CloseIcon = ({ className }: IconProps) => {
+	return (
+		<Image
+			src="/icons/close2.svg"
+			alt="닫기"
+			width={40}
+			height={40}
+			className={className}
+			priority
+		/>
+	);
+};
