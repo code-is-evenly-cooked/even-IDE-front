@@ -48,9 +48,9 @@ export default function HyunhaTestPage() {
             {/* 모달 닫기 버튼 */}
             <button
               onClick={handleClose}
-              className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded"
+              className="absolute top-4 right-4 bg-white-500 text-white text px-4 py-2 rounded-xl"
             >
-              닫기
+              x
             </button>
           </div>
         </div>
