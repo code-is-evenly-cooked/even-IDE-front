@@ -48,11 +48,11 @@ const useLoginForm = () => {
 
 		setIsLoading(true);
 		try {
-			const response: AuthResponse = await userLogin({
+			await userLogin({
 				email: formState.email,
 				password: formState.password,
 			});
-			console.log("로그인 성공", response);
+			router.replace("/editor");
 		} catch (err) {
 			if (err instanceof Error) {
 				alert(err.message);
