@@ -1,10 +1,11 @@
 import { NextRequest } from "next/server";
-import { createErrorResponse, createJsonResponse } from "@/lib/response";
-import { parseJSON } from "@/lib/fetch";
+import { createErrorResponse } from "@/lib/response";
+import { handleApiResponse } from "@/lib/api";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function POST(req: NextRequest) {
+	console.log("API_BASE_URL", API_BASE_URL);
 	try {
 		const body = await req.json();
 		const response = await fetch(`${API_BASE_URL}/auth/signup`, {
@@ -15,16 +16,7 @@ export async function POST(req: NextRequest) {
 			body: JSON.stringify(body),
 		});
 
-		const parsed = await parseJSON<{ message?: string }>(response);
-
-		if (!response.ok) {
-			return createErrorResponse(
-				typeof parsed === "string" ? parsed : parsed.message || "Signup failed",
-				response.status
-			);
-		}
-
-		return createJsonResponse(parsed);
+		return await handleApiResponse(response, "회원가입 실패");
 	} catch (err) {
 		console.error("[POST /auth/signup]", err);
 		return createErrorResponse("Unexpected error occurred", 500);
