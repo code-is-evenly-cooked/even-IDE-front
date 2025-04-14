@@ -10,7 +10,7 @@ import page from "@/app/hyunhatest/page";
 
 const Popup = () => {
 	return (
-		<div className="w-full max-w-[33rem] border border-black mt-26 bg-[#2b2b2b] p-6 rounded-xl">
+		<div className="w-full max-w-[33rem] border border-black mt-26 bg-gray700 p-6 rounded-xl">
 			<div className="flex justify-center items-center pt-8 pb-4 gap-4">
 				<EvenIcon />
 				<h1 className="text-3xl">even ide</h1>
