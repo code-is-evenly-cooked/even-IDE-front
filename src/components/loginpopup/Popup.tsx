@@ -16,14 +16,12 @@ const Popup = () => {
 				<h1 className="text-3xl">even ide</h1>
 			</div>
 			<div className="flex flex-col gap-5 px-6 sm:px-12 py-10">
-				<form className="flex flex-col gap-20">
-					<h2 className="text-xl text-white text-center">
-						로그인하여 나만의 개발 환경을 시작하세요.
-					</h2>
-					<BaseButton type="submit" size="xl">
-						로그인 하러가기
-					</BaseButton>
-				</form>
+				<h2 className="text-xl text-white text-center">
+					로그인하여 나만의 개발 환경을 시작하세요.
+				</h2>
+				<BaseButton type="submit" size="xl">
+					로그인 하러가기
+				</BaseButton>
 			</div>
 		</div>
 	);
