@@ -3,6 +3,7 @@ import { Plus, Undo2, Trash2, FolderPlus } from "lucide-react";
 import { useIdeStore } from "@/stores/useIdeStore";
 import { EvenIcon } from "../../common/Icons";
 
+
 export default function Sidebar() {
   const { addFile, selectFile, files } = useIdeStore();
 
@@ -16,7 +17,7 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="w-[240px] min-w-[240px] h-screen bg-gray700 text-white flex flex-col">
+    <aside className="w-[280px] min-w-[280px] h-screen border-tonedown border-[1px] bg-gray700 text-white flex flex-col">
       {/* 상단 로고 */}
       <div className="flex px-5 py-3 content-center text-lg font-bold border-b border-gray-700 bg-tonedown">
         <div>

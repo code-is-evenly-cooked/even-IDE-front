@@ -55,6 +55,12 @@ export default function EditorPage() {
             <TerminalView terminalRef={terminalRef} />
           </div>
         </main>
+        <div className="w-[280px] bg-black"></div>
+        <div className="flex flex-col">
+          <button>A</button>
+          <button>B</button>
+          <button>C</button>
+        </div>
       </div>
     </div>
   );
