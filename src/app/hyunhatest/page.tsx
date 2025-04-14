@@ -30,9 +30,9 @@ export default function HyunhaTestPage() {
 
         <div className="flex flex-col gap-5 px-6 sm:px-12 py-6">
           <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
-            <h1 className="text-xl text-white text-center">
+            <h2 className="text-xl text-white text-center">
               미트볼 버튼을 누르면 로그인 유도 팝업이 모달로 표시됩니다.
-            </h1>
+            </h2>
             <BaseButton type="submit" size="xl">
               미트볼 버튼
             </BaseButton>
