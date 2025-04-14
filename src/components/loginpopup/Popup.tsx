@@ -2,7 +2,7 @@
 "use client";
 
 import React from "react";
-import TextInput from "@/components/common/Input/TextInput";
+
 import BaseButton from "@/components/common/Button/BaseButton";
 import { EvenIcon } from "@/components/common/Icons";
 import page from "@/app/hyunhatest/page";
