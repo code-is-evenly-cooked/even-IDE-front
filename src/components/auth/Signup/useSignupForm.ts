@@ -1,3 +1,4 @@
+import { userSignup } from "@/service/auth";
 import { AgreementsState, AgreementsType } from "@/types/agreement";
 import {
 	validateEmail,
@@ -85,21 +86,28 @@ const useSignupForm = () => {
 
 	const handleSignup = async (e: FormEvent) => {
 		e.preventDefault();
-		console.log(validateForm());
 
 		if (!validateForm()) return;
 
 		if (!agreements.terms || !agreements.privacy) {
 			alert("필수 약관에 동의해주세요");
+			return;
 		}
 
 		setIsLoading(true);
 		try {
-			// TODO: API 요청
-			console.log("회원가입 정보", formState);
-			console.log("약관 동의 상태", agreements);
-		} catch (error) {
-			console.error("회원가입 실패", error);
+			const response: AuthResponse = await userSignup({
+				email: formState.email,
+				password: formState.password,
+				nickname: formState.nickname,
+			});
+			console.log("회원가입 성공", response);
+		} catch (err) {
+			if (err instanceof Error) {
+				alert(err.message);
+			} else {
+				alert("알 수 없는 오류가 발생했습니다.");
+			}
 		} finally {
 			setIsLoading(false);
 		}
