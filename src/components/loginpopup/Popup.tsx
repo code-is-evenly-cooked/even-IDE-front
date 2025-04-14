@@ -6,7 +6,6 @@ import TextInput from "@/components/common/Input/TextInput";
 import BaseButton from "@/components/common/Button/BaseButton";
 import { EvenIcon } from "@/components/common/Icons";
 import page from "@/app/hyunhatest/page";
-import Link from "next/link";
 // useLoginPopupForm 혹은 로그인 팝업 전용 파일에서 import
 
 const Popup = () => {
