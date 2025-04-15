@@ -1,3 +1,4 @@
+import { passwordReset } from "@/service/auth";
 import { validateEmail } from "@/utils/validate";
 import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 
@@ -30,10 +31,16 @@ const useResetPasswordForm = () => {
 
 		setIsLoading(true);
 		try {
-			// TODO: API 요청
-			console.log("이메일 제출:", email);
+			await passwordReset(email);
+			// TODO: 로그 제거 필요
+
+			alert("비밀번호 재설정 메일이 발송되었습니다.");
 		} catch (err) {
-			console.error("이메일 제출 실패", err);
+			if (err instanceof Error) {
+				alert(err.message);
+			} else {
+				alert("알 수 없는 오류가 발생했습니다.");
+			}
 		} finally {
 			setIsLoading(false);
 		}

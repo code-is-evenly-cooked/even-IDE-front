@@ -68,6 +68,19 @@ export const EvenIcon = ({ className }: IconProps) => {
 	);
 };
 
+export const EvenBigIcon = ({ className }: IconProps) => {
+	return (
+		<Image
+			src="/icons/evenBig.svg"
+			alt="이븐"
+			width={80}
+			height={80}
+			className={className}
+			priority
+		/>
+	);
+};
+
 export const FileNewIcon = ({ className }: IconProps) => {
 	return (
 		<Image
