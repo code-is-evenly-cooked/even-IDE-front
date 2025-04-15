@@ -3,7 +3,7 @@ import { clsx } from "clsx";
 import { useState } from "react";
 
 export default function FileExplorer() {
-  const { files, currentFileId, selectFile, addFile } = useIdeStore();
+  const { files, currentFileId, openFile, addFile } = useIdeStore();
   const [fileCount, setFileCount] = useState(1);
 
   const handleAddFile = () => {
@@ -32,7 +32,7 @@ export default function FileExplorer() {
         {files.map((file) => (
           <li
             key={file.id}
-            onClick={() => selectFile(file.id)}
+            onClick={() => openFile(file.id)}
             className={clsx(
               "cursor-pointer px-2 py-1 rounded text-sm transition-colors",
               currentFileId === file.id
