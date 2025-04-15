@@ -14,7 +14,7 @@ const Header = ({ onRun }: HeaderProps) => {
   const setLanguage = useLanguageStore((state) => state.setLenguage);
 
   return (
-    <header className="w-main-area ml-[240px] h-[3rem] flex justify-between items-center p-4">
+    <header className="h-[3rem] flex justify-between items-center p-4">
       <div className="flex items-center gap-4">
         <button className="text-xl hover:text-gray-300" aria-label="메뉴 열기">
           ☰
@@ -23,7 +23,7 @@ const Header = ({ onRun }: HeaderProps) => {
         <select
           value={language}
           onChange={(e) => setLanguage(e.target.value)}
-          className="bg-gray-700 text-white text-sm rounded px-2 py-1"
+          className="bg-transparent border text-white text-sm rounded pl-4 pr-10 py-2"
         >
           <option>JavaScript</option>
           <option>TypeScript</option>
