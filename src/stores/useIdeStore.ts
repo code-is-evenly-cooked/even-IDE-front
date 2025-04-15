@@ -70,6 +70,22 @@ export const useIdeStore = create<IdeStore>((set, get) => ({
     }
   },
 
+  // 파일 삭제
+  deleteFile: (id) => {
+    const { files, openedFileIds, currentFileId, selectFile } = get();
+    const newFiles = files.filter((file) => file.id !== id);
+    const newOpened = openedFileIds.filter((fid) => fid !== id);
+    const newCurrent =
+      currentFileId === id
+        ? newOpened[newOpened.length - 1] || null
+        : currentFileId;
+    set({
+      files: newFiles,
+      openedFileIds: newOpened,
+      currentFileId: newCurrent,
+    });
+  },
+
   // 현재 코드 값 저장 (Monaco Editor 외부에서도 접근 가능)
   currentCode: "",
   setCurrentCode: (code) => set({ currentCode: code }),
