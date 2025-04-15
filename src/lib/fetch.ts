@@ -10,17 +10,19 @@ export async function fetchWithJson<T = unknown>(
 		},
 	});
 
+	const parsedBody = await parseJSON<T | { message?: string }>(res);
+
 	if (!res.ok) {
-		const errorBody = await parseJSON<{ message?: string }>(res);
 		const errorMessage =
-			typeof errorBody === "string"
-				? errorBody
-				: errorBody.message ?? "알 수 없는 오류가 발생했습니다.";
+			typeof parsedBody === "string"
+				? parsedBody
+				: (parsedBody as { message?: string }).message ??
+				  "알 수 없는 오류가 발생했습니다.";
 
 		throw new Error(errorMessage);
 	}
 
-	return res.json();
+	return parsedBody as T;
 }
 
 export async function parseJSON<T = unknown>(

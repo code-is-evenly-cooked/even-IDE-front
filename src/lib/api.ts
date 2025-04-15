@@ -1,21 +1,22 @@
-import { parseJSON } from "@/lib/fetch";
-import { createErrorResponse, createJsonResponse } from "@/lib/response";
+import { parseJSON } from "./fetch";
+import { createErrorResponse, createJsonResponse } from "./response";
 
-/**
- * fetch 결과를 기반으로 일관된 API 응답 객체를 생성
- */
-export async function handleApiResponse<T>(
+export async function handleAPIResponse<T>(
 	response: Response,
 	defaultErrorMsg = "API 요청 실패"
 ) {
-	const parsed = await parseJSON<{ message?: string }>(response);
+	const parsed = await parseJSON<T | { message?: string }>(response);
 
 	if (!response.ok) {
-		return createErrorResponse(
-			typeof parsed === "string" ? parsed : parsed.message || defaultErrorMsg,
-			response.status
-		);
+		const message =
+			typeof parsed === "string"
+				? parsed
+				: typeof parsed === "object" && parsed !== null && "message" in parsed
+				? parsed.message ?? defaultErrorMsg
+				: defaultErrorMsg;
+
+		return createErrorResponse(message, response.status);
 	}
 
-	return createJsonResponse(parsed as T);
+	return createJsonResponse(parsed as T, response.status);
 }

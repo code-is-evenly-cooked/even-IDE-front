@@ -1,4 +1,4 @@
-import { handleApiResponse } from "@/lib/api";
+import { handleAPIResponse } from "@/lib/api";
 import { createErrorResponse } from "@/lib/response";
 import { NextRequest } from "next/server";
 
@@ -15,7 +15,10 @@ export async function POST(req: NextRequest) {
 			body: JSON.stringify(body),
 		});
 
-		return await handleApiResponse(response, "비밀번호 재설정 실패");
+		return await handleAPIResponse<SignupResponse>(
+			response,
+			"비밀번호 재설정 실패"
+		);
 	} catch (err) {
 		console.error("[POST /auth/password-reset]", err);
 		return createErrorResponse("Unexpected error occurred", 500);
