@@ -1,15 +1,12 @@
-// 로그인 유도 팝업창 페이지
 "use client";
 
 import React from "react";
 import BaseButton from "@/components/common/Button/BaseButton";
 import { EvenIcon } from "@/components/common/Icons";
 
-// useLoginPopupForm 혹은 로그인 팝업 전용 파일에서 import
-
-const Popup = () => {
+const LoginPopup = () => {
 	return (
-		<div className="w-full max-w-[33rem] border border-gray mt-26 bg-gray700 p-6 rounded-xl">
+		<div className="w-full max-w-[33rem] border border-gray700 mt-26 bg-gray700 p-6 rounded-xl">
 			<div className="flex justify-center items-center pt-8 pb-4 gap-4">
 				<EvenIcon />
 				<h1 className="text-3xl">even ide</h1>
@@ -26,4 +23,4 @@ const Popup = () => {
 	);
 };
 
-export default Popup;
+export default LoginPopup;

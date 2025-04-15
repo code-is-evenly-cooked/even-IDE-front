@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import BaseButton from "@/components/common/Button/BaseButton";
 import { EvenIcon } from "@/components/common/Icons";
-import Popup from "@/components/loginpopup/LoginPopup";
+import LoginPopup from "@/components/auth/LoginPopup/LoginPopup";
 
 export default function HyunhaTestPage() {
   // 모달 표시 여부 상태
@@ -44,7 +44,7 @@ export default function HyunhaTestPage() {
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="relative">
-            <Popup />
+            <LoginPopup />
             {/* 모달 닫기 버튼 */}
             <button
               onClick={handleClose}
