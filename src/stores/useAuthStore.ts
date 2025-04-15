@@ -3,7 +3,7 @@ import { create } from "zustand";
 interface AuthState {
 	isLoggedIn: boolean;
 	accessToken: string | null;
-	provider: "email" | "google" | "kakao" | null;
+	provider: "local" | "google" | "kakao" | null;
 	setAuth: (token: string, provider: AuthState["provider"]) => void;
 	clearAuth: () => void;
 }
