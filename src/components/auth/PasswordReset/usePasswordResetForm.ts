@@ -1,4 +1,4 @@
-import { resetPassword } from "@/service/auth";
+import { passwordReset } from "@/service/auth";
 import { validateEmail } from "@/utils/validate";
 import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 
@@ -31,8 +31,9 @@ const useResetPasswordForm = () => {
 
 		setIsLoading(true);
 		try {
-			const response = await resetPassword(email);
-			console.log(response);
+			await passwordReset(email);
+			// TODO: 로그 제거 필요
+
 			alert("비밀번호 재설정 메일이 발송되었습니다.");
 		} catch (err) {
 			if (err instanceof Error) {
