@@ -1,3 +1,4 @@
+import { userLogin } from "@/service/auth";
 import { validateEmail, validatePassword } from "@/utils/validate";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useCallback, useState } from "react";
@@ -21,8 +22,8 @@ const useLoginForm = () => {
 	const validateForm = useCallback(() => {
 		const newErrors: LoginFormErrors = {};
 
-		const idError = validateEmail(formState.email);
-		if (idError) newErrors.email = idError;
+		const emailError = validateEmail(formState.email);
+		if (emailError) newErrors.email = emailError;
 
 		const passwordError = validatePassword(formState.password);
 		if (passwordError) newErrors.password = passwordError;
@@ -46,6 +47,21 @@ const useLoginForm = () => {
 		if (!validateForm()) return;
 
 		setIsLoading(true);
+		try {
+			await userLogin({
+				email: formState.email,
+				password: formState.password,
+			});
+			router.replace("/editor");
+		} catch (err) {
+			if (err instanceof Error) {
+				alert(err.message);
+			} else {
+				alert("알 수 없는 오류가 발생했습니다.");
+			}
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
 	const handleSignup = () => {

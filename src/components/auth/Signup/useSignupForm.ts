@@ -1,9 +1,11 @@
+import { userSignup } from "@/service/auth";
 import { AgreementsState, AgreementsType } from "@/types/agreement";
 import {
 	validateEmail,
 	validateNickname,
 	validatePassword,
 } from "@/utils/validate";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 
 type SignupFormType = "email" | "password" | "confirmPassword" | "nickname";
@@ -16,6 +18,7 @@ interface SignupFormErrors {
 }
 
 const useSignupForm = () => {
+	const router = useRouter();
 	const [formState, setFormState] = useState({
 		email: "",
 		password: "",
@@ -45,7 +48,6 @@ const useSignupForm = () => {
 
 		const nicknameError = validateNickname(formState.nickname);
 		if (nicknameError) newErrors.nickname = nicknameError;
-		console.log(newErrors);
 		setErrors(newErrors);
 		return Object.keys(newErrors).length === 0;
 	}, [
@@ -85,21 +87,30 @@ const useSignupForm = () => {
 
 	const handleSignup = async (e: FormEvent) => {
 		e.preventDefault();
-		console.log(validateForm());
 
 		if (!validateForm()) return;
 
 		if (!agreements.terms || !agreements.privacy) {
 			alert("필수 약관에 동의해주세요");
+			return;
 		}
 
 		setIsLoading(true);
 		try {
-			// TODO: API 요청
-			console.log("회원가입 정보", formState);
-			console.log("약관 동의 상태", agreements);
-		} catch (error) {
-			console.error("회원가입 실패", error);
+			await userSignup({
+				email: formState.email,
+				password: formState.password,
+				nickname: formState.nickname,
+			});
+
+			// TODO: 회원가입 완료 후 ux 수정 필요
+			router.replace("/login");
+		} catch (err) {
+			if (err instanceof Error) {
+				alert(err.message);
+			} else {
+				alert("알 수 없는 오류가 발생했습니다.");
+			}
 		} finally {
 			setIsLoading(false);
 		}
