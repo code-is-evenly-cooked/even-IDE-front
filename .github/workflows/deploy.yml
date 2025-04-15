@@ -1,0 +1,28 @@
+name: Sync from upstream
+
+on:
+  schedule:
+    - cron: "0 * * * *" # 매 시간마다 자동 실행 (UTC 기준)
+  workflow_dispatch: # 수동 실행도 가능
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
+      - name: Setup Git Identity
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Add upstream and fetch
+        run: |
+          git remote add upstream https://github.com/code-is-evenly-cooked/even-IDE-front.git
+          git fetch upstream
+          git merge upstream/main --allow-unrelated-histories -m "🔄 Sync with upstream"
+          git push https://${{ secrets.AUTO_ACTION }}@github.com/mini0212/even-IDE-front.git HEAD:main
