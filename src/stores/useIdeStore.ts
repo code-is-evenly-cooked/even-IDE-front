@@ -17,6 +17,9 @@ type IdeStore = {
 
   openFile: (id: string) => void; // 탭에 파일을 추가 및 선택
   closeFile: (id: string) => void; // 탭에서 파일 제거
+
+  currentCode: string;
+  setCurrentCode: (code: string) => void;
 };
 
 export const useIdeStore = create<IdeStore>((set) => ({

@@ -17,23 +17,23 @@ const CodeEditor = () => {
     );
   }
 
-  const handleEditorChange = (value: string | undefined) => {
-    updateFileContent(currentFile.id, value ?? "");
-  };
+
 
   return (
     <div className="h-[45vh] min-h-[300px] border-t-[1px] border-t-tonedown">
       <Editor
         height="100%"
         defaultLanguage="javascript"
-        value={currentFile.content}
+        value={currentFile?.content ?? ""}
         theme="vs-dark"
         options={{
           fontSize: 14,
           minimap: { enabled: false },
           automaticLayout: true,
         }}
-        onChange={handleEditorChange}
+        onChange={(value) => {
+          updateFileContent(currentFile.id, value ?? "");
+        }}
       />
     </div>
   );
