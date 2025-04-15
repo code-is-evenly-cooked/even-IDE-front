@@ -1,4 +1,6 @@
+import { saveAuthCookie } from "@/lib/cookie";
 import { userLogin } from "@/service/auth";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { validateEmail, validatePassword } from "@/utils/validate";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useCallback, useState } from "react";
@@ -48,10 +50,12 @@ const useLoginForm = () => {
 
 		setIsLoading(true);
 		try {
-			await userLogin({
+			const response = await userLogin({
 				email: formState.email,
 				password: formState.password,
 			});
+			saveAuthCookie(response.accessToken);
+			useAuthStore.getState().setAuth(response.accessToken, "local");
 			router.replace("/editor");
 		} catch (err) {
 			if (err instanceof Error) {
