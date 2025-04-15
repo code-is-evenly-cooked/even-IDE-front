@@ -1,6 +1,7 @@
 import { useIdeStore } from "@/stores/useIdeStore";
 import { clsx } from "clsx";
 import { useState } from "react";
+import { FolderIcon, FileIcon} from "@/components/common/Icons";
 
 export default function FileExplorer() {
   const { files, currentFileId, openFile, addFile } = useIdeStore();
@@ -13,9 +14,12 @@ export default function FileExplorer() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto p-2">
-      <div className="flex justify-between items-center mb-2">
-        <div className="text-sm text-gray-400 font-semibold">📁 프로젝트</div>
+    <div className="flex-1 overflow-y-auto">
+      <div className="flex justify-between items-center mb-2 px-3 pt-3">
+        <div className="flex text-sm text-white font-medium">
+          <FolderIcon className="w-5 h-5" />
+          <span className="ml-3">프로젝트</span>
+        </div>
         <button
           onClick={handleAddFile}
           className="text-sm text-blue-500 hover:underline"
@@ -24,19 +28,20 @@ export default function FileExplorer() {
         </button>
       </div>
 
-      <ul className="pl-2 space-y-1">
+      <ul className="space-y-1">
         {files.map((file) => (
           <li
             key={file.id}
             onClick={() => openFile(file.id)}
             className={clsx(
-              "cursor-pointer px-2 py-1 rounded text-sm transition-colors",
+              "flex cursor-pointer px-8 py-2 text-sm transition-colors",
               currentFileId === file.id
-                ? "bg-zinc-300 text-black font-bold"
-                : "text-gray-600 hover:bg-zinc-100"
+                ? "bg-gray500 text-white font-bold"
+                : "text-white hover:bg-gray700"
             )}
           >
-            📄 {file.name}
+            <FileIcon className="w-5 h-5" />
+            <span className="ml-2">{file.name}</span>
           </li>
         ))}
       </ul>

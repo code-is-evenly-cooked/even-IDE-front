@@ -132,3 +132,29 @@ export const CloseIcon = ({ className }: IconProps) => {
     />
   );
 };
+
+export const FileIcon = ({ className }: IconProps) => {
+  return (
+    <Image
+      src="/icons/file.svg"
+      alt="닫기"
+      width={40}
+      height={40}
+      className={className}
+      priority
+    />
+  );
+};
+
+export const FolderIcon = ({ className }: IconProps) => {
+  return (
+    <Image
+      src="/icons/folder.svg"
+      alt="닫기"
+      width={40}
+      height={40}
+      className={className}
+      priority
+    />
+  );
+};
