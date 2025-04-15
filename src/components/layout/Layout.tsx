@@ -1,15 +1,19 @@
+"use client";
+
+import useAuthInitializer from "@/hooks/useAuthInitializer";
 import React, { ReactNode } from "react";
 
 interface LayoutProps {
-  children: ReactNode;
+	children: ReactNode;
 }
 
 const Layout = ({ children }: LayoutProps) => {
-  return (
-    <div className="h-screen">
-      <main>{children}</main>
-    </div>
-  );
+	useAuthInitializer();
+	return (
+		<div className="h-screen">
+			<main>{children}</main>
+		</div>
+	);
 };
 
 export default Layout;
