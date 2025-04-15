@@ -14,6 +14,7 @@ type IdeStore = {
   selectFile: (id: string | null) => void;
   updateFileContent: (id: string, newContent: string) => void;
   addFile: (name: string) => void;
+  deleteFile: (id: string) => void;
 
   openFile: (id: string) => void;
   closeFile: (id: string) => void;
@@ -71,8 +72,8 @@ export const useIdeStore = create<IdeStore>((set, get) => ({
   },
 
   // 파일 삭제
-  deleteFile: (id) => {
-    const { files, openedFileIds, currentFileId, selectFile } = get();
+  deleteFile: (id: string) => {
+    const { files, openedFileIds, currentFileId } = get();
     const newFiles = files.filter((file) => file.id !== id);
     const newOpened = openedFileIds.filter((fid) => fid !== id);
     const newCurrent =
