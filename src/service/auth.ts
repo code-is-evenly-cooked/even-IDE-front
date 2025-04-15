@@ -1,4 +1,10 @@
 import { fetchWithJson } from "@/lib/fetch";
+import {
+	AuthCredentials,
+	AuthResponse,
+	SignupCredentials,
+	SignupResponse,
+} from "@/types/auth";
 
 export const userSignup = async (
 	credentials: SignupCredentials
