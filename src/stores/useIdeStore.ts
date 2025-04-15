@@ -13,8 +13,12 @@ type IdeStore = {
 
   selectFile: (id: string | null) => void;
   updateFileContent: (id: string, newContent: string) => void;
-  addFile: (name: string) => void;
+  addFile: (name: string, id?: string) => void;
   deleteFile: (id: string) => void;
+
+  editingFileId: string | null;
+  setEditingFileId: (id: string | null) => void;
+  renameFile: (id: string, newName: string) => void;
 
   openFile: (id: string) => void;
   closeFile: (id: string) => void;
@@ -40,8 +44,7 @@ export const useIdeStore = create<IdeStore>((set, get) => ({
     })),
 
   // 새 파일 생성 -> 자동으로 탭 열기 + 선택 상태
-  addFile: (name) => {
-    const id = Date.now().toString();
+  addFile: (name, id = Date.now().toString()) => {
     const newFile = { id, name, content: "" };
     set((state) => ({
       files: [...state.files, newFile],
@@ -70,6 +73,18 @@ export const useIdeStore = create<IdeStore>((set, get) => ({
       selectFile(fallbackId);
     }
   },
+
+  // 파일 이름 변경
+  editingFileId: null,
+  setEditingFileId: (id) => set({ editingFileId: id }),
+
+  renameFile: (id, newName) =>
+    set((state) => ({
+      files: state.files.map((file) =>
+        file.id === id ? { ...file, name: newName } : file
+      ),
+      editingFileId: null,
+    })),
 
   // 파일 삭제
   deleteFile: (id: string) => {
