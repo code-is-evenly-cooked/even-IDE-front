@@ -9,16 +9,13 @@ import {
 } from "../../common/Icons";
 
 export default function Sidebar() {
-  const { addFile, deleteFile, selectFile, files, currentFileId } =
+  const { addFile, deleteFile, setEditingFileId, currentFileId } =
     useIdeStore();
 
   const handleAddFile = () => {
-    const name = `newFile${files.length + 1}.js`;
-    addFile(name);
-
-    // 추가한 파일을 바로 선택
-    const lastFile = files[files.length - 1];
-    if (lastFile) selectFile(lastFile.id);
+    const id = Date.now().toString();
+    addFile("", id);
+    setEditingFileId(id);
   };
 
   // 파일 삭제

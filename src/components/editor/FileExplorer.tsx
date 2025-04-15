@@ -1,10 +1,16 @@
 import { useIdeStore } from "@/stores/useIdeStore";
 import { clsx } from "clsx";
-import { FolderIcon, FileIcon} from "@/components/common/Icons";
+import { FolderIcon, FileIcon } from "@/components/common/Icons";
 
 export default function FileExplorer() {
-  const { files, currentFileId, openFile } = useIdeStore();
-
+  const {
+    files,
+    currentFileId,
+    openFile,
+    editingFileId,
+    renameFile,
+    deleteFile,
+  } = useIdeStore();
 
   return (
     <div className="flex-1 overflow-y-auto">
@@ -16,21 +22,40 @@ export default function FileExplorer() {
       </div>
 
       <ul className="space-y-1">
-        {files.map((file) => (
-          <li
-            key={file.id}
-            onClick={() => openFile(file.id)}
-            className={clsx(
-              "flex cursor-pointer px-8 py-2 text-sm transition-colors",
-              currentFileId === file.id
-                ? "bg-gray500 text-white font-bold"
-                : "text-white hover:bg-gray700"
-            )}
-          >
-            <FileIcon className="w-5 h-5" />
-            <span className="ml-2">{file.name}</span>
-          </li>
-        ))}
+        {files.map((file) =>
+          editingFileId === file.id ? (
+            <li key={file.id} className="px-8 py-2">
+              <input
+                autoFocus
+                type="text"
+                defaultValue={file.name}
+                onBlur={(e) => {
+                  const newName = e.currentTarget.value.trim();
+                  if (newName) {
+                    renameFile(file.id, newName);
+                  } else {
+                    deleteFile(file.id);
+                  }
+                }}
+                className="w-full rounded bg-gray500 px-2 py-1 text-sm text-white outline-none"
+              />
+            </li>
+          ) : (
+            <li
+              key={file.id}
+              onClick={() => openFile(file.id)}
+              className={clsx(
+                "flex cursor-pointer px-8 py-2 text-sm transition-colors",
+                currentFileId === file.id
+                  ? "bg-gray500 text-white font-bold"
+                  : "text-white hover:bg-gray700"
+              )}
+            >
+              <FileIcon className="w-5 h-5" />
+              <span className="ml-2">{file.name}</span>
+            </li>
+          )
+        )}
       </ul>
     </div>
   );
