@@ -9,7 +9,8 @@ import {
 } from "../../common/Icons";
 
 export default function Sidebar() {
-  const { addFile, selectFile, files } = useIdeStore();
+  const { addFile, deleteFile, selectFile, files, currentFileId } =
+    useIdeStore();
 
   const handleAddFile = () => {
     const name = `newFile${files.length + 1}.js`;
@@ -18,6 +19,13 @@ export default function Sidebar() {
     // 추가한 파일을 바로 선택
     const lastFile = files[files.length - 1];
     if (lastFile) selectFile(lastFile.id);
+  };
+
+  // 파일 삭제
+  const handleDeleteFile = () => {
+    if (currentFileId) {
+      deleteFile(currentFileId);
+    }
   };
 
   return (
@@ -41,7 +49,7 @@ export default function Sidebar() {
         <button title="되돌리기">
           <BackIcon className="w-4 h-4" />
         </button>
-        <button title="삭제">
+        <button title="삭제" onClick={handleDeleteFile}>
           <CloseIcon className="w-5 h-5" />
         </button>
       </div>
