@@ -6,13 +6,8 @@ import { X } from "lucide-react";
 import clsx from "clsx";
 
 export default function Tabbar() {
-  const {
-    files,
-    currentFileId,
-    openedFileIds,
-    selectFile,
-    closeFile,
-  } = useIdeStore();
+  const { files, currentFileId, openedFileIds, selectFile, closeFile } =
+    useIdeStore();
 
   return (
     <div className="flex items-end h-[45px] bg-[#1E1E1E] text-white overflow-x-auto px-2">

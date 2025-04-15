@@ -7,7 +7,6 @@ type RunButtonProps = {
 };
 
 export default function RunButton({ onRun }: RunButtonProps) {
-  
   const { files, currentFileId } = useIdeStore();
   const currentFile = files.find((f) => f.id === currentFileId);
   const code = currentFile?.content ?? "";

@@ -10,10 +10,6 @@ export default function FileExplorer() {
     const name = `newFile${fileCount}.js`; // 파일 이름 자동 증가
     addFile(name);
     setFileCount((prev) => prev + 1);
-
-    // 마지막 파일을 바로 선택
-    const lastFile = files[files.length - 1];
-    if (lastFile) selectFile(lastFile.id);
   };
 
   return (

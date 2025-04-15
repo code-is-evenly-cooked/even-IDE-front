@@ -1,7 +1,12 @@
 import FileExplorer from "@/components/editor/FileExplorer";
 import { useIdeStore } from "@/stores/useIdeStore";
-import { EvenIcon, FileNewIcon, FolderNewIcon, BackIcon, CloseIcon } from "../../common/Icons";
-
+import {
+  EvenIcon,
+  FileNewIcon,
+  FolderNewIcon,
+  BackIcon,
+  CloseIcon,
+} from "../../common/Icons";
 
 export default function Sidebar() {
   const { addFile, selectFile, files } = useIdeStore();
