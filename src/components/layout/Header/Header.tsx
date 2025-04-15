@@ -14,7 +14,6 @@ type HeaderProps = {
 const Header = ({ onRun }: HeaderProps) => {
 	const language = useLanguageStore((state) => state.language);
 	const setLanguage = useLanguageStore((state) => state.setLenguage);
-
 	const { isLoggedIn, clearAuth } = useAuthStore();
 
 	const handleLogout = () => {
