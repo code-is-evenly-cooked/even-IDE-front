@@ -18,3 +18,10 @@ export const userLogin = async (
 		headers: { "Content-Type": "application/json" },
 		body: JSON.stringify(credentials),
 	});
+
+export const resetPassword = async (email: string): Promise<MessageResponse> =>
+	fetchWithJson("/api/auth/reset-password", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ email }),
+	});
