@@ -1,17 +1,10 @@
 import { useIdeStore } from "@/stores/useIdeStore";
 import { clsx } from "clsx";
-import { useState } from "react";
 import { FolderIcon, FileIcon} from "@/components/common/Icons";
 
 export default function FileExplorer() {
-  const { files, currentFileId, openFile, addFile } = useIdeStore();
-  const [fileCount, setFileCount] = useState(1);
+  const { files, currentFileId, openFile } = useIdeStore();
 
-  const handleAddFile = () => {
-    const name = `newFile${fileCount}.js`; // 파일 이름 자동 증가
-    addFile(name);
-    setFileCount((prev) => prev + 1);
-  };
 
   return (
     <div className="flex-1 overflow-y-auto">
@@ -20,12 +13,6 @@ export default function FileExplorer() {
           <FolderIcon className="w-5 h-5" />
           <span className="ml-3">프로젝트</span>
         </div>
-        <button
-          onClick={handleAddFile}
-          className="text-sm text-blue-500 hover:underline"
-        >
-          + 새 파일
-        </button>
       </div>
 
       <ul className="space-y-1">
