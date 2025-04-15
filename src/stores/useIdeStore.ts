@@ -11,7 +11,7 @@ type IdeStore = {
   currentFileId: string | null;
   openedFileIds: string[]; // 열린 탭의 파일 ID 목록
 
-  selectFile: (id: string) => void;
+  selectFile: (id: string | null) => void;
   updateFileContent: (id: string, newContent: string) => void;
   addFile: (name: string) => void;
 
@@ -27,8 +27,10 @@ export const useIdeStore = create<IdeStore>((set, get) => ({
   currentFileId: null,
   openedFileIds: [],
 
+  // 파일 선택
   selectFile: (id) => set({ currentFileId: id }),
 
+  // 파일 내용 수정 (코드 입력 시 호출)
   updateFileContent: (id, content) =>
     set((state) => ({
       files: state.files.map((file) =>
@@ -36,6 +38,7 @@ export const useIdeStore = create<IdeStore>((set, get) => ({
       ),
     })),
 
+  // 새 파일 생성 -> 자동으로 탭 열기 + 선택 상태
   addFile: (name) => {
     const id = Date.now().toString();
     const newFile = { id, name, content: "" };
@@ -46,6 +49,7 @@ export const useIdeStore = create<IdeStore>((set, get) => ({
     }));
   },
 
+  // 파일 탭 열기 (중복 방지) + 선택 상태 전환
   openFile: (id) => {
     const { openedFileIds, selectFile } = get();
     if (!openedFileIds.includes(id)) {
@@ -54,6 +58,7 @@ export const useIdeStore = create<IdeStore>((set, get) => ({
     selectFile(id);
   },
 
+  // 파일 탭 닫기 + 이전 탭 이동
   closeFile: (id) => {
     const { openedFileIds, currentFileId, selectFile } = get();
     const newOpened = openedFileIds.filter((fid: string) => fid !== id);
@@ -65,6 +70,7 @@ export const useIdeStore = create<IdeStore>((set, get) => ({
     }
   },
 
+  // 현재 코드 값 저장 (Monaco Editor 외부에서도 접근 가능)
   currentCode: "",
   setCurrentCode: (code) => set({ currentCode: code }),
 }));
