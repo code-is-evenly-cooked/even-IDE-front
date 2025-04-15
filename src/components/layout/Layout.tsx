@@ -1,5 +1,4 @@
 import React, { ReactNode } from "react";
-import Header from "./Header/Header";
 
 interface LayoutProps {
 	children: ReactNode;
@@ -8,7 +7,6 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
 	return (
 		<div className="h-screen">
-			<Header />
 			<main>{children}</main>
 		</div>
 	);
