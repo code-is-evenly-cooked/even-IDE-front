@@ -3,7 +3,6 @@ import IconButton from "@/components/common/Button/IconButton";
 import { useIdeStore } from "@/stores/useIdeStore";
 
 export default function HeaderActions() {
-  
   // 확장자 별 MIME 타입 (내보내기에서 사용)
   const getMimeType = (filename: string): string => {
     if (filename.endsWith(".html")) return "text/html";
@@ -26,6 +25,12 @@ export default function HeaderActions() {
       alert("내보낼 파일이 선택되지 않았습니다.");
       return;
     }
+
+    // 내보내기 여부 확인
+    const confirmExport = window.confirm(
+      `"${currentFile.name}" 파일을 내보내시겠습니까?`
+    );
+    if (!confirmExport) return; // 취소 시 동작 중단
 
     const mimeType = getMimeType(currentFile.name);
     const blob = new Blob([currentFile.content], { type: mimeType }); // 파일 내용과 타입
