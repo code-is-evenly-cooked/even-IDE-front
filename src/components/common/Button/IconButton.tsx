@@ -1,11 +1,6 @@
 import { forwardRef, memo, useMemo } from "react";
 import type { IconButtonProps } from "@/types/button";
-import {
-	BASE_BUTTON_STYLES,
-	TEXT_COLOR,
-	BG_COLOR,
-	ICON_BUTTON_SIZE_MAP,
-} from "./styles";
+import { BASE_BUTTON_STYLES, BG_COLOR, ICON_BUTTON_SIZE_MAP } from "./styles";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 
 const IconButton = memo(
@@ -16,19 +11,28 @@ const IconButton = memo(
 				label,
 				size = "md",
 				color = "gray500",
-				textColor = "white",
 				isLoading,
 				disabled,
 				className,
 				transparent = false,
+				isActive = false,
 				...props
 			},
 			ref
 		) => {
 			const sizeClass = ICON_BUTTON_SIZE_MAP[size] || ICON_BUTTON_SIZE_MAP.md;
-			const colorClass = transparent
-				? `${TEXT_COLOR[textColor] || ""} bg-transparent`
-				: `${TEXT_COLOR[textColor] || ""} ${BG_COLOR[color] || ""}`;
+			const colorClass = useMemo(() => {
+				if (transparent) {
+					return `bg-transparent hover:bg-gray700`;
+				}
+				const baseBg = BG_COLOR[color] || "";
+
+				const activeTint = isActive
+					? "border border-violet600 shadow-violetIconGlow"
+					: "";
+
+				return `${baseBg} ${activeTint}`;
+			}, [color, transparent, isActive]);
 
 			const loadingStyle = isLoading ? "cursor-wait" : "";
 

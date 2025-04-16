@@ -21,6 +21,7 @@ module.exports = {
 			},
 			boxShadow: {
 				violetGlow: "0 0 6px #744CEB, 0 0 12px #744CEB",
+				violetIconGlow: "0 0 2px #744CEB, 0 0 4px #744CEB",
 			},
 			width: {
 				"main-area": "calc(100% - 280px)",

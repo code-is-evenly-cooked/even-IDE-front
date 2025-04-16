@@ -1,6 +1,11 @@
 export type ButtonSize = "sm" | "md" | "lg" | "xl";
 export type ButtonStyle = "primary" | "outline" | "icon";
-export type ButtonColor = "primary" | "violet300" | "gray500" | "kakao";
+export type ButtonColor =
+	| "primary"
+	| "violet300"
+	| "gray500"
+	| "gray700"
+	| "kakao";
 export type ButtonTextColor =
 	| "white"
 	| "gray500"
@@ -29,4 +34,5 @@ interface IconButtonProps
 	isLoading?: boolean;
 	className?: string;
 	transparent?: boolean;
+	isActive?: boolean;
 }

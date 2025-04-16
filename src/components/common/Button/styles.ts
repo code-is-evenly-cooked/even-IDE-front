@@ -25,6 +25,7 @@ export const BG_COLOR: Record<string, string> = {
 	violet300: "bg-violet300 hover:bg-violet300/80 active:bg-violet300/60",
 	kakao: "bg-kakao hover:bg-kakao/80 active:bg-kakao/60",
 	gray500: "bg-gray500 hover:bg-gray500/80 active:bg-gray500/60",
+	gray700: "bg-gray700 hover:bg-gray700/80 active:bg-gray700/60",
 };
 
 export const BORDER_COLOR: Record<string, string> = {
