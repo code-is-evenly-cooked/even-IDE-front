@@ -1,50 +1,80 @@
 "use client";
 
-import {ChangeEvent, FormEvent, useCallback, useState, useEffect} from "react";
-import {signIn, useSession} from "next-auth/react";
-import {useAuthStore} from "@/stores/useAuthStore";
-import {useRouter} from "next/navigation"
+import { saveAuthCookie } from "@/lib/cookie";
+import { userLogin } from "@/service/auth";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { validateEmail, validatePassword } from "@/utils/validate";
+import { useRouter } from "next/navigation";
+import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 
 type FormType = "email" | "password";
 
-interface FormState {
-    email: string;
-    password: string;
-}
-
-interface FormErrors {
-    email?: string;
-    password?: string;
+interface LoginFormErrors {
+	email?: string;
+	password?: string;
 }
 
 const useLoginForm = () => {
-    const router = useRouter();
-    const {data: session} = useSession();
-    const setAccessToken = useAuthStore((state) => state.setAccessToken);
+	const router = useRouter();
+	const [formState, setFormState] = useState({
+		email: "",
+		password: "",
+	});
+	const [errors, setErrors] = useState<LoginFormErrors>({});
+	const [isLoading, setIsLoading] = useState(false);
 
-    const [formState, setFormState] = useState<FormState>({
-        email: "",
-        password: "",
-    });
-    const [errors, setErrors] = useState<FormErrors>({});
-    const [isLoading, setIsLoading] = useState(false);
+	const validateForm = useCallback(() => {
+		const newErrors: LoginFormErrors = {};
 
-    const handleFormChange = useCallback(
-        (key: FormType) => (e: ChangeEvent<HTMLInputElement>) => {
-            const {value} = e.target;
-            setFormState((prev) => ({...prev, [key]: value}));
-            setErrors((prev) => ({...prev, [key]: ""}));
-        },
-        []
-    );
+		const emailError = validateEmail(formState.email);
+		if (emailError) newErrors.email = emailError;
 
-    const handleSubmit = async (e: FormEvent) => {
-        e.preventDefault();
+		const passwordError = validatePassword(formState.password);
+		if (passwordError) newErrors.password = passwordError;
 
-        setIsLoading(true);
-    };
+		setErrors(newErrors);
+		return Object.keys(newErrors).length === 0;
+	}, [formState.email, formState.password]);
 
-    const handleGoogleLogin = async () => {
+	const handleFormChange = useCallback(
+		(key: FormType) => (e: ChangeEvent<HTMLInputElement>) => {
+			const { value } = e.target;
+			setFormState((prev) => ({ ...prev, [key]: value }));
+			setErrors((prev) => ({ ...prev, [key]: "" }));
+		},
+		[]
+	);
+
+	const handleLogin = async (e: FormEvent) => {
+		e.preventDefault();
+
+		if (!validateForm()) return;
+
+		setIsLoading(true);
+		try {
+			const response = await userLogin({
+				email: formState.email,
+				password: formState.password,
+			});
+			saveAuthCookie(response.accessToken);
+			useAuthStore.getState().setAuth(response.accessToken, "local");
+			router.replace("/editor");
+		} catch (err) {
+			if (err instanceof Error) {
+				alert(err.message);
+			} else {
+				alert("알 수 없는 오류가 발생했습니다.");
+			}
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	const handleSignup = () => {
+		router.push("/signup");
+	};
+
+	const handleGoogleLogin = async () => {
         try {
             const res = await signIn("google", {redirect: false});
 
@@ -58,7 +88,7 @@ const useLoginForm = () => {
         console.log("google Login");
     };
 
-    const handleKakaoLogin = async () => {
+	 const handleKakaoLogin = async () => {
         try {
             const res = await signIn("kakao", { redirect: false });
 
@@ -106,20 +136,20 @@ const useLoginForm = () => {
                 })
                 .catch((err) => {
                     console.error("서버 통신 에러", err);
-                    alert("서버 인증 실패 또는 권한 없음");
                 });
         }
     }, [session?.accessToken]);
 
-    return {
-        formState,
-        errors,
-        isLoading,
-        handleFormChange,
-        handleSubmit,
-        handleGoogleLogin,
-        handleKakaoLogin,
-    };
+	return {
+		formState,
+		errors,
+		isLoading,
+		handleFormChange,
+		handleLogin,
+		handleSignup,
+		handleGoogleLogin,
+		handleKakaoLogin,
+	};
 };
 
 export default useLoginForm;

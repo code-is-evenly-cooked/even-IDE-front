@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { createErrorResponse } from "@/lib/response";
 import { handleAPIResponse } from "@/lib/api";
+import { AuthResponse } from "@/types/auth";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
