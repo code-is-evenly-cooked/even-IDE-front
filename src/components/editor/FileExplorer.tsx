@@ -26,6 +26,7 @@ export default function FileExplorer() {
         {files.map((file) =>
           editingFileId === file.id ? (
             <li key={file.id} className="px-8 py-2">
+              <div className="text-xs text-gray200 mb-1 ml-1">이름 입력</div>
               <input
                 autoFocus
                 type="text"
