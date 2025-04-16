@@ -44,30 +44,30 @@ export default function EditorPage() {
   };
 
   return (
-    <div>
-      <div className="flex h-screen w-screen overflow-hidden">
-        <Sidebar />
-        <div className="flex flex-col">
-          <Header onRun={handleRun} />
-          <div className="flex">
-            <main className="min-h-screen flex flex-col bg-gray700">
-              <div>
-                <Tabbar />
-                <CodeEditor />
+      <div>
+        <div className="flex h-screen w-screen overflow-hidden">
+          <Sidebar />
+          <div className="flex flex-col">
+            <Header onRun={handleRun} />
+            <div className="flex">
+              <main className="min-h-screen flex flex-col bg-gray700">
+                <div>
+                  <Tabbar />
+                  <CodeEditor />
+                </div>
+                <div className="mt-[20px]">
+                  <TerminalView terminalRef={terminalRef} />
+                </div>
+              </main>
+              <div className="w-[280px] bg-black"></div>
+              <div className="flex flex-col">
+                <button>A</button>
+                <button>B</button>
+                <button>C</button>
               </div>
-              <div className="mt-[20px]">
-                <TerminalView terminalRef={terminalRef} />
-              </div>
-            </main>
-            <div className="w-[280px] bg-black"></div>
-            <div className="flex flex-col">
-              <button>A</button>
-              <button>B</button>
-              <button>C</button>
             </div>
           </div>
         </div>
       </div>
-    </div>
   );
 }
