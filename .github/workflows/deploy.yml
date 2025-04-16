@@ -2,9 +2,6 @@ name: Sync from upstream
 
 on:
   schedule:
-<<<<<<< HEAD
-    - cron: "0 * * * *" # 매 시간마다 자동 실행 (UTC 기준)
-=======
     - cron: "0 0 * * *" # 매일 오전 9시 실행 (KST 기준)
 >>>>>>> origin/main
   workflow_dispatch: # 수동 실행도 가능
