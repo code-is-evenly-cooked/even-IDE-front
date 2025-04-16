@@ -9,7 +9,7 @@ export default function Tabbar() {
     useIdeStore();
 
   return (
-    <div className="flex items-end h-[45px] bg-gray900 text-white overflow-x-auto whitespace-nowrap px-3">
+    <div className="flex items-end h-[45px] bg-gray900 text-white overflow-x-auto whitespace-nowrap scrollbar-hide px-3">
       {openedFileIds.map((id) => {
         const file = files.find((f) => f.id === id);
         if (!file) return null;
