@@ -16,6 +16,9 @@ interface LoginFormErrors {
 
 const useLoginForm = () => {
 	const router = useRouter();
+	const {data: session} = useSession();
+    	const setAccessToken = useAuthStore((state) => state.setAccessToken);
+	
 	const [formState, setFormState] = useState({
 		email: "",
 		password: "",
