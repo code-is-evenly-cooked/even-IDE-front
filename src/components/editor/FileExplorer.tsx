@@ -8,6 +8,7 @@ export default function FileExplorer() {
     currentFileId,
     openFile,
     editingFileId,
+    setEditingFileId,
     renameFile,
     deleteFile,
   } = useIdeStore();
@@ -57,6 +58,7 @@ export default function FileExplorer() {
             <li
               key={file.id}
               onClick={() => openFile(file.id)}
+              onDoubleClick={() => setEditingFileId(file.id)}
               className={clsx(
                 "flex cursor-pointer px-8 py-2 text-sm transition-colors",
                 currentFileId === file.id
