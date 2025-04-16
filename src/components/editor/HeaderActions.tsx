@@ -1,14 +1,25 @@
 import { Download, Upload } from "lucide-react";
 import IconButton from "@/components/common/Button/IconButton";
+import { useIdeStore } from "@/stores/useIdeStore";
 
 export default function HeaderActions() {
   // 내보내기 기능
   const handleExport = () => {
-    const blob = new Blob(["코드 내용"], { type: "text/plain" });
+    const { files, currentFileId } = useIdeStore.getState();  // 열려있는 파일 상태 조회
+
+    // 파일이 선택 중인지 확인
+    const currentFile = files.find((f) => f.id === currentFileId);
+    if (!currentFile) {
+      alert("내보낼 파일이 선택되지 않았습니다.");
+      return;
+    }
+
+    const blob = new Blob([currentFile.content], { type: "text/plain" });  // 파일 내용과 타입
     const url = URL.createObjectURL(blob);
+
     const a = document.createElement("a");
     a.href = url;
-    a.download = "my-code.txt";
+    a.download = currentFile.name || "untitled.txt";  // 파일 이름
     a.click();
     URL.revokeObjectURL(url);
   };
