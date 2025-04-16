@@ -1,3 +1,5 @@
+"use client";
+
 import { saveAuthCookie } from "@/lib/cookie";
 import { userLogin } from "@/service/auth";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -14,6 +16,9 @@ interface LoginFormErrors {
 
 const useLoginForm = () => {
 	const router = useRouter();
+	const {data: session} = useSession();
+    	const setAccessToken = useAuthStore((state) => state.setAccessToken);
+	
 	const [formState, setFormState] = useState({
 		email: "",
 		password: "",
@@ -72,13 +77,71 @@ const useLoginForm = () => {
 		router.push("/signup");
 	};
 
-	const handleGoogleLogin = () => {
-		console.log("google Login");
-	};
+	const handleGoogleLogin = async () => {
+        try {
+            const res = await signIn("google", {redirect: false});
 
-	const handleKakaoLogin = () => {
-		console.log("kakao Login");
-	};
+            if (res?.error) {
+                console.error("구글 로그인 실패", res.error);
+                return;
+            }
+        } catch (error) {
+            console.error("구글 로그인 중 에러", error);
+        }
+        console.log("google Login");
+    };
+
+	 const handleKakaoLogin = async () => {
+        try {
+            const res = await signIn("kakao", { redirect: false });
+
+            if (res?.error) {
+                console.error("카카오 로그인 실패", res.error);
+                return;
+            }
+        } catch (error) {
+            console.error("카카오 로그인 중 에러", error);
+        }
+
+        console.log("kakao Login");
+    };
+
+    useEffect(() => {
+        const accessToken = session?.accessToken as string | undefined;
+        const provider = session?.user?.provider ?? "google";
+
+        console.log("🔍 session:", session);
+        console.log("🔍 accessToken:", session?.accessToken);
+
+        if (accessToken) {
+            setAccessToken(accessToken);
+
+            fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/social`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    provider,
+                    token: accessToken,
+                }),
+            })
+                .then(async (res) => {
+                    if (!res.ok) {
+                        const errorText = await res.text();
+                        throw new Error(`서버 오류: ${res.status} ${errorText}`);
+                    }
+                    return res.json();
+                })
+                .then((data) => {
+                    console.log("서버 응답", data);
+                    router.push("/editor");
+                })
+                .catch((err) => {
+                    console.error("서버 통신 에러", err);
+                });
+        }
+    }, [session?.accessToken]);
 
 	return {
 		formState,
