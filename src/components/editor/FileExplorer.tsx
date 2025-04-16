@@ -37,6 +37,19 @@ export default function FileExplorer() {
                     deleteFile(file.id);
                   }
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    const newName = e.currentTarget.value.trim();
+                    if (newName) {
+                      renameFile(file.id, newName);
+                    } else {
+                      deleteFile(file.id);
+                    }
+                  }
+                  if (e.key === "Escape") {
+                    deleteFile(file.id);
+                  }
+                }}
                 className="w-full rounded bg-gray500 px-2 py-1 text-sm text-white outline-none"
               />
             </li>
