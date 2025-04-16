@@ -18,14 +18,14 @@ export default function Tabbar() {
           <div
             key={id}
             className={clsx(
-              "flex flex-shrink-0 items-center min-w-[100px] max-w-[200px] h-[35px] px-3 py-1 mr-0.5 rounded-t-md cursor-pointer text-sm",
+              "flex flex-shrink-0 items-center min-w-[100px] max-w-[160px] h-[35px] px-3 py-1 mr-0.5 rounded-t-md cursor-pointer text-sm",
               currentFileId === id
                 ? "bg-tonedown text-white"
                 : "bg-gray-600 text-gray-300 hover:bg-gray-600"
             )}
             onClick={() => selectFile(id)}
           >
-            <span className="flex-1 mr-6 font-bold truncate">{file.name}</span>
+            <span className="flex-1 mr-3 font-bold truncate">{file.name}</span>
             <button
               onClick={(e) => {
                 e.stopPropagation();
