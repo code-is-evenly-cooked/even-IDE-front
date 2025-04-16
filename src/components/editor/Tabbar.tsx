@@ -25,7 +25,7 @@ export default function Tabbar() {
             )}
             onClick={() => selectFile(id)}
           >
-            <span className="flex-1 mr-6 font-bold">{file.name}</span>
+            <span className="flex-1 mr-6 font-bold truncate">{file.name}</span>
             <button
               onClick={(e) => {
                 e.stopPropagation();
