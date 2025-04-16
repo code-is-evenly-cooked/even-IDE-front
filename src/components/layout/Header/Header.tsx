@@ -22,7 +22,7 @@ const Header = ({ onRun }: HeaderProps) => {
 	};
 
 	return (
-		<header className="w-main-area ml-[240px] h-[3rem] flex justify-between items-center p-4">
+		<header className="h-[3rem] flex justify-between items-center p-4">
 			<div className="flex items-center gap-4">
 				<button className="text-xl hover:text-gray-300" aria-label="메뉴 열기">
 					☰
