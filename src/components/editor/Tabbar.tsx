@@ -9,7 +9,7 @@ export default function Tabbar() {
     useIdeStore();
 
   return (
-    <div className="flex items-end h-[45px] bg-gray900 text-white overflow-x-auto px-3">
+    <div className="flex items-end h-[45px] bg-gray900 text-white overflow-x-auto whitespace-nowrap px-3">
       {openedFileIds.map((id) => {
         const file = files.find((f) => f.id === id);
         if (!file) return null;
@@ -18,7 +18,7 @@ export default function Tabbar() {
           <div
             key={id}
             className={clsx(
-              "flex items-center min-w-[100px] max-w-[200px] h-[35px] px-3 py-1 mr-0.5 rounded-t-md cursor-pointer text-sm",
+              "flex flex-shrink-0 items-center min-w-[100px] max-w-[200px] h-[35px] px-3 py-1 mr-0.5 rounded-t-md cursor-pointer text-sm",
               currentFileId === id
                 ? "bg-tonedown text-white"
                 : "bg-gray-600 text-gray-300 hover:bg-gray-600"
