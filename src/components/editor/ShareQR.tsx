@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
 import QRCodeStyling from "qr-code-styling";
+import { Copy } from "lucide-react";
 
 type ShareQRProps = {
   url: string;
@@ -43,24 +44,26 @@ export default function ShareQR({ url, isOpen, onClose }: ShareQRProps) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg relative w-[300px]">
-        <button className="absolute text-black top-2 right-3 text-2xl" onClick={onClose}>
+      <div className="bg-white p-5 rounded-lg shadow-lg relative w-[300px]">
+        <button className="absolute text-black top-2 right-3 text-3xl" onClick={onClose}>
           ×
         </button>
-        <h3 className="text-black text-lg font-semibold mb-4">프로젝트 공유</h3>
+        <h3 className="text-black text-lg font-semibold mt-[10px] mb-4">프로젝트 공유</h3>
+        <div className="flex items-center gap-2">
         <input
           value={url}
           readOnly
-          className="w-full text-black p-2 border rounded mb-2"
+          className="flex-1 text-black p-2 border rounded mb-4"
         />
         <button
           onClick={handleCopy}
           className="text-blue-600 underline mb-4 text-sm"
         >
-          링크 복사
+          <Copy className="w-5 h-5 text-gray500"/>
         </button>
+        </div>
         <div ref={qrRef} className="flex justify-center" />
-        <button className="w-full h-[40px] text-black bg-violet300 p-1 rounded" onClick={handleDownload}>QR 코드 다운로드</button>
+        <button className="w-full h-[40px] mt-4 text-white bg-gray500 font-semibold p-1 rounded" onClick={handleDownload}>QR 코드 다운로드</button>
       </div>
     </div>
   );
