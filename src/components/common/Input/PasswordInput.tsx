@@ -21,7 +21,6 @@ const PasswordInput = memo(
 				icon={isVisible ? <EyeCloseIcon /> : <EyeIcon />}
 				label={isVisible ? "비밀번호 숨기기" : "비밀번호 표시"}
 				transparent
-				color="gray500"
 				onClick={toggleVisibility}
 			/>
 		);
