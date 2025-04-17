@@ -8,6 +8,7 @@ export default function FileExplorer() {
     currentFileId,
     openFile,
     editingFileId,
+    setEditingFileId,
     renameFile,
     deleteFile,
   } = useIdeStore();
@@ -25,6 +26,7 @@ export default function FileExplorer() {
         {files.map((file) =>
           editingFileId === file.id ? (
             <li key={file.id} className="px-8 py-2">
+              <div className="text-xs text-gray200 mb-1 ml-1">이름 입력</div>
               <input
                 autoFocus
                 type="text"
@@ -37,6 +39,19 @@ export default function FileExplorer() {
                     deleteFile(file.id);
                   }
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    const newName = e.currentTarget.value.trim();
+                    if (newName) {
+                      renameFile(file.id, newName);
+                    } else {
+                      deleteFile(file.id);
+                    }
+                  }
+                  if (e.key === "Escape") {
+                    deleteFile(file.id);
+                  }
+                }}
                 className="w-full rounded bg-gray500 px-2 py-1 text-sm text-white outline-none"
               />
             </li>
@@ -44,6 +59,7 @@ export default function FileExplorer() {
             <li
               key={file.id}
               onClick={() => openFile(file.id)}
+              onDoubleClick={() => setEditingFileId(file.id)}
               className={clsx(
                 "flex cursor-pointer px-8 py-2 text-sm transition-colors",
                 currentFileId === file.id

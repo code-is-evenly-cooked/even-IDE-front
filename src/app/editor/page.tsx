@@ -50,8 +50,8 @@ export default function EditorPage() {
           <div className="flex flex-col">
             <Header onRun={handleRun} />
             <div className="flex">
-              <main className="min-h-screen flex flex-col bg-gray700">
-                <div>
+              <main className="min-w-0 min-h-screen flex flex-col bg-gray700">
+                <div className="w-[720px]"> {/* 편집기 너비와 동일하게 */} 
                   <Tabbar />
                   <CodeEditor />
                 </div>
