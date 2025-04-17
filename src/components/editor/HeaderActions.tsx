@@ -1,8 +1,11 @@
-import { Download, Upload } from "lucide-react";
+import { Download, Upload, Share2 } from "lucide-react";
 import IconButton from "@/components/common/Button/IconButton";
 import { useIdeStore } from "@/stores/useIdeStore";
+import ShareQR from "./ShareQR";
+import { useState } from "react";
 
 export default function HeaderActions() {
+  const [isShareOpen, setIsShareOpen] = useState(false);
   // 확장자 별 MIME 타입 (내보내기에서 사용)
   const getMimeType = (filename: string): string => {
     if (filename.endsWith(".html")) return "text/html";
@@ -43,6 +46,8 @@ export default function HeaderActions() {
     URL.revokeObjectURL(url);
   };
 
+  const projectUrl = typeof window !== "undefined" ? window.location.href : "";
+
   return (
     <div className="flex gap-1 px-3">
       <IconButton
@@ -63,6 +68,21 @@ export default function HeaderActions() {
         textColor="white"
         size="md"
         transparent
+      />
+      <IconButton
+        icon={<Share2 className="w-5 h-5" />}
+        label="공유"
+        onClick={() => setIsShareOpen(true)}
+        color="gray500"
+        textColor="white"
+        size="md"
+        transparent
+      />
+      {/* 공유 모달 */}
+      <ShareQR
+        url={projectUrl}
+        isOpen={isShareOpen}
+        onClose={() => setIsShareOpen(false)}
       />
     </div>
   );
