@@ -9,6 +9,7 @@ import { useLanguageStore } from "@/stores/useLanguageStore";
 import Tabbar from "@/components/editor/Tabbar";
 import Toolbox from "@/components/editor/Toolbox/Toolbox";
 import { PanelType } from "@/types/panel";
+import RightPanel from "@/components/editor/RightPanel/RightPanel";
 
 const CodeEditor = dynamic(() => import("@/components/editor/CodeEditor"), {
 	ssr: false,
@@ -61,6 +62,7 @@ export default function EditorPage() {
 								<TerminalView terminalRef={terminalRef} />
 							</div>
 						</main>
+						<RightPanel activePanel={activePanel} />
 						<Toolbox activePanel={activePanel} onSelect={setActivePanel} />
 					</div>
 				</div>
