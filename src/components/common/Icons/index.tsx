@@ -171,3 +171,16 @@ export const QrcodeIcon = ({ className }: IconProps) => {
 		/>
 	);
 };
+
+export const QnaIcon = ({ className }: IconProps) => {
+	return (
+		<Image
+			src="/icons/qna.svg"
+			alt="닫기"
+			width={40}
+			height={40}
+			className={className}
+			priority
+		/>
+	);
+};
