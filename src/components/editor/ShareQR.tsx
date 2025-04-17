@@ -28,12 +28,17 @@ export default function ShareQR({ url, isOpen, onClose }: ShareQRProps) {
     }
   }, [isOpen, url]);
 
+  // 프로젝트 url 복사
   const handleCopy = async () => {
     await navigator.clipboard.writeText(url);
     alert("링크가 복사되었습니다!");
   };
 
+  // QR 다운로드
   const handleDownload = () => {
+    const confirmed = window.confirm("QR 코드를 저장하시겠습니까?");
+    if (!confirmed) return;
+
     qrCodeInstance.current?.download({
       name: "project-qrcode",
       extension: "png",
@@ -45,25 +50,35 @@ export default function ShareQR({ url, isOpen, onClose }: ShareQRProps) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
       <div className="bg-white p-5 rounded-lg shadow-lg relative w-[300px]">
-        <button className="absolute text-black top-2 right-3 text-3xl" onClick={onClose}>
+        <button
+          className="absolute text-black top-2 right-3 text-3xl"
+          onClick={onClose}
+        >
           ×
         </button>
-        <h3 className="text-black text-lg font-semibold mt-[10px] mb-4">프로젝트 공유</h3>
+        <h3 className="text-black text-lg font-semibold mt-[10px] mb-4">
+          프로젝트 공유
+        </h3>
         <div className="flex items-center gap-2">
-        <input
-          value={url}
-          readOnly
-          className="flex-1 text-black p-2 border rounded mb-4"
-        />
-        <button
-          onClick={handleCopy}
-          className="text-blue-600 underline mb-4 text-sm"
-        >
-          <Copy className="w-5 h-5 text-gray500"/>
-        </button>
+          <input
+            value={url}
+            readOnly
+            className="flex-1 text-black p-2 border rounded mb-4"
+          />
+          <button
+            onClick={handleCopy}
+            className="text-blue-600 underline mb-4 text-sm"
+          >
+            <Copy className="w-5 h-5 text-gray500" />
+          </button>
         </div>
         <div ref={qrRef} className="flex justify-center" />
-        <button className="w-full h-[40px] mt-4 text-white bg-gray500 font-semibold p-1 rounded" onClick={handleDownload}>QR 코드 다운로드</button>
+        <button
+          className="w-full h-[40px] mt-4 text-white bg-gray500 font-semibold p-1 rounded"
+          onClick={handleDownload}
+        >
+          QR 코드 다운로드
+        </button>
       </div>
     </div>
   );
