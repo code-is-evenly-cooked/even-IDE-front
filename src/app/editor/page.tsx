@@ -52,7 +52,7 @@ export default function EditorPage() {
 				<div className="flex flex-1 flex-col">
 					<Header onRun={handleRun} />
 					<div className="flex">
-						<main className="min-h-screen flex flex-1 flex-col bg-gray700">
+						<main className="min-w-0 min-h-screen flex flex-1 flex-col bg-gray700">
 							<div>
 								<Tabbar />
 								<CodeEditor />

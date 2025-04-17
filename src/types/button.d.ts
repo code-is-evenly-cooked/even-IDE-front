@@ -30,7 +30,6 @@ interface IconButtonProps
 	label: string;
 	size?: ButtonSize;
 	color?: ButtonColor;
-	textColor?: ButtonTextColor;
 	isLoading?: boolean;
 	className?: string;
 	transparent?: boolean;
