@@ -1,5 +1,6 @@
-import { Download, Upload, Share2 } from "lucide-react";
+import { Download, Upload, Share2, Github } from "lucide-react";
 import IconButton from "@/components/common/Button/IconButton";
+import { QnaIcon } from "@/components/common/Icons";
 import { useIdeStore } from "@/stores/useIdeStore";
 import ShareQR from "./ShareQR";
 import { useState } from "react";
@@ -83,6 +84,24 @@ export default function HeaderActions() {
         url={projectUrl}
         isOpen={isShareOpen}
         onClose={() => setIsShareOpen(false)}
+      />
+      <IconButton
+        icon={<Github className="w-6 h-6" />}
+        label="Info"
+        onClick={() => alert("Github 버튼")}
+        color="gray500"
+        textColor="white"
+        size="md"
+        transparent
+      />
+      <IconButton
+        icon={<QnaIcon className="w-6 h-6" />}
+        label="Info"
+        onClick={() => alert("Info 버튼")}
+        color="gray500"
+        textColor="white"
+        size="md"
+        transparent
       />
     </div>
   );
