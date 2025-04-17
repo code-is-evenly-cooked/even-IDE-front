@@ -47,6 +47,7 @@ const IconButton = memo(
 					ref={ref}
 					type="button"
 					aria-label={label}
+					aria-pressed={isActive}
 					disabled={disabled || isLoading}
 					className={finalClassName}
 					{...props}
