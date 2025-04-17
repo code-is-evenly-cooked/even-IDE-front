@@ -114,6 +114,7 @@ export const useIdeStore = create<IdeStore>()(
       partialize: (state) => ({
         files: state.files,
         currentFileId: state.currentFileId,
+        openedFileIds: state.openedFileIds,
       }), // 저장할 상태만 선택
     }
   )
