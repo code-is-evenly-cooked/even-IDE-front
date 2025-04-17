@@ -23,7 +23,7 @@ const Toolbox = ({ onSelect, activePanel }: ToolboxProps) => {
 		];
 
 	return (
-		<aside className="flex flex-col w-9 mx-2 bg-gray900">
+		<aside className="flex flex-col w-9 mx-2 bg-gray900 flex-shrink-0">
 			{TOOLBOX_ITEMS.map(({ panel, icon, label }) => (
 				<IconButton
 					key={panel}

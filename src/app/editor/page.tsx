@@ -47,13 +47,13 @@ export default function EditorPage() {
 
 	return (
 		<div>
-			<div className="flex h-screen overflow-hidden">
+			<div className="flex h-screen">
 				<Sidebar />
-				<div className="flex flex-1 flex-col">
+				<div className="flex flex-1 flex-col min-w-0">
 					<Header onRun={handleRun} />
-					<div className="flex">
-						<main className="min-w-0 min-h-screen flex flex-1 flex-col bg-gray700">
-							<div>
+					<div className="flex min-w-0">
+						<main className="min-w-0 overflow-x-hidden flex flex-1 flex-col bg-gray700">
+							<div className="flex flex-col flex-1 min-w-0">
 								<Tabbar />
 								<CodeEditor />
 							</div>
