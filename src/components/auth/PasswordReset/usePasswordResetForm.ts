@@ -1,8 +1,10 @@
 import { passwordReset } from "@/service/auth";
 import { validateEmail } from "@/utils/validate";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 
 const useResetPasswordForm = () => {
+	const router = useRouter(); 
 	const [email, setEmail] = useState("");
 	const [emailError, setEmailError] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
@@ -43,6 +45,7 @@ const useResetPasswordForm = () => {
 			}
 		} finally {
 			setIsLoading(false);
+			router.push("update-password");
 		}
 	};
 
