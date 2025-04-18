@@ -2,9 +2,11 @@
 
 import { Editor } from "@monaco-editor/react";
 import { useIdeStore } from "@/stores/useIdeStore";
+import { useLanguageStore } from "@/stores/useLanguageStore";
 
 const CodeEditor = () => {
 	const { files, currentFileId, updateFileContent } = useIdeStore();
+    const { language } = useLanguageStore();
 
 	const currentFile = files.find((f) => f.id === currentFileId);
 
@@ -21,7 +23,7 @@ const CodeEditor = () => {
 		<div className="h-[45vh] min-h-[300px] border-t-[1px] border-t-tonedown min-w-0">
 			<Editor
 				height="100%"
-				defaultLanguage="javascript"
+				language={language.toLowerCase()}
 				value={currentFile?.content ?? ""}
 				theme="vs-dark"
 				options={{
