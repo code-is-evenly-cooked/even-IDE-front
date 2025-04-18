@@ -97,7 +97,10 @@ const useLoginForm = () => {
 
     const handleKakaoLogin = async () => {
         try {
-            const res = await signIn("kakao", {redirect: false});
+            const res = await signIn("kakao", {
+                redirect: true,
+                callbackUrl: "/editor",
+            });
 
             if (res?.error) {
                 console.error("카카오 로그인 실패", res.error);
