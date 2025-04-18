@@ -12,33 +12,44 @@ export default function LanguageDropdown() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-            setOpen(false);
-        }
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () =>  document.removeEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
-    <div ref={dropdownRef} className="flex border rounded pl-4 pr-4 py-1.5">
-      <button onClick={() => setOpen(!open)} className="flex">
-        <span className="mr-8">{language}</span>
+    <div
+      ref={dropdownRef}
+      className="relative w-[150px] border rounded px-4 py-1.5"
+    >
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex w-full justify-between"
+      >
+        <span className="">{language}</span>
         <div>▼</div>
       </button>
 
       {open && (
-        <ul>
+        <ul className="absolute top-0 left-0 z-10 w-[150px] mt-[42px] bg-gray900">
           {languages.map((lang) => (
             <li
-            key={lang}
-            onClick={() => {
+              key={lang}
+              onClick={() => {
                 setLanguage(lang);
                 setOpen(false);
-            }}
-            className={`px-4 py-2 hover:bg-gray500 cursor-pointer ${lang === language ? "bg-gray700 font-semibold" : ""}`}
+              }}
+              className={`px-4 py-2 hover:bg-gray500 cursor-pointer ${
+                lang === language ? "font-semibold" : ""
+              }`}
             >
-                {lang}
+              {lang}
             </li>
           ))}
         </ul>
