@@ -158,3 +158,29 @@ export const FolderIcon = ({ className }: IconProps) => {
 		/>
 	);
 };
+
+export const QrcodeIcon = ({ className }: IconProps) => {
+	return (
+		<Image
+			src="/icons/qrcode.svg"
+			alt="닫기"
+			width={40}
+			height={40}
+			className={className}
+			priority
+		/>
+	);
+};
+
+export const QnaIcon = ({ className }: IconProps) => {
+	return (
+		<Image
+			src="/icons/qna.svg"
+			alt="닫기"
+			width={40}
+			height={40}
+			className={className}
+			priority
+		/>
+	);
+};
