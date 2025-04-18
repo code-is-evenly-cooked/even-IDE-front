@@ -37,7 +37,7 @@ export default function LanguageDropdown() {
       </button>
 
       {open && (
-        <ul className="absolute top-0 left-0 z-10 w-[150px] mt-[42px] bg-gray900">
+        <ul className="absolute top-0 left-0 z-10 w-[150px] max-h-[119px] mt-[42px] pr-1 bg-gray900 overflow-y-scroll scrollbar-thumb">
           {languages.map((lang) => (
             <li
               key={lang}
