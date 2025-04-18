@@ -7,13 +7,15 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { removeAuthCookie } from "@/lib/cookie";
 import HeaderActions from "@/components/editor/HeaderActions";
 import LanguageDropdown from "@/components/editor/LanguageDropdown";
+import { useLanguageStore } from "@/stores/useLanguageStore";
 
 type HeaderProps = {
-  onRun: (code: string) => void;
+  onRun: (code: string, language: string) => void;
 };
 
 const Header = ({ onRun }: HeaderProps) => {
   const { isLoggedIn, clearAuth } = useAuthStore();
+  const { language } = useLanguageStore();
 
   const handleLogout = () => {
     removeAuthCookie();
@@ -31,7 +33,7 @@ const Header = ({ onRun }: HeaderProps) => {
         <LanguageDropdown />
 
         {/* 실행 버튼 */}
-        <RunButton onRun={onRun} />
+        <RunButton onRun={(code) => onRun(code, language)} />
         <HeaderActions />
       </div>
       <div className="flex">

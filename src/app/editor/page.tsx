@@ -19,15 +19,16 @@ const TerminalView = dynamic(() => import("@/components/editor/Terminal"), {
 
 export default function EditorPage() {
 	const terminalRef = useRef<XtermType | null>(null);
-	const language = useLanguageStore((state) => state.language);
+	const getLanguage = useLanguageStore((state) => state.language);
 	const [activePanel, setActivePanel] = useState<PanelType | null>(null);
 
 	const handleRun = (code: string) => {
+    const language = getLanguage;
 		if (!terminalRef.current) return;
 
 		terminalRef.current.clear();
 
-		if (language === "JavaScript") {
+		if (language.toLowerCase() === "javascript") {
 			try {
 				const result = eval(code); // 코드 실행
 
