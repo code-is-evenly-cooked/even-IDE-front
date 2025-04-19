@@ -125,8 +125,8 @@ export const CloseIcon = ({ className }: IconProps) => {
 		<Image
 			src="/icons/close2.svg"
 			alt="닫기"
-			width={40}
-			height={40}
+			width={36}
+			height={36}
 			className={className}
 			priority
 		/>
@@ -153,6 +153,19 @@ export const FolderIcon = ({ className }: IconProps) => {
 			alt="닫기"
 			width={40}
 			height={40}
+			className={className}
+			priority
+		/>
+	);
+};
+
+export const ChatTransferIcon = ({ className }: IconProps) => {
+	return (
+		<Image
+			src="/icons/chatTransfer.svg"
+			alt="닫기"
+			width={36}
+			height={36}
 			className={className}
 			priority
 		/>
