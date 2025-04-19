@@ -1,14 +1,15 @@
-import { PanelType } from "@/types/panel";
-import React from "react";
+"use client";
 
-interface RightPanelProps {
-	activePanel: PanelType | null;
-}
+import ChatModal from "./Chat/ChatModal";
+import ChatPanel from "./Chat/ChatPanel";
 
-const RightPanel = ({ activePanel }: RightPanelProps) => {
-	if (!activePanel) return null; // activePanel 없으면 랜더링 X
-
-	return <div className="w-[300px] bg-gray500/30"></div>;
+const RightPanel = () => {
+	return (
+		<>
+			<ChatPanel />
+			<ChatModal />
+		</>
+	);
 };
 
 export default RightPanel;
