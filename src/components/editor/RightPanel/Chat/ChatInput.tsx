@@ -1,10 +1,17 @@
 import React, { useRef, useState } from "react";
 import SendButton from "./SendButton";
+import useChatSocket from "@/hooks/useChatSocket";
 
-const ChatInput = () => {
+interface ChatInputProps {
+	projectId: string;
+}
+
+const ChatInput = ({ projectId }: ChatInputProps) => {
 	const textAreaRef = useRef<HTMLTextAreaElement>(null);
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const [message, setMessage] = useState("");
+
+	const { sendMessage } = useChatSocket(Number(1));
 
 	const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		const value = e.target.value;
@@ -14,8 +21,10 @@ const ChatInput = () => {
 	};
 
 	const handleSend = () => {
-		if (!message.trim()) return;
-		console.log("전송하는 메세지", message);
+		const trimmedMessage = message.trim();
+		if (!trimmedMessage) return;
+
+		sendMessage(trimmedMessage);
 		setMessage("");
 
 		requestAnimationFrame(() => {

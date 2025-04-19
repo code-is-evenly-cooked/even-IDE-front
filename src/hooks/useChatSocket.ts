@@ -90,6 +90,8 @@ const useChatSocket = (projectId: number) => {
 			content,
 		};
 
+		console.log("메시지 전송:", payload);
+
 		client.publish({
 			destination: `app/chat.send`,
 			body: JSON.stringify(payload),
