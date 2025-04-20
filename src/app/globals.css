@@ -16,3 +16,11 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
 	display: none;
 }
+
+.memo-icon {
+	background: url('/icons/memo-icon.svg') center center no-repeat;
+	background-size: contain;
+	width: 16px;
+	height: 16px;
+	margin-left: 20px;
+}
