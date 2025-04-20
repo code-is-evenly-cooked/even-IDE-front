@@ -10,6 +10,7 @@ const ChatInput = ({ projectId }: ChatInputProps) => {
 	const textAreaRef = useRef<HTMLTextAreaElement>(null);
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const [message, setMessage] = useState("");
+	const [isComposing, setIsComposing] = useState(false);
 
 	const { sendMessage } = useChatSocket(Number(1));
 
@@ -23,7 +24,7 @@ const ChatInput = ({ projectId }: ChatInputProps) => {
 	const handleSend = () => {
 		const trimmedMessage = message.trim();
 		if (!trimmedMessage) return;
-
+		console.log("보낸 메세지", trimmedMessage);
 		sendMessage(trimmedMessage);
 		setMessage("");
 
@@ -46,12 +47,15 @@ const ChatInput = ({ projectId }: ChatInputProps) => {
 				"
 				placeholder="내용을 입력하세요"
 				onKeyDown={(e) => {
-					if (e.key === "Enter" && !e.shiftKey) {
+					if (e.key === "Enter" && !e.shiftKey && !isComposing) {
 						e.preventDefault();
 						handleSend();
 					}
 				}}
+				onChange={(e) => setMessage(e.target.value)}
 				onInput={handleInput}
+				onCompositionStart={() => setIsComposing(true)}
+				onCompositionEnd={() => setIsComposing(false)}
 				value={message}
 			/>
 			<SendButton disabled={message.trim() === ""} onClick={handleSend} />
