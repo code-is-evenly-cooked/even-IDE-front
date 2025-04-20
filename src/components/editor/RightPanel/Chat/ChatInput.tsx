@@ -2,11 +2,11 @@ import React, { useRef, useState } from "react";
 import SendButton from "./SendButton";
 import useChatSocket from "@/hooks/useChatSocket";
 
-interface ChatInputProps {
-	projectId: string;
-}
+// interface ChatInputProps {
+// 	projectId: string;
+// }
 
-const ChatInput = ({ projectId }: ChatInputProps) => {
+const ChatInput = () => {
 	const textAreaRef = useRef<HTMLTextAreaElement>(null);
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const [message, setMessage] = useState("");
