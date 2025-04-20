@@ -10,6 +10,7 @@ import { useEffect, useRef } from "react";
 
 const useChatSocket = (projectId: number) => {
 	const clientRef = useRef<Client | null>(null);
+	const sendMessagePathRef = useRef<string | null>(null);
 	const { setSenderInfo, appendMessage, sender, nickname } = useChatStore();
 
 	useEffect(() => {
@@ -18,7 +19,7 @@ const useChatSocket = (projectId: number) => {
 		return () => {
 			clientRef.current?.deactivate();
 		};
-	}, [projectId]);
+	}, []);
 
 	const connect = async () => {
 		try {
@@ -33,9 +34,10 @@ const useChatSocket = (projectId: number) => {
 
 			const data: ChatJoinResponse = await res.json();
 			const { sender, nickname, chat } = data;
-			const { subscribeTopic, sendJoinPath } = chat; // sendMessagePath
+			const { subscribeTopic, sendJoinPath, sendMessagePath } = chat;
 
 			setSenderInfo(sender, nickname);
+			sendMessagePathRef.current = sendMessagePath;
 
 			// WebSocket 연결
 			// const socket = new SockJS("/ws");
@@ -80,7 +82,8 @@ const useChatSocket = (projectId: number) => {
 
 	const sendMessage = (content: string) => {
 		const client = clientRef.current;
-		if (!client || !client.connected) return;
+		const destination = sendMessagePathRef.current;
+		if (!client || !client.connected || !destination) return;
 
 		const payload: ChatSendPayload = {
 			type: "MESSAGE",
