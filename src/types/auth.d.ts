@@ -1,3 +1,5 @@
+export type AuthProvider = "local" | "google" | "kakao";
+
 interface SignupCredentials {
 	email: string;
 	password: string;
