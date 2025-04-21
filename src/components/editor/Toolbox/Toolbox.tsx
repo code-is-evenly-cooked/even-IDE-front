@@ -2,10 +2,16 @@ import React, { ReactNode } from "react";
 import { MessageCircleCodeIcon } from "lucide-react";
 import IconButton from "@/components/common/Button/IconButton";
 import { PanelType } from "@/types/panel";
-import { useChatStore } from "@/stores/useChatStore";
 
-const Toolbox = () => {
-	const { isVisible, toggleVisibility } = useChatStore();
+interface ToolboxProps {
+	activePanel: PanelType | null;
+	onSelect: (PanelType: PanelType | null) => void;
+}
+
+const Toolbox = ({ onSelect, activePanel }: ToolboxProps) => {
+	const handleClick = (panel: PanelType) => {
+		onSelect(activePanel === panel ? null : panel);
+	};
 
 	const TOOLBOX_ITEMS: { panel: PanelType; icon: ReactNode; label: string }[] =
 		[
@@ -17,15 +23,15 @@ const Toolbox = () => {
 		];
 
 	return (
-		<aside className="flex flex-col w-9 mx-1 bg-gray900 shrink-0">
+		<aside className="flex flex-col w-9 mx-2 bg-gray900 flex-shrink-0">
 			{TOOLBOX_ITEMS.map(({ panel, icon, label }) => (
 				<IconButton
 					key={panel}
 					icon={icon}
-					label={isVisible ? `${label} 닫기` : `${label} 열기`}
+					label={activePanel === panel ? `${label} 닫기` : `${label} 열기`}
 					color="gray700"
-					isActive={isVisible}
-					onClick={toggleVisibility}
+					isActive={activePanel === panel}
+					onClick={() => handleClick(panel)}
 				/>
 			))}
 		</aside>

@@ -2,14 +2,13 @@
 
 import Sidebar from "@/components/layout/Sidebar/Sidebar";
 import Header from "@/components/layout/Header/Header";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import type { Terminal as XtermType } from "xterm";
 import dynamic from "next/dynamic";
 import { useLanguageStore } from "@/stores/useLanguageStore";
 import Tabbar from "@/components/editor/Tabbar";
 import Toolbox from "@/components/editor/Toolbox/Toolbox";
-import RightPanel from "@/components/editor/RightPanel/RightPanel";
-import { ChatProvider } from "@/providers/ChatProvider";
+import { PanelType } from "@/types/panel";
 
 const CodeEditor = dynamic(() => import("@/components/editor/CodeEditor"), {
 	ssr: false,
@@ -21,6 +20,7 @@ const TerminalView = dynamic(() => import("@/components/editor/Terminal"), {
 export default function EditorPage() {
 	const terminalRef = useRef<XtermType | null>(null);
 	const language = useLanguageStore((state) => state.language);
+	const [activePanel, setActivePanel] = useState<PanelType | null>(null);
 
 	const handleRun = (code: string) => {
 		if (!terminalRef.current) return;
@@ -61,11 +61,7 @@ export default function EditorPage() {
 								<TerminalView terminalRef={terminalRef} />
 							</div>
 						</main>
-						{/* TODO: project id 넘기는 것 필요 */}
-						<ChatProvider projectId={1}>
-							<RightPanel />
-							<Toolbox />
-						</ChatProvider>
+						<Toolbox activePanel={activePanel} onSelect={setActivePanel} />
 					</div>
 				</div>
 			</div>
