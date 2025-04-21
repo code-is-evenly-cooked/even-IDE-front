@@ -1,19 +1,23 @@
-import { Download, Upload } from "lucide-react";
+import { Download, Upload, Share2, Github } from "lucide-react";
 import IconButton from "@/components/common/Button/IconButton";
+import { QnaIcon } from "@/components/common/Icons";
 import { useIdeStore } from "@/stores/useIdeStore";
+import ShareQR from "./ShareQR";
+import { useState } from "react";
 
 export default function HeaderActions() {
-	// 확장자 별 MIME 타입 (내보내기에서 사용)
-	const getMimeType = (filename: string): string => {
-		if (filename.endsWith(".html")) return "text/html";
-		if (filename.endsWith(".js")) return "application/javascript";
-		if (filename.endsWith(".ts")) return "application/typescript";
-		if (filename.endsWith(".java")) return "text/x-java-source"; // 또는 text/plain
-		if (filename.endsWith(".py")) return "text/x-python"; // 또는 text/plain
-		if (filename.endsWith(".json")) return "application/json";
-		if (filename.endsWith(".css")) return "text/css";
-		return "text/plain"; // 기본값
-	};
+  const [isShareOpen, setIsShareOpen] = useState(false);
+  // 확장자 별 MIME 타입 (내보내기에서 사용)
+  const getMimeType = (filename: string): string => {
+    if (filename.endsWith(".html")) return "text/html";
+    if (filename.endsWith(".js")) return "application/javascript";
+    if (filename.endsWith(".ts")) return "application/typescript";
+    if (filename.endsWith(".java")) return "text/x-java-source"; // 또는 text/plain
+    if (filename.endsWith(".py")) return "text/x-python"; // 또는 text/plain
+    if (filename.endsWith(".json")) return "application/json";
+    if (filename.endsWith(".css")) return "text/css";
+    return "text/plain"; // 기본값
+  };
 
 	// 내보내기 기능
 	const handleExport = () => {
@@ -43,25 +47,57 @@ export default function HeaderActions() {
 		URL.revokeObjectURL(url);
 	};
 
-	return (
-		<div className="flex gap-1 px-3">
-			<IconButton
-				icon={<Download className="w-5 h-5" />}
-				label="내보내기"
-				onClick={handleExport}
-				color="gray500"
-				size="md"
-				className="hover:bg-slate-400"
-				transparent
-			/>
-			<IconButton
-				icon={<Upload className="w-5 h-5" />}
-				label="가져오기"
-				onClick={() => alert("가져오기 버튼")}
-				color="gray500"
-				size="md"
-				transparent
-			/>
-		</div>
-	);
+  const projectUrl = typeof window !== "undefined" ? window.location.href : "";
+
+  return (
+    <div className="flex gap-1 px-3">
+      <IconButton
+        icon={<Download className="w-5 h-5" />}
+        label="내보내기"
+        onClick={handleExport}
+        color="gray500"
+        size="md"
+        className="hover:bg-slate-400"
+        transparent
+      />
+      <IconButton
+        icon={<Upload className="w-5 h-5" />}
+        label="가져오기"
+        onClick={() => alert("가져오기 버튼")}
+        color="gray500"
+        size="md"
+        transparent
+      />
+      <IconButton
+        icon={<Share2 className="w-5 h-5" />}
+        label="공유"
+        onClick={() => setIsShareOpen(true)}
+        color="gray500"
+        size="md"
+        transparent
+      />
+      {/* 공유 모달 */}
+      <ShareQR
+        url={projectUrl}
+        isOpen={isShareOpen}
+        onClose={() => setIsShareOpen(false)}
+      />
+      <IconButton
+        icon={<Github className="w-6 h-6" />}
+        label="Info"
+        onClick={() => alert("Github 버튼")}
+        color="gray500"
+        size="md"
+        transparent
+      />
+      <IconButton
+        icon={<QnaIcon className="w-6 h-6" />}
+        label="Info"
+        onClick={() => alert("Info 버튼")}
+        color="gray500"
+        size="md"
+        transparent
+      />
+    </div>
+  );
 }

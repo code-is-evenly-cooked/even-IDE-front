@@ -125,8 +125,8 @@ export const CloseIcon = ({ className }: IconProps) => {
 		<Image
 			src="/icons/close2.svg"
 			alt="닫기"
-			width={36}
-			height={36}
+			width={40}
+			height={40}
 			className={className}
 			priority
 		/>
@@ -150,6 +150,32 @@ export const FolderIcon = ({ className }: IconProps) => {
 	return (
 		<Image
 			src="/icons/folder.svg"
+			alt="닫기"
+			width={40}
+			height={40}
+			className={className}
+			priority
+		/>
+	);
+};
+
+export const QrcodeIcon = ({ className }: IconProps) => {
+	return (
+		<Image
+			src="/icons/qrcode.svg"
+			alt="닫기"
+			width={40}
+			height={40}
+			className={className}
+			priority
+		/>
+	);
+};
+
+export const QnaIcon = ({ className }: IconProps) => {
+	return (
+		<Image
+			src="/icons/qna.svg"
 			alt="닫기"
 			width={40}
 			height={40}
