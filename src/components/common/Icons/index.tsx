@@ -3,8 +3,7 @@ import Image from "next/image";
 interface IconProps {
     className?: string;
 }
-
-export const EyeIcon = ({className}: IconProps) => {
+export const EyeIcon = ({ className }: IconProps) => {
     return (
         <Image
             src="/icons/eye.svg"
@@ -17,7 +16,7 @@ export const EyeIcon = ({className}: IconProps) => {
     );
 };
 
-export const EyeCloseIcon = ({className}: IconProps) => {
+export const EyeCloseIcon = ({ className }: IconProps) => {
     return (
         <Image
             src="/icons/eyeClose.svg"
@@ -30,7 +29,7 @@ export const EyeCloseIcon = ({className}: IconProps) => {
     );
 };
 
-export const GoogleIcon = ({className}: IconProps) => {
+export const GoogleIcon = ({ className }: IconProps) => {
     return (
         <Image
             src="/icons/google.svg"
@@ -43,7 +42,7 @@ export const GoogleIcon = ({className}: IconProps) => {
     );
 };
 
-export const KakaoIcon = ({className}: IconProps) => {
+export const KakaoIcon = ({ className }: IconProps) => {
     return (
         <Image
             src="/icons/kakao.svg"
@@ -56,7 +55,7 @@ export const KakaoIcon = ({className}: IconProps) => {
     );
 };
 
-export const EvenIcon = ({className}: IconProps) => {
+export const EvenIcon = ({ className }: IconProps) => {
     return (
         <Image
             src="/icons/even.svg"
@@ -69,7 +68,7 @@ export const EvenIcon = ({className}: IconProps) => {
     );
 };
 
-export const EvenBigIcon = ({className}: IconProps) => {
+export const EvenBigIcon = ({ className }: IconProps) => {
     return (
         <Image
             src="/icons/evenBig.svg"
@@ -82,7 +81,7 @@ export const EvenBigIcon = ({className}: IconProps) => {
     );
 };
 
-export const FileNewIcon = ({className}: IconProps) => {
+export const FileNewIcon = ({ className }: IconProps) => {
     return (
         <Image
             src="/icons/fileNew.svg"
@@ -95,7 +94,7 @@ export const FileNewIcon = ({className}: IconProps) => {
     );
 };
 
-export const FolderNewIcon = ({className}: IconProps) => {
+export const FolderNewIcon = ({ className }: IconProps) => {
     return (
         <Image
             src="/icons/folderNew.svg"
@@ -108,7 +107,7 @@ export const FolderNewIcon = ({className}: IconProps) => {
     );
 };
 
-export const BackIcon = ({className}: IconProps) => {
+export const BackIcon = ({ className }: IconProps) => {
     return (
         <Image
             src="/icons/back.svg"
@@ -121,7 +120,7 @@ export const BackIcon = ({className}: IconProps) => {
     );
 };
 
-export const CloseIcon = ({className}: IconProps) => {
+export const CloseIcon = ({ className }: IconProps) => {
     return (
         <Image
             src="/icons/close2.svg"
@@ -134,7 +133,7 @@ export const CloseIcon = ({className}: IconProps) => {
     );
 };
 
-export const FileIcon = ({className}: IconProps) => {
+export const FileIcon = ({ className }: IconProps) => {
     return (
         <Image
             src="/icons/file.svg"
@@ -148,42 +147,55 @@ export const FileIcon = ({className}: IconProps) => {
 };
 
 export const FolderIcon = ({ className }: IconProps) => {
-	return (
-		<Image
-			src="/icons/folder.svg"
-			alt="닫기"
-			width={40}
-			height={40}
-			className={className}
-			priority
-		/>
-	);
+    return (
+        <Image
+            src="/icons/folder.svg"
+            alt="닫기"
+            width={40}
+            height={40}
+            className={className}
+            priority
+        />
+    );
 };
 
 export const QrcodeIcon = ({ className }: IconProps) => {
-	return (
-		<Image
-			src="/icons/qrcode.svg"
-			alt="닫기"
-			width={40}
-			height={40}
-			className={className}
-			priority
-		/>
-	);
+    return (
+        <Image
+            src="/icons/qrcode.svg"
+            alt="닫기"
+            width={40}
+            height={40}
+            className={className}
+            priority
+        />
+    );
 };
 
 export const QnaIcon = ({ className }: IconProps) => {
-	return (
-		<Image
-			src="/icons/qna.svg"
-			alt="닫기"
-			width={40}
-			height={40}
-			className={className}
-			priority
-		/>
-	);
+    return (
+        <Image
+            src="/icons/qna.svg"
+            alt="닫기"
+            width={40}
+            height={40}
+            className={className}
+            priority
+        />
+    );
+};
+
+export const ChatTransferIcon = ({ className }: IconProps) => {
+    return (
+        <Image
+            src="/icons/chatTransfer.svg"
+            alt="닫기"
+            width={36}
+            height={36}
+            className={className}
+            priority
+        />
+    );
 };
 
 export const MemoIcon = ({className}: IconProps) => {
