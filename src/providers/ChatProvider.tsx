@@ -1,17 +1,31 @@
+"use client";
+
 import { ChatMessage, useChatStore } from "@/stores/useChatStore";
 import {
 	ChatJoinPayload,
 	ChatJoinResponse,
 	ChatSendPayload,
 } from "@/types/chat";
-import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
-import { useEffect, useRef } from "react";
+import { createContext, useEffect, useRef } from "react";
+import SockJS from "sockjs-client";
 
-const useChatSocket = (projectId: number) => {
+interface ChatContextValue {
+	sendMessage: (content: string) => void;
+}
+
+export const ChatContext = createContext<ChatContextValue | null>(null);
+
+interface ChatProviderProps {
+	children: React.ReactNode;
+	projectId: number;
+}
+
+export const ChatProvider = ({ children, projectId }: ChatProviderProps) => {
 	const clientRef = useRef<Client | null>(null);
 	const sendMessagePathRef = useRef<string | null>(null);
-	const { setSenderInfo, appendMessage, sender, nickname } = useChatStore();
+	const { setSenderInfo, appendMessage, setMessages, sender, nickname } =
+		useChatStore();
 
 	useEffect(() => {
 		connect();
@@ -19,7 +33,7 @@ const useChatSocket = (projectId: number) => {
 		return () => {
 			clientRef.current?.deactivate();
 		};
-	}, []);
+	}, [projectId]);
 
 	const connect = async () => {
 		try {
@@ -39,8 +53,14 @@ const useChatSocket = (projectId: number) => {
 			setSenderInfo(sender, nickname);
 			sendMessagePathRef.current = sendMessagePath;
 
+			// History API
+			const historyRes = await fetch(
+				`/api/chat/history?projectId=${projectId}`
+			);
+			const historyData: ChatMessage[] = await historyRes.json();
+			setMessages(historyData);
+
 			// WebSocket 연결
-			// const socket = new SockJS("/ws");
 			const socket = new SockJS(`${process.env.NEXT_PUBLIC_API_BASE_URL!}/ws`);
 			const client = new Client({
 				webSocketFactory: () => socket,
@@ -101,7 +121,9 @@ const useChatSocket = (projectId: number) => {
 		});
 	};
 
-	return { sendMessage };
+	return (
+		<ChatContext.Provider value={{ sendMessage }}>
+			{children}
+		</ChatContext.Provider>
+	);
 };
-
-export default useChatSocket;

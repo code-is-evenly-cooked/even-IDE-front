@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import SendButton from "./SendButton";
-import useChatSocket from "@/hooks/useChatSocket";
+import { useChat } from "@/hooks/useChat";
 
 // interface ChatInputProps {
 // 	projectId: string;
@@ -12,7 +12,7 @@ const ChatInput = () => {
 	const [message, setMessage] = useState("");
 	const [isComposing, setIsComposing] = useState(false);
 
-	const { sendMessage } = useChatSocket(Number(1));
+	const { sendMessage } = useChat();
 
 	const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		const value = e.target.value;

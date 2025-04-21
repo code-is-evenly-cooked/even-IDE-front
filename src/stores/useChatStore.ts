@@ -21,6 +21,7 @@ interface ChatState {
 	// 메세지 상태
 	messages: ChatMessage[];
 	appendMessage: (message: ChatMessage) => void;
+	setMessages: (messages: ChatMessage[]) => void;
 
 	// 유저 정보
 	sender: string;
@@ -37,6 +38,7 @@ export const useChatStore = create<ChatState>((set) => ({
 	messages: [],
 	appendMessage: (message) =>
 		set((state) => ({ messages: [...state.messages, message] })),
+	setMessages: (messages) => set(() => ({ messages })),
 
 	sender: "",
 	nickname: "",
