@@ -21,11 +21,18 @@ export default function Sidebar() {
 
   const [isAddingProject, setIsAddingProject] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
+    null
+  );
 
   // 파일 추가
-  const handleAddFile = (projectId: string) => {
+  const handleAddFile = () => {
+    if (!selectedProjectId) {
+      alert("먼저 프로젝트를 선택해주세요.");
+      return;
+    }
     const id = Date.now().toString();
-    addFile("", projectId, id); 
+    addFile("", selectedProjectId, id);
     setEditingFileId(id);
   };
 
@@ -122,7 +129,7 @@ export default function Sidebar() {
 
       {/* 파일 탐색기 */}
       <div className="flex-1 overflow-y-auto">
-        <FileExplorer />
+        <FileExplorer onProjectClick={setSelectedProjectId} selectedProjectId={selectedProjectId} />
       </div>
     </aside>
   );
