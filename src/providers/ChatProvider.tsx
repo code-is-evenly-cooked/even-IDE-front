@@ -27,13 +27,14 @@ export const ChatProvider = ({ children, projectId }: ChatProviderProps) => {
 	const { setSenderInfo, appendMessage, setMessages, sender, nickname } =
 		useChatStore();
 
+	// TODO: Dependency 추가 필요(projectId)
 	useEffect(() => {
 		connect();
 
 		return () => {
 			clientRef.current?.deactivate();
 		};
-	}, [projectId]);
+	});
 
 	const connect = async () => {
 		try {
