@@ -184,3 +184,16 @@ export const QnaIcon = ({ className }: IconProps) => {
 		/>
 	);
 };
+
+export const ChatTransferIcon = ({ className }: IconProps) => {
+	return (
+		<Image
+			src="/icons/chatTransfer.svg"
+			alt="닫기"
+			width={36}
+			height={36}
+			className={className}
+			priority
+		/>
+	);
+};
