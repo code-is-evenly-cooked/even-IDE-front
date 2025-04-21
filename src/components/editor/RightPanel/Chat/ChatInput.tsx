@@ -41,7 +41,7 @@ const ChatInput = () => {
 			<textarea
 				rows={1}
 				className="
-				w-full px-3 py-2 text-gray200 text-body-2 font-medium scrollbar-hide
+				w-full px-3 py-2 text-white text-body-2 font-medium scrollbar-hide
 				rounded-2xl resize-none placeholder:text-gray500 bg-gray900
 				focus:border-violet600 focus:shadow-violetGlow focus:outline-none focus:ring-0
 				"
