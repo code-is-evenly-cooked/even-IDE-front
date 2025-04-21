@@ -27,3 +27,11 @@ body {
 .scrollbar-thumb::-webkit-scrollbar-track {
   background: transparent;
 }
+
+.memo-icon {
+	background: url('/icons/memo-icon.svg') center center no-repeat;
+	background-size: contain;
+	width: 16px;
+	height: 16px;
+	margin-left: 12px;
+}
