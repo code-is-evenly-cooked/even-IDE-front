@@ -25,7 +25,7 @@ export const createProject = async (
   const data = await res.json();
 
   return {
-    id: data.shareUUID,
+    id: data.sharedUUID,
     name: data.projectName,
   };
 };
