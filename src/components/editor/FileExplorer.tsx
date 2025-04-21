@@ -10,7 +10,10 @@ interface FileExplorerProps {
   selectedProjectId: string | null;
 }
 
-export default function FileExplorer({ onProjectClick, selectedProjectId }: FileExplorerProps) {
+export default function FileExplorer({
+  onProjectClick,
+  selectedProjectId,
+}: FileExplorerProps) {
   const {
     files,
     currentFileId,
@@ -33,18 +36,21 @@ export default function FileExplorer({ onProjectClick, selectedProjectId }: File
         </div>
       </div>
 
-            <ul className="space-y-1">
+      <ul className="space-y-1">
         {projects.map((project) => (
           <li key={project.id}>
             {/* 프로젝트 클릭 */}
             <div
               onClick={() => onProjectClick(project.id)}
               className={clsx(
-                "px-4 py-2 cursor-pointer",
-                selectedProjectId === project.id ? "bg-gray500 font-bold" : "hover:bg-gray700 text-white"
+                "flex text-sm px-3 py-2 cursor-pointer",
+                selectedProjectId === project.id
+                  ? "bg-gray500 font-bold"
+                  : "hover:bg-gray700 text-white"
               )}
             >
-              📁 {project.name}
+              <FolderIcon className="w-5 h-5" />
+              <span className="ml-3">{project.name}</span>
             </div>
 
             {/* 하위 파일들 */}
@@ -54,7 +60,9 @@ export default function FileExplorer({ onProjectClick, selectedProjectId }: File
                 .map((file) =>
                   editingFileId === file.id ? (
                     <li key={file.id} className="px-8 py-2">
-                      <div className="text-xs text-gray200 mb-1 ml-1">이름 입력</div>
+                      <div className="text-xs text-gray200 mb-1 ml-1">
+                        이름 입력
+                      </div>
                       <input
                         autoFocus
                         type="text"
