@@ -60,8 +60,9 @@ const useLoginForm = () => {
                 email: formState.email,
                 password: formState.password,
             });
+            const { userId } = response;
             saveAuthCookie(response.accessToken);
-            useAuthStore.getState().setAuth(response.accessToken, "local");
+            useAuthStore.getState().setAuth(response.accessToken, "local", userId);
             router.replace("/editor");
         } catch (err) {
             if (err instanceof Error) {

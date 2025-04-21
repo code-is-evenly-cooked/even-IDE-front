@@ -18,6 +18,7 @@ interface AuthCredentials {
 interface AuthResponse {
 	accessToken: string;
 	refreshToken: string;
+	userId: number;
 }
 
 export interface DecodedToken {

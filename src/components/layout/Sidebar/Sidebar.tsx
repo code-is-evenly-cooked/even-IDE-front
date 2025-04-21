@@ -50,6 +50,10 @@ export default function Sidebar() {
     }
 
     const token = useAuthStore.getState().accessToken;
+    const ownerId = useAuthStore.getState().userId;
+    console.log("📦 요청 전 확인:");
+console.log("token:", token);
+console.log("ownerId:", ownerId);
     if (!token) {
       console.error("로그인 토큰이 없습니다.");
       alert("로그인이 필요합니다.");
@@ -57,8 +61,8 @@ export default function Sidebar() {
     }
 
     try {
-      const project = await createProject(trimmed, token);
-      addProject(project); // zustand에 저장
+      const project = await createProject(newProjectName, token, Number(ownerId));
+      addProject(project);
     } catch (err) {
       console.error("프로젝트 생성 실패", err);
     }
