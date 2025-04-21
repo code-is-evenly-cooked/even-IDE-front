@@ -18,14 +18,15 @@ export const ChatContext = createContext<ChatContextValue | null>(null);
 
 interface ChatProviderProps {
 	children: React.ReactNode;
-	projectId: number;
 }
 
-export const ChatProvider = ({ children, projectId }: ChatProviderProps) => {
+export const ChatProvider = ({ children }: ChatProviderProps) => {
 	const clientRef = useRef<Client | null>(null);
 	const sendMessagePathRef = useRef<string | null>(null);
 	const { setSenderInfo, appendMessage, setMessages, sender, nickname } =
 		useChatStore();
+
+	const projectId = 1;
 
 	useEffect(() => {
 		connect();
