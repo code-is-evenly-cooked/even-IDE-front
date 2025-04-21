@@ -9,6 +9,7 @@ import { useLanguageStore } from "@/stores/useLanguageStore";
 import Tabbar from "@/components/editor/Tabbar";
 import Toolbox from "@/components/editor/Toolbox/Toolbox";
 import RightPanel from "@/components/editor/RightPanel/RightPanel";
+import { ChatProvider } from "@/providers/ChatProvider";
 
 const CodeEditor = dynamic(() => import("@/components/editor/CodeEditor"), {
 	ssr: false,
@@ -60,8 +61,10 @@ export default function EditorPage() {
 								<TerminalView terminalRef={terminalRef} />
 							</div>
 						</main>
-						<RightPanel />
-						<Toolbox />
+						<ChatProvider projectId={1}>
+							<RightPanel />
+							<Toolbox />
+						</ChatProvider>
 					</div>
 				</div>
 			</div>
