@@ -1,20 +1,19 @@
 import { create } from "zustand";
-import { nanoid } from "nanoid";
 
 export type Project = {
-  id: string;
+  id: string;  // shareUUID
   name: string;
 };
 
 type ProjectState = {
   projects: Project[];
-  addProject: (name: string) => void;
+  addProject: (project: Project) => void;
 };
 
 export const useProjectStore = create<ProjectState>((set) => ({
   projects: [],
-  addProject: (name: string) =>
+  addProject: (project) =>
     set((state) => ({
-      projects: [...state.projects, { id: nanoid(), name }],
+      projects: [...state.projects, project],
     })),
 }));
