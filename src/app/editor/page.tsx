@@ -2,13 +2,14 @@
 
 import Sidebar from "@/components/layout/Sidebar/Sidebar";
 import Header from "@/components/layout/Header/Header";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import type { Terminal as XtermType } from "xterm";
 import dynamic from "next/dynamic";
 import { useLanguageStore } from "@/stores/useLanguageStore";
 import Tabbar from "@/components/editor/Tabbar";
 import Toolbox from "@/components/editor/Toolbox/Toolbox";
 import RightPanel from "@/components/editor/RightPanel/RightPanel";
+import { useProjectStore } from "@/stores/useProjectStore";
 
 const CodeEditor = dynamic(() => import("@/components/editor/CodeEditor"), {
 	ssr: false,
@@ -20,6 +21,7 @@ const TerminalView = dynamic(() => import("@/components/editor/Terminal"), {
 export default function EditorPage() {
 	const terminalRef = useRef<XtermType | null>(null);
 	const language = useLanguageStore((state) => state.language);
+	const setProjectId = useProjectStore((state) => state.setProjectId);
 
 	const handleRun = (code: string) => {
 		if (!terminalRef.current) return;
@@ -43,6 +45,10 @@ export default function EditorPage() {
 			terminalRef.current.write(`\r\n[아직 지원되지 않는 언어입니다]\r\n`);
 		}
 	};
+
+	useEffect(() => {
+		setProjectId(1); // 실제 프로젝트에선 동적 ID로 변경 필요
+	}, [setProjectId]);
 
 	return (
 		<div>

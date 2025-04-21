@@ -1,6 +1,7 @@
 "use client";
 
 import { ChatMessage, useChatStore } from "@/stores/useChatStore";
+import { useProjectStore } from "@/stores/useProjectStore";
 import {
 	ChatJoinPayload,
 	ChatJoinResponse,
@@ -26,15 +27,7 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
 	const { setSenderInfo, appendMessage, setMessages, sender, nickname } =
 		useChatStore();
 
-	const projectId = 1;
-
-	useEffect(() => {
-		connect();
-
-		return () => {
-			clientRef.current?.deactivate();
-		};
-	}, [projectId]);
+	const projectId = useProjectStore((state) => state.projectId);
 
 	const connect = async () => {
 		try {
@@ -82,7 +75,7 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
 				// 입장 메세지 전송
 				const joinPayload: ChatJoinPayload = {
 					type: "JOIN",
-					projectId,
+					projectId: projectId ?? 0,
 					sender,
 					nickname,
 				};
@@ -108,7 +101,7 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
 
 		const payload: ChatSendPayload = {
 			type: "MESSAGE",
-			projectId,
+			projectId: projectId ?? 0,
 			sender,
 			nickname,
 			content,
@@ -121,6 +114,15 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
 			body: JSON.stringify(payload),
 		});
 	};
+
+	useEffect(() => {
+		if (!projectId) return;
+		connect();
+
+		return () => {
+			clientRef.current?.deactivate();
+		};
+	}, [projectId]);
 
 	return (
 		<ChatContext.Provider value={{ sendMessage }}>
