@@ -41,10 +41,25 @@ const CodeEditor = () => {
                 onMount={(editor, monaco) => {
                     setEditorInstance(editor);
                     setMonacoInstance(monaco);
+
+                    // 마우스로 클릭한 위치 추적
                     editor.onMouseDown((e) => {
+                        if (
+                            e.target.type === monaco.editor.MouseTargetType.GUTTER_GLYPH_MARGIN
+                        ) {
+                            // 💡 메모 아이콘 마진 클릭은 무시
+                            return;
+                        }
+
                         if (e.target.position) {
                             setSelectedLine(e.target.position.lineNumber);
                         }
+                    });
+
+
+                    // 키보드로 커서 이동할 때 위치 추적
+                    editor.onDidChangeCursorPosition((e) => {
+                        setSelectedLine(e.position.lineNumber);
                     });
                 }}
             />
