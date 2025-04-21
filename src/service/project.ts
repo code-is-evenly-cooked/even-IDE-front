@@ -26,6 +26,6 @@ export const createProject = async (
 
   return {
     id: data.shareUUID,
-    name: data.name,
+    name: data.projectName,
   };
 };
