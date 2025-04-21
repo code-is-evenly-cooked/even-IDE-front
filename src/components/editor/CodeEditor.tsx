@@ -2,8 +2,9 @@
 
 import {Editor} from "@monaco-editor/react";
 import {useIdeStore} from "@/stores/useIdeStore";
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import MemoIndicator from "./MemoLine";
+import {createPortal} from "react-dom";
 
 const CodeEditor = () => {
     const {files, currentFileId, updateFileContent} = useIdeStore();
@@ -11,8 +12,33 @@ const CodeEditor = () => {
     const [monacoInstance, setMonacoInstance] = useState<any>(null);
     const [selectedLine, setSelectedLine] = useState<number | null>(null); // 클릭한 코드 라인
     const [openedMemoLine, setOpenedMemoLine] = useState<number | null>(null);
+    const [memoContent, setMemoContent] = useState<string>("");
+    const memoRef = useRef<HTMLDivElement | null>(null);
 
     const currentFile = files.find((f) => f.id === currentFileId);
+
+    // 외부 클릭 감지하여 메모창 닫기
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (memoRef.current && !memoRef.current.contains(event.target as Node)) {
+                setOpenedMemoLine(null);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    const handleIconClick = () => {
+        console.log("🧠 메모 아이콘 클릭 selectedLine:", selectedLine, "openedMemoLine:", openedMemoLine);
+        if (openedMemoLine === selectedLine) {
+            setOpenedMemoLine(null); // toggle off
+        } else {
+            setOpenedMemoLine(selectedLine); // toggle on
+        }
+    };
 
     // 파일이 선택되지 않았을 때 메시지
     if (!currentFile) {
@@ -24,7 +50,7 @@ const CodeEditor = () => {
     }
 
     return (
-        <div className="h-[45vh] min-h-[300px] border-t-[1px] border-t-tonedown min-w-0">
+        <div className="h-[45vh] min-h-[300px] border-t-[1px] border-t-tonedown min-w-0 relative">
             <Editor
                 height="100%"
                 defaultLanguage="javascript"
@@ -34,7 +60,7 @@ const CodeEditor = () => {
                     fontSize: 14,
                     minimap: {enabled: false},
                     automaticLayout: true,
-                    glyphMargin: true, // 메모 아이콘 margin 켜기
+                    glyphMargin: true,
                 }}
                 onChange={(value) => {
                     updateFileContent(currentFile.id, value ?? "");
@@ -43,13 +69,8 @@ const CodeEditor = () => {
                     setEditorInstance(editor);
                     setMonacoInstance(monaco);
 
-                    // 마우스로 클릭한 위치 추적
                     editor.onMouseDown((e) => {
                         if (e.target.type === monaco.editor.MouseTargetType.GUTTER_GLYPH_MARGIN) {
-                            if (e.target.position) {
-                                const line = e.target.position.lineNumber;
-                                setOpenedMemoLine(line);
-                            }
                             return;
                         }
 
@@ -58,27 +79,36 @@ const CodeEditor = () => {
                         }
                     });
 
-                    // 키보드로 커서 이동할 때 위치 추적
                     editor.onDidChangeCursorPosition((e) => {
                         setSelectedLine(e.position.lineNumber);
                     });
                 }}
             />
 
-            {/* ✅ 메모 입력창 표시 */}
-            {openedMemoLine !== null && editorInstance && (
-                <div
-                    className="absolute z-50 bg-gray-800 text-white p-2 rounded shadow-md transition-all duration-150"
-                    style={{
-                        top: editorInstance.getTopForLineNumber(openedMemoLine) + 30, // 줄의 top 위치 + 살짝 아래로
-                        left: 'calc(100% - 280px)',
-                    }}
-                >
-                    ✏️ 메모 입력창 (라인 {openedMemoLine})
-                </div>
-            )}
+            {/* 메모 입력창 */}
+            {openedMemoLine !== null && editorInstance &&
+                createPortal(
+                    <div
+                        ref={memoRef}
+                        className="fixed z-50 bg-gray-800 text-white p-3 rounded shadow-md w-64"
+                        style={{
+                            top: editorInstance.getTopForLineNumber(openedMemoLine) + 30,
+                            left: window.innerWidth - 300,
+                        }}
+                    >
+                        <div className="text-sm mb-2">라인 {openedMemoLine} 메모</div>
+                        <textarea
+                            value={memoContent}
+                            onChange={(e) => setMemoContent(e.target.value)}
+                            className="w-full h-20 p-2 rounded bg-gray-700 text-white resize-none focus:outline-none"
+                            placeholder="메모를 입력하세요"
+                        />
+                    </div>,
+                    document.body
+                )
+            }
 
-            {/* ✅ 클릭된 라인에만 메모 아이콘 표시 */}
+            {/* 클릭된 라인에만 메모 아이콘 표시 */}
             {editorInstance && monacoInstance && (
                 <MemoIndicator
                     editor={editorInstance}
