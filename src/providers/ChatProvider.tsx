@@ -34,7 +34,7 @@ export const ChatProvider = ({ children, projectId }: ChatProviderProps) => {
 		return () => {
 			clientRef.current?.deactivate();
 		};
-	});
+	}, []);
 
 	const connect = async () => {
 		try {
