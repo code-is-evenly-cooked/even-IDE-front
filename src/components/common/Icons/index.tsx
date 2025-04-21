@@ -184,6 +184,7 @@ export const QnaIcon = ({ className }: IconProps) => {
 			priority
 		/>
 	);
+};
 
 export const MemoIcon = ({className}: IconProps) => {
     return (
