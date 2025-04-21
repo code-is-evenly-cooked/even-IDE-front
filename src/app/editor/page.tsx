@@ -61,6 +61,7 @@ export default function EditorPage() {
 								<TerminalView terminalRef={terminalRef} />
 							</div>
 						</main>
+						{/* TODO: project id 넘기는 것 필요 */}
 						<ChatProvider projectId={1}>
 							<RightPanel />
 							<Toolbox />
