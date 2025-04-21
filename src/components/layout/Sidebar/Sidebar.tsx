@@ -15,16 +15,17 @@ import {
 } from "../../common/Icons";
 
 export default function Sidebar() {
-  const { addFile, deleteFile, setEditingFileId, currentFileId } = useIdeStore();
-    const { addProject } = useProjectStore(); 
+  const { addFile, deleteFile, setEditingFileId, currentFileId } =
+    useIdeStore();
+  const { addProject } = useProjectStore();
 
-    const [isAddingProject, setIsAddingProject] = useState(false);
-    const [newProjectName, setNewProjectName] = useState("");
+  const [isAddingProject, setIsAddingProject] = useState(false);
+  const [newProjectName, setNewProjectName] = useState("");
 
   // 파일 추가
-  const handleAddFile = () => {
+  const handleAddFile = (projectId: string) => {
     const id = Date.now().toString();
-    addFile("", id);
+    addFile("", projectId, id); 
     setEditingFileId(id);
   };
 
@@ -52,8 +53,8 @@ export default function Sidebar() {
     const token = useAuthStore.getState().accessToken;
     const ownerId = useAuthStore.getState().userId;
     console.log("📦 요청 전 확인:");
-console.log("token:", token);
-console.log("ownerId:", ownerId);
+    console.log("token:", token);
+    console.log("ownerId:", ownerId);
     if (!token) {
       console.error("로그인 토큰이 없습니다.");
       alert("로그인이 필요합니다.");
@@ -61,7 +62,11 @@ console.log("ownerId:", ownerId);
     }
 
     try {
-      const project = await createProject(newProjectName, token, Number(ownerId));
+      const project = await createProject(
+        newProjectName,
+        token,
+        Number(ownerId)
+      );
       addProject(project);
     } catch (err) {
       console.error("프로젝트 생성 실패", err);

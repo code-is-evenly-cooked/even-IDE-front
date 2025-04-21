@@ -5,6 +5,7 @@ type IdeFile = {
   id: string;
   name: string;
   content: string;
+  projectId: string;
 };
 
 type IdeStore = {
@@ -14,7 +15,7 @@ type IdeStore = {
 
   selectFile: (id: string | null) => void;
   updateFileContent: (id: string, newContent: string) => void;
-  addFile: (name: string, id?: string) => void;
+  addFile: (name: string, projectId: string, id?: string) => void;
   deleteFile: (id: string) => void;
 
   editingFileId: string | null;
@@ -47,8 +48,8 @@ export const useIdeStore = create<IdeStore>()(
         })),
 
       // 새 파일 생성 -> 자동으로 탭 열기 + 선택 상태
-      addFile: (name, id = Date.now().toString()) => {
-        const newFile = { id, name, content: "" };
+      addFile: (name: string, projectId: string, id = Date.now().toString()) => {
+        const newFile: IdeFile = { id, name, content: "", projectId };
         set((state) => ({
           files: [...state.files, newFile],
           openedFileIds: [...state.openedFileIds, id],
