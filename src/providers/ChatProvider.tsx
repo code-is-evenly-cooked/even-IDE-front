@@ -12,6 +12,7 @@ import {
 import { Client } from "@stomp/stompjs";
 import { createContext, useEffect, useRef } from "react";
 import SockJS from "sockjs-client";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 interface ChatContextValue {
 	sendMessage: (content: string) => void;
@@ -29,9 +30,14 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
 	const { setSenderInfo, appendMessage, setMessages, sender, nickname } =
 		useChatStore();
 
+	const accessToken = useAuthStore((state) => state.accessToken);
 	const projectId = useProjectStore((state) => state.projectId);
 
 	const connect = async () => {
+		// 기존 연결 종료
+		if (clientRef.current?.connected) {
+			clientRef.current.deactivate();
+		}
 		const accessToken = getAuthCookie();
 
 		try {
@@ -128,7 +134,7 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
 		return () => {
 			clientRef.current?.deactivate();
 		};
-	}, [projectId]);
+	}, [projectId, accessToken]);
 
 	return (
 		<ChatContext.Provider value={{ sendMessage }}>
