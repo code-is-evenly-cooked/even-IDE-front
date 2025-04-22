@@ -6,7 +6,7 @@ import { EvenIcon } from "@/components/common/Icons";
 import Link from "next/link";
 import PasswordInput from "@/components/common/Input/PasswordInput";
 
-const PasswordUpdateForm = () => {
+const PasswordResetForm = () => {
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -61,4 +61,4 @@ const PasswordUpdateForm = () => {
 	);
 };
 
-export default PasswordUpdateForm;
+export default PasswordResetForm;
