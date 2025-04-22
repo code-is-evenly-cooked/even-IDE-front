@@ -21,7 +21,7 @@ const TerminalView = dynamic(() => import("@/components/editor/Terminal"), {
 
 type ProjectResponse = {
 	projectId: string;
-	name: string;
+	projectName: string;
 	createdAt: string;
 };
 
@@ -69,7 +69,7 @@ export default function EditorPage() {
 			// ✅ 프로젝트 리스트 저장
 			const projects = data.map((project) => ({
 			  id: project.projectId,
-			  name: project.name,
+			  name: project.projectName,
 			}));
 			setProjects(projects);
 		  })
