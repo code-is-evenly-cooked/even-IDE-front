@@ -1,5 +1,7 @@
 "use client";
 
+import { resolveNickname } from "@/lib/useChatIdentity";
+import { getAuthCookie } from "@/lib/cookie";
 import { ChatMessage, useChatStore } from "@/stores/useChatStore";
 import { useProjectStore } from "@/stores/useProjectStore";
 import {
@@ -30,12 +32,15 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
 	const projectId = useProjectStore((state) => state.projectId);
 
 	const connect = async () => {
+		const accessToken = getAuthCookie();
+
 		try {
 			// 입장 API 호출
 			const res = await fetch("/api/chat/join", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
+					...(accessToken && { Authorization: `Bearer ${accessToken}` }),
 				},
 				body: JSON.stringify({ projectId }),
 			});
@@ -44,7 +49,8 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
 			const { sender, nickname, chat } = data;
 			const { subscribeTopic, sendJoinPath, sendMessagePath } = chat;
 
-			setSenderInfo(sender, nickname);
+			const nickNameToUse = resolveNickname(nickname);
+			setSenderInfo(sender, nickNameToUse);
 			sendMessagePathRef.current = sendMessagePath;
 
 			// History API
@@ -77,7 +83,7 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
 					type: "JOIN",
 					projectId: projectId ?? 0,
 					sender,
-					nickname,
+					nickname: nickNameToUse,
 				};
 				console.log("입장 메시지 전송:", joinPayload);
 
