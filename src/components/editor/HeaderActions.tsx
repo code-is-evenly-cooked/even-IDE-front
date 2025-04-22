@@ -1,4 +1,4 @@
-import { Download, Upload, Share2, Github } from "lucide-react";
+import { Download, Upload, Share2, Github, Save } from "lucide-react";
 import IconButton from "@/components/common/Button/IconButton";
 import { QnaIcon } from "@/components/common/Icons";
 import { useIdeStore } from "@/stores/useIdeStore";
@@ -49,8 +49,28 @@ export default function HeaderActions() {
 
   const projectUrl = typeof window !== "undefined" ? window.location.href : "";
 
+  const handleSave = () => {
+    const { files } = useIdeStore.getState();
+  
+    if (files.length === 0) {
+      alert("저장할 파일이 없습니다.");
+      return;
+    }
+  
+    console.log("💾 저장할 파일 목록:", files);
+  };
+
   return (
     <div className="flex gap-1 px-3">
+      <IconButton
+        icon={<Save className="w-5 h-5" />}
+        label="저장"
+        onClick={handleSave}
+        color="gray500"
+        size="md"
+        className="hover:bg-slate-400"
+        transparent
+      />
       <IconButton
         icon={<Download className="w-5 h-5" />}
         label="내보내기"
