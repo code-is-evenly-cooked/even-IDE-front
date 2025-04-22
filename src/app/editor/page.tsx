@@ -10,6 +10,7 @@ import Tabbar from "@/components/editor/Tabbar";
 import Toolbox from "@/components/editor/Toolbox/Toolbox";
 import RightPanel from "@/components/editor/RightPanel/RightPanel";
 import { useProjectStore } from "@/stores/useProjectStore";
+import { getAuthCookie } from "@/lib/cookie";
 
 const CodeEditor = dynamic(() => import("@/components/editor/CodeEditor"), {
 	ssr: false,
@@ -18,11 +19,18 @@ const TerminalView = dynamic(() => import("@/components/editor/Terminal"), {
 	ssr: false,
 });
 
+type ProjectResponse = {
+	projectId: string;
+	name: string;
+	createdAt: string;
+};
+
 export default function EditorPage() {
 	const terminalRef = useRef<XtermType | null>(null);
 	//const [activePanel, setActivePanel] = useState<PanelType | null>(null);
 	const language = useLanguageStore((state) => state.language);
 	const setProjectId = useProjectStore((state) => state.setProjectId);
+	const { setProjects } = useProjectStore();
 
 	const handleRun = (code: string) => {
 		if (!terminalRef.current) return;
@@ -46,6 +54,29 @@ export default function EditorPage() {
 			terminalRef.current.write(`\r\n[아직 지원되지 않는 언어입니다]\r\n`);
 		}
 	};
+
+	useEffect(() => {
+		const token = getAuthCookie().token;
+		if (!token) return;
+	  
+		fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/editor`, {
+		  headers: {
+			Authorization: `Bearer ${token}`,
+		  },
+		})
+		  .then((res) => res.json())
+		  .then((data: ProjectResponse[]) => {
+			// ✅ 프로젝트 리스트 저장
+			const projects = data.map((project) => ({
+			  id: project.projectId,
+			  name: project.name,
+			}));
+			setProjects(projects);
+		  })
+		  .catch((err) => {
+			console.error("❌ 프로젝트 리스트 불러오기 실패:", err);
+		  });
+	  }, [setProjects]);
 
 	useEffect(() => {
 		setProjectId(1); // 실제 프로젝트에선 동적 ID로 변경 필요
