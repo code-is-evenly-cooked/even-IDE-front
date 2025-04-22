@@ -1,22 +1,14 @@
 "use client";
 
-import React, { ChangeEvent, useState } from "react";
 import BaseButton from "@/components/common/Button/BaseButton";
 import { EvenIcon } from "@/components/common/Icons";
 import Link from "next/link";
 import PasswordInput from "@/components/common/Input/PasswordInput";
+import usePasswordResetForm from "./usePasswordResetForm";
 
 const PasswordResetForm = () => {
-	const [password, setPassword] = useState("");
-	const [confirmPassword, setConfirmPassword] = useState("");
-
-	const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-		setPassword(e.target.value);
-	};
-
-	const handleConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-		setConfirmPassword(e.target.value);
-	};
+	const { formState, errors, handleFormChange, handleResetPassword } =
+		usePasswordResetForm();
 
 	return (
 		<div className="w-full max-w-[30rem] border border-white mt-16">
@@ -26,7 +18,7 @@ const PasswordResetForm = () => {
 			</div>
 
 			<div className="flex flex-col gap-5 px-6 sm:px-12 py-6">
-				<form className="flex flex-col gap-5">
+				<form onSubmit={handleResetPassword} className="flex flex-col gap-5">
 					<h2 className="text-xl text-white text-center">비밀번호 재설정</h2>
 					<h3 className="text-md text-white text-center leading-loose">
 						새로운 비밀번호를 설정하세요.
@@ -34,15 +26,19 @@ const PasswordResetForm = () => {
 
 					<PasswordInput
 						placeholder="비밀번호를 입력하세요."
-						value={password}
-						onChange={handlePasswordChange}
 						size="xl"
+						value={formState.password}
+						onChange={handleFormChange("password")}
+						styleState={errors.password ? "invalid" : "default"}
+						error={errors.password}
 					/>
 					<PasswordInput
 						placeholder="비밀번호 확인"
-						value={confirmPassword}
-						onChange={handleConfirmPasswordChange}
 						size="xl"
+						value={formState.passwordConfirm}
+						onChange={handleFormChange("passwordConfirm")}
+						styleState={errors.passwordConfirm ? "invalid" : "default"}
+						error={errors.passwordConfirm}
 					/>
 					<BaseButton type="submit" size="xl">
 						확인
