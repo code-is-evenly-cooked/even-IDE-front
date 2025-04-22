@@ -2,14 +2,19 @@
 
 import Sidebar from "@/components/layout/Sidebar/Sidebar";
 import Header from "@/components/layout/Header/Header";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import type { Terminal as XtermType } from "xterm";
 import dynamic from "next/dynamic";
 import { useLanguageStore } from "@/stores/useLanguageStore";
 import Tabbar from "@/components/editor/Tabbar";
 import Toolbox from "@/components/editor/Toolbox/Toolbox";
 import RightPanel from "@/components/editor/RightPanel/RightPanel";
-import { ChatProvider } from "@/providers/ChatProvider";
+import { getAuthCookie } from "@/lib/cookie";
+import { fetchProject } from "@/service/project";
+import { useProjectStore } from "@/stores/useProjectStore";
+import { useIdeStore } from "@/stores/useIdeStore";
+import type { FileItem } from "@/types/file";
+
 
 const CodeEditor = dynamic(() => import("@/components/editor/CodeEditor"), {
   ssr: false,
@@ -23,6 +28,8 @@ export default function ProjectPage({ params }: { params: { uuid: string } }) {
   const terminalRef = useRef<XtermType | null>(null);
   //const [activePanel, setActivePanel] = useState<PanelType | null>(null);
   const language = useLanguageStore((state) => state.language);
+  const { setProjects } = useProjectStore();
+  const { setFiles } = useIdeStore();
 
   const handleRun = (code: string) => {
     if (!terminalRef.current) return;
@@ -47,6 +54,28 @@ export default function ProjectPage({ params }: { params: { uuid: string } }) {
     }
   };
 
+  useEffect(() => {
+    const token = getAuthCookie().token;
+    if (!token) return;
+
+    fetchProject(projectId, token)
+      .then((data) => {
+        setProjects([{ id: data.sharedUUID, name: data.projectName }]);
+
+        setFiles(
+          (data.files as FileItem[]).map((file) => ({
+            id: String(file.id),
+            name: file.name,
+            content: "",
+            projectId: data.sharedUUID,
+          }))
+        );
+      })
+      .catch((err) => {
+        console.error("❌ 프로젝트 불러오기 실패:", err);
+      });
+  }, [projectId, setProjects, setFiles]);
+
   return (
     <div>
       <div className="flex">
@@ -63,11 +92,8 @@ export default function ProjectPage({ params }: { params: { uuid: string } }) {
                 <TerminalView terminalRef={terminalRef} />
               </div>
             </main>
-            {/* TODO: project id 넘기는 것 필요 */}
-            <ChatProvider projectId={1}>
-              <RightPanel />
-              <Toolbox />
-            </ChatProvider>
+            <RightPanel />
+            <Toolbox />
           </div>
         </div>
       </div>
