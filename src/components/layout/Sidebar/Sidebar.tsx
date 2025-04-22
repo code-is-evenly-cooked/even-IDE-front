@@ -5,7 +5,7 @@ import FileExplorer from "@/components/editor/FileExplorer";
 import { useIdeStore } from "@/stores/useIdeStore";
 import { useProjectStore } from "@/stores/useProjectStore";
 import { createProject } from "@/service/project"; // API 요청 함수
-import { useAuthStore } from "@/stores/useAuthStore";
+import { getAuthCookie } from "@/lib/cookie";
 import {
   EvenIcon,
   FileNewIcon,
@@ -62,8 +62,8 @@ export default function Sidebar({ projectId }: SidebarProps) {
       return;
     }
 
-    const token = useAuthStore.getState().accessToken;
-    const ownerId = useAuthStore.getState().userId;
+    const token = getAuthCookie().token;
+    const ownerId = getAuthCookie().userId;
     console.log("📦 요청 전 확인:");
     console.log("token:", token);
     console.log("ownerId:", ownerId);
