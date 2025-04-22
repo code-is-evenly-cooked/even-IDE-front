@@ -79,7 +79,11 @@ export default function Sidebar({ projectId }: SidebarProps) {
         token,
         Number(ownerId)
       );
-      addProject(project);
+      addProject({
+        id: project.id,           // UUID
+        name: project.name,
+        projectId: project.projectId, // 숫자형 ID도 포함해서 넘김
+      });
     } catch (err) {
       console.error("프로젝트 생성 실패", err);
     }
