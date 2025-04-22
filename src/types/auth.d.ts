@@ -20,6 +20,9 @@ interface AuthCredentials {
 interface AuthResponse {
 	accessToken: string;
 	refreshToken: string;
+	userId: number;
+	nickname: string;
+	provider: AuthProvider;
 }
 
 export interface DecodedToken {
