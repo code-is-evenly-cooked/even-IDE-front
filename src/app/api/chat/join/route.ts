@@ -8,11 +8,13 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 export async function POST(req: NextRequest) {
 	try {
 		const body = await req.json();
+		const token = req.headers.get("authorization");
 
 		const repsonse = await fetch(`${API_BASE_URL}/chat/join`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
+				Authorization: token || "",
 			},
 			body: JSON.stringify(body),
 		});

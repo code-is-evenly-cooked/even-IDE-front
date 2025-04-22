@@ -1,6 +1,9 @@
 "use client";
 
+import { resolveNickname } from "@/lib/useChatIdentity";
+import { getAuthCookie } from "@/lib/cookie";
 import { ChatMessage, useChatStore } from "@/stores/useChatStore";
+import { useProjectStore } from "@/stores/useProjectStore";
 import {
 	ChatJoinPayload,
 	ChatJoinResponse,
@@ -18,30 +21,26 @@ export const ChatContext = createContext<ChatContextValue | null>(null);
 
 interface ChatProviderProps {
 	children: React.ReactNode;
-	projectId: number;
 }
 
-export const ChatProvider = ({ children, projectId }: ChatProviderProps) => {
+export const ChatProvider = ({ children }: ChatProviderProps) => {
 	const clientRef = useRef<Client | null>(null);
 	const sendMessagePathRef = useRef<string | null>(null);
 	const { setSenderInfo, appendMessage, setMessages, sender, nickname } =
 		useChatStore();
 
-	useEffect(() => {
-		connect();
-
-		return () => {
-			clientRef.current?.deactivate();
-		};
-	}, [projectId]);
+	const projectId = useProjectStore((state) => state.projectId);
 
 	const connect = async () => {
+		const accessToken = getAuthCookie();
+
 		try {
 			// 입장 API 호출
 			const res = await fetch("/api/chat/join", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
+					...(accessToken && { Authorization: `Bearer ${accessToken}` }),
 				},
 				body: JSON.stringify({ projectId }),
 			});
@@ -50,7 +49,8 @@ export const ChatProvider = ({ children, projectId }: ChatProviderProps) => {
 			const { sender, nickname, chat } = data;
 			const { subscribeTopic, sendJoinPath, sendMessagePath } = chat;
 
-			setSenderInfo(sender, nickname);
+			const nickNameToUse = resolveNickname(nickname);
+			setSenderInfo(sender, nickNameToUse);
 			sendMessagePathRef.current = sendMessagePath;
 
 			// History API
@@ -81,9 +81,9 @@ export const ChatProvider = ({ children, projectId }: ChatProviderProps) => {
 				// 입장 메세지 전송
 				const joinPayload: ChatJoinPayload = {
 					type: "JOIN",
-					projectId,
+					projectId: projectId ?? 0,
 					sender,
-					nickname,
+					nickname: nickNameToUse,
 				};
 				console.log("입장 메시지 전송:", joinPayload);
 
@@ -107,7 +107,7 @@ export const ChatProvider = ({ children, projectId }: ChatProviderProps) => {
 
 		const payload: ChatSendPayload = {
 			type: "MESSAGE",
-			projectId,
+			projectId: projectId ?? 0,
 			sender,
 			nickname,
 			content,
@@ -120,6 +120,15 @@ export const ChatProvider = ({ children, projectId }: ChatProviderProps) => {
 			body: JSON.stringify(payload),
 		});
 	};
+
+	useEffect(() => {
+		if (!projectId) return;
+		connect();
+
+		return () => {
+			clientRef.current?.deactivate();
+		};
+	}, [projectId]);
 
 	return (
 		<ChatContext.Provider value={{ sendMessage }}>
