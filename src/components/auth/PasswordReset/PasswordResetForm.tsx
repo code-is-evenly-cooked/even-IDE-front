@@ -6,9 +6,17 @@ import Link from "next/link";
 import PasswordInput from "@/components/common/Input/PasswordInput";
 import usePasswordResetForm from "./usePasswordResetForm";
 
-const PasswordResetForm = () => {
-	const { formState, errors, handleFormChange, handleResetPassword } =
-		usePasswordResetForm();
+interface PasswordResetFormProps {
+	token: string;
+}
+
+const PasswordResetForm = ({ token }: PasswordResetFormProps) => {
+	const {
+		formState,
+		errors,
+		handleFormChange,
+		handleResetPassword,
+	} = usePasswordResetForm(token);
 
 	return (
 		<div className="w-full max-w-[30rem] border border-white mt-16">

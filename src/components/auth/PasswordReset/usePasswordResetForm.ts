@@ -8,7 +8,7 @@ interface PasswordResetErrors {
 	passwordConfirm?: string;
 }
 
-const usePasswordResetForm = () => {
+const usePasswordResetForm = (token: string) => {
 	const [formState, setFormState] = useState({
 		password: "",
 		passwordConfirm: "",
