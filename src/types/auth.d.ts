@@ -30,5 +30,5 @@ export interface DecodedToken {
 	role: string;
 	iat: number; // 생성 시간
 	exp: number; // 만료 시간
-	provider?: "local" | "google" | "kakao";
+	provider?: AuthProvider;
 }
