@@ -23,14 +23,14 @@ type ProjectResponse = {
 	projectId: string;
 	projectName: string;
 	createdAt: string;
+	sharedUUID: string;
 };
 
 export default function EditorPage() {
 	const terminalRef = useRef<XtermType | null>(null);
 	//const [activePanel, setActivePanel] = useState<PanelType | null>(null);
 	const language = useLanguageStore((state) => state.language);
-	const setProjectId = useProjectStore((state) => state.setProjectId);
-	const { setProjects } = useProjectStore();
+	const { setProjects, setProjectId } = useProjectStore();
 
 	const handleRun = (code: string) => {
 		if (!terminalRef.current) return;
@@ -58,25 +58,24 @@ export default function EditorPage() {
 	useEffect(() => {
 		const token = getAuthCookie().token;
 		if (!token) return;
-	  
+
 		fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/editor`, {
-		  headers: {
-			Authorization: `Bearer ${token}`,
-		  },
+			headers: { Authorization: `Bearer ${token}` },
 		})
-		  .then((res) => res.json())
-		  .then((data: ProjectResponse[]) => {
-			// ✅ 프로젝트 리스트 저장
-			const projects = data.map((project) => ({
-			  id: project.projectId,
-			  name: project.projectName,
-			}));
-			setProjects(projects);
-		  })
-		  .catch((err) => {
-			console.error("❌ 프로젝트 리스트 불러오기 실패:", err);
-		  });
-	  }, [setProjects]);
+			.then((res) => res.json())
+			.then((data: ProjectResponse[]) => {
+				const projects = data.map((project) => ({
+					id: project.sharedUUID, // sharedUUID가 id로 저장됨
+					name: project.projectName,
+					projectId: Number(project.projectId), // projectId도 따로 저장
+				}));
+				setProjects(projects);
+				if (projects.length > 0) setProjectId(projects[0].projectId);
+			})
+			.catch((err) => {
+				console.error("❌ 프로젝트 리스트 불러오기 실패:", err);
+			});
+	}, [setProjects, setProjectId]);
 
 	useEffect(() => {
 		setProjectId(1); // 실제 프로젝트에선 동적 ID로 변경 필요

@@ -4,6 +4,7 @@ import { create } from "zustand";
 export type Project = {
   id: string; // UUID (sharedUUID)
   name: string;
+  projectId: number; // 실제 projectId도 함께 저장
 };
 
 type ProjectState = {
@@ -11,7 +12,7 @@ type ProjectState = {
   addProject: (project: Project) => void;
   setProjects: (projects: Project[]) => void;
 
-  projectId: number | null; // 선택된 프로젝트 ID
+  projectId: number | null; // 선택된 프로젝트의 숫자형 ID
   setProjectId: (id: number) => void;
 };
 
