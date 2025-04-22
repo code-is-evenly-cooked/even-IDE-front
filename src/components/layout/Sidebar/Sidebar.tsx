@@ -14,7 +14,11 @@ import {
   CloseIcon,
 } from "../../common/Icons";
 
-export default function Sidebar() {
+interface SidebarProps {
+  projectId?: string;
+}
+
+export default function Sidebar({ projectId }: SidebarProps) {
   const { addFile, deleteFile, setEditingFileId, currentFileId } =
     useIdeStore();
   const { addProject } = useProjectStore();
@@ -31,6 +35,7 @@ export default function Sidebar() {
       alert("먼저 프로젝트를 선택해주세요.");
       return;
     }
+    console.log("🧩 선택된 프로젝트로 파일 추가:", selectedProjectId);
     const id = Date.now().toString();
     addFile("", selectedProjectId, id);
     setEditingFileId(id);
@@ -129,7 +134,10 @@ export default function Sidebar() {
 
       {/* 파일 탐색기 */}
       <div className="flex-1 overflow-y-auto">
-        <FileExplorer onProjectClick={setSelectedProjectId} selectedProjectId={selectedProjectId} />
+        <FileExplorer
+          onProjectClick={projectId ? () => {} : setSelectedProjectId}
+          selectedProjectId={selectedProjectId}
+        />
       </div>
     </aside>
   );
