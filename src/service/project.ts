@@ -1,9 +1,10 @@
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 export const createProject = async (
   name: string,
   token: string,
   ownerId: number
 ) => {
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const res = await fetch(`${API_BASE_URL}/projects`, {
     method: "POST",
@@ -29,3 +30,19 @@ export const createProject = async (
     name: data.projectName,
   };
 };
+
+export const fetchProject = async (uuid: string, token: string) => {
+    const res = await fetch(`${API_BASE_URL}/projects/${uuid}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  
+    if (!res.ok) {
+      const error = await res.text();
+      throw new Error(`프로젝트 조회 실패: ${error}`);
+    }
+  
+    return await res.json();
+  };

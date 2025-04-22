@@ -12,6 +12,7 @@ type IdeStore = {
   files: IdeFile[];
   currentFileId: string | null;
   openedFileIds: string[]; // 열린 탭의 파일 ID 목록
+  setFiles: (files: IdeFile[]) => void;
 
   selectFile: (id: string | null) => void;
   updateFileContent: (id: string, newContent: string) => void;
@@ -36,6 +37,8 @@ export const useIdeStore = create<IdeStore>()(
       currentFileId: null,
       openedFileIds: [],
 
+      setFiles: (files) => set({ files }),
+      
       // 파일 선택
       selectFile: (id) => set({ currentFileId: id }),
 
