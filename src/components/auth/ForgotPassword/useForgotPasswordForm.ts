@@ -1,10 +1,8 @@
-import { passwordReset } from "@/service/auth";
+import { forgotPassword } from "@/service/auth";
 import { validateEmail } from "@/utils/validate";
-import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 
-const useResetPasswordForm = () => {
-	const router = useRouter(); 
+const useForgotPasswordForm = () => {
 	const [email, setEmail] = useState("");
 	const [emailError, setEmailError] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
@@ -33,9 +31,7 @@ const useResetPasswordForm = () => {
 
 		setIsLoading(true);
 		try {
-			await passwordReset(email);
-			// TODO: 로그 제거 필요
-
+			await forgotPassword(email);
 			alert("비밀번호 재설정 메일이 발송되었습니다.");
 		} catch (err) {
 			if (err instanceof Error) {
@@ -45,7 +41,6 @@ const useResetPasswordForm = () => {
 			}
 		} finally {
 			setIsLoading(false);
-			router.push("update-password");
 		}
 	};
 
@@ -58,4 +53,4 @@ const useResetPasswordForm = () => {
 	};
 };
 
-export default useResetPasswordForm;
+export default useForgotPasswordForm;
