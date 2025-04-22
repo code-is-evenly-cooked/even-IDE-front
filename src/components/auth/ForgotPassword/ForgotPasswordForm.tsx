@@ -3,7 +3,7 @@
 import React from "react";
 import TextInput from "@/components/common/Input/TextInput";
 import BaseButton from "@/components/common/Button/BaseButton";
-import useForgotPasswordForm from "../ForgotPassword/useForgotPasswordForm";
+import useForgotPasswordForm from "./useForgotPasswordForm";
 import { EvenIcon } from "@/components/common/Icons";
 import Link from "next/link";
 

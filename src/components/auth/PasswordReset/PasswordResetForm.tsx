@@ -14,6 +14,7 @@ const PasswordResetForm = ({ token }: PasswordResetFormProps) => {
 	const {
 		formState,
 		errors,
+		isLoading,
 		handleFormChange,
 		handleResetPassword,
 	} = usePasswordResetForm(token);
@@ -48,7 +49,7 @@ const PasswordResetForm = ({ token }: PasswordResetFormProps) => {
 						styleState={errors.passwordConfirm ? "invalid" : "default"}
 						error={errors.passwordConfirm}
 					/>
-					<BaseButton type="submit" size="xl">
+					<BaseButton type="submit" size="xl" isLoading={isLoading}>
 						확인
 					</BaseButton>
 					<div className="flex justify-center text-sm text-gray200 font-light">

@@ -31,3 +31,13 @@ export const forgotPassword = async (email: string): Promise<MessageResponse> =>
 		headers: { "Content-Type": "application/json" },
 		body: JSON.stringify({ email }),
 	});
+
+export const resetPassword = async (
+	token: string,
+	newPassword: string
+): Promise<MessageResponse> =>
+	fetchWithJson("/api/auth/password-reset", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ token, newPassword }),
+	});
