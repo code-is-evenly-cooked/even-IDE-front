@@ -1,18 +1,10 @@
-"use client";
+import { Suspense } from "react";
+import PasswordResetPageClient from "./PasswordResetPageClient";
 
-import PasswordResetForm from "@/components/auth/PasswordReset/PasswordResetForm";
-import { useSearchParams } from "next/navigation";
-import React from "react";
-
-export default function PasswordResetPage() {
-	const searchParam = useSearchParams();
-	const token = searchParam.get("token");
-
-	if (!token) return <div>잘못된 접근입니다.</div>;
-
+export default function Page() {
 	return (
-		<div className="flex justify-center items-center">
-			<PasswordResetForm token={token} />
-		</div>
+		<Suspense fallback={<div className="text-center py-10">로딩 중...</div>}>
+			<PasswordResetPageClient />
+		</Suspense>
 	);
 }
