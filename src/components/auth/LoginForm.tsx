@@ -1,13 +1,13 @@
 "use client";
 
 import React from "react";
-import TextInput from "../../common/Input/TextInput";
-import BaseButton from "../../common/Button/BaseButton";
-import SocialLoginButton from "../../common/Button/SocialLoginButton";
-import PasswordInput from "../../common/Input/PasswordInput";
 import Link from "next/link";
-import { EvenIcon } from "../../common/Icons";
-import useLoginForm from "./useLoginForm";
+import useLoginForm from "./LoginForm/useLoginForm";
+import { EvenIcon } from "../common/Icons";
+import TextInput from "../common/Input/TextInput";
+import PasswordInput from "../common/Input/PasswordInput";
+import BaseButton from "../common/Button/BaseButton";
+import SocialLoginButton from "../common/Button/SocialLoginButton";
 
 const LoginForm = () => {
 	const {
