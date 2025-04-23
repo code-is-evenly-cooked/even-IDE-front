@@ -16,7 +16,6 @@ interface ChatState {
 	// UI 상태
 	isVisible: boolean;
 	viewMode: ChatViewMode;
-	toggleVisibility: () => void;
 	setViewMode: (mode: ChatViewMode) => void;
 
 	// 메세지 상태
@@ -28,12 +27,12 @@ interface ChatState {
 	sender: string;
 	nickname: string;
 	setSenderInfo: (sender: string, nickname: string) => void;
+	resetChatUser: () => void;
 }
 
 export const useChatStore = create<ChatState>((set) => ({
 	isVisible: true,
 	viewMode: "panel",
-	toggleVisibility: () => set((state) => ({ isVisible: !state.isVisible })),
 	setViewMode: (mode) => set({ viewMode: mode }),
 
 	messages: [],
@@ -44,4 +43,5 @@ export const useChatStore = create<ChatState>((set) => ({
 	sender: "",
 	nickname: "",
 	setSenderInfo: (sender, nickname) => set({ sender, nickname }),
+	resetChatUser: () => set({ sender: "", nickname: "" }),
 }));

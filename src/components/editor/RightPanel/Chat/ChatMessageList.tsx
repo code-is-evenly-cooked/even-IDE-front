@@ -12,7 +12,7 @@ const ChatMessageList = () => {
 	}, [messages]);
 
 	return (
-		<div className="flex flex-col">
+		<div className="flex flex-col justify-end min-h-full">
 			{messageWithDates.map((message, index) =>
 				message.type === "DATE" ? (
 					<div
