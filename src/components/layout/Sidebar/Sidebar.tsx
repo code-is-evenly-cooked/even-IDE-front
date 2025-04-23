@@ -20,16 +20,18 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ projectId }: SidebarProps) {
-  const { addFile, deleteFile, currentFileId } = useIdeStore();
+  const { addFile, deleteFile, currentFileId, setEditingFileId } =
+    useIdeStore();
   const { addProject, projects } = useProjectStore();
 
   const [isAddingProject, setIsAddingProject] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
+    null
+  );
 
   // 파일 추가
   const handleAddFile = async () => {
-    
     if (!selectedProjectId) {
       alert("먼저 프로젝트를 선택해주세요.");
       return;
@@ -41,8 +43,12 @@ export default function Sidebar({ projectId }: SidebarProps) {
     if (!project) return;
 
     try {
-      const newFile = await createFile(project.projectId, "새 파일", token);
-      addFile(newFile.filename, selectedProjectId, String(newFile.fileId));
+      const newFile = await createFile(project.projectId, "파일", token);
+      const newFileId = String(newFile.fileId);
+      addFile(newFile.filename, selectedProjectId, newFileId);
+      
+      // 파일 생성 후 이름 입력 모드 진입
+      setEditingFileId(newFileId);
     } catch (err) {
       alert("파일 생성 실패");
       console.error(err);
@@ -141,7 +147,9 @@ export default function Sidebar({ projectId }: SidebarProps) {
       {/* 파일 탐색기 */}
       <div className="flex-1 overflow-y-auto">
         <FileExplorer
-          onProjectClick={projectId ? () => {} : (id) => setSelectedProjectId(id)}
+          onProjectClick={
+            projectId ? () => {} : (id) => setSelectedProjectId(id)
+          }
           selectedProjectId={selectedProjectId ?? ""} // null 방지 처리
         />
       </div>
