@@ -15,7 +15,6 @@ import { useProjectStore } from "@/stores/useProjectStore";
 import { useIdeStore } from "@/stores/useIdeStore";
 import type { FileItem } from "@/types/file";
 
-
 const CodeEditor = dynamic(() => import("@/components/editor/CodeEditor"), {
   ssr: false,
 });
@@ -23,7 +22,13 @@ const TerminalView = dynamic(() => import("@/components/editor/Terminal"), {
   ssr: false,
 });
 
-export default function ProjectPage({ params }: { params: { uuid: string } }) {
+interface PageProps {
+  params: {
+    uuid: string;
+  };
+}
+
+export default function ProjectPage({ params }: PageProps) {
   const projectId = params.uuid;
   const terminalRef = useRef<XtermType | null>(null);
   //const [activePanel, setActivePanel] = useState<PanelType | null>(null);
@@ -60,7 +65,13 @@ export default function ProjectPage({ params }: { params: { uuid: string } }) {
 
     fetchProject(projectId, token)
       .then((data) => {
-        setProjects([{ id: data.sharedUUID, name: data.projectName }]);
+        setProjects([
+          {
+            id: data.sharedUUID,
+            name: data.projectName,
+            projectId: data.projectId,
+          },
+        ]);
 
         setFiles(
           (data.files as FileItem[]).map((file) => ({
