@@ -1,5 +1,5 @@
-import {create} from "zustand";
-import {persist} from "zustand/middleware"; // 상태를 localStorage에 저장할 때 사용
+import { create } from "zustand";
+import { persist } from "zustand/middleware"; // 상태를 localStorage에 저장할 때 사용
 
 type IdeFile = {
     id: string;
