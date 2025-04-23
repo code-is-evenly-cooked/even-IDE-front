@@ -8,11 +8,13 @@ import { useProjectStore } from "@/stores/useProjectStore";
 interface FileExplorerProps {
   onProjectClick: (projectId: string) => void;
   selectedProjectId: string | null;
+  onFileNameSubmit: (fileId: string, newName: string) => void;
 }
 
 export default function FileExplorer({
   onProjectClick,
   selectedProjectId,
+  onFileNameSubmit,
 }: FileExplorerProps) {
   const {
     files,
@@ -20,7 +22,6 @@ export default function FileExplorer({
     openFile,
     editingFileId,
     setEditingFileId,
-    renameFile,
     deleteFile,
   } = useIdeStore();
 
@@ -70,7 +71,7 @@ export default function FileExplorer({
                         onBlur={(e) => {
                           const newName = e.currentTarget.value.trim();
                           if (newName) {
-                            renameFile(file.id, newName);
+                            onFileNameSubmit(file.id, newName);
                           } else {
                             deleteFile(file.id);
                           }
@@ -79,7 +80,7 @@ export default function FileExplorer({
                           if (e.key === "Enter") {
                             const newName = e.currentTarget.value.trim();
                             if (newName) {
-                              renameFile(file.id, newName);
+                              onFileNameSubmit(file.id, newName);
                             } else {
                               deleteFile(file.id);
                             }

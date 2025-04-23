@@ -22,8 +22,14 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ projectId }: SidebarProps) {
-  const { addFile, deleteFile, currentFileId, setEditingFileId, files } =
-    useIdeStore();
+  const {
+    addFile,
+    deleteFile,
+    currentFileId,
+    setEditingFileId,
+    files,
+    setFiles,
+  } = useIdeStore();
   const { addProject, removeProject, projects } = useProjectStore();
 
   const [isAddingProject, setIsAddingProject] = useState(false);
@@ -33,38 +39,47 @@ export default function Sidebar({ projectId }: SidebarProps) {
   );
   const router = useRouter();
 
-  // 파일 추가
+  const ownerId = Number(getAuthCookie().userId);
+  const token = getAuthCookie().token;
+
+  // 파일 추가 (임시 생성 → 이름 입력 후 서버로 생성)
   const handleAddFile = async () => {
     if (!selectedProjectId) {
       alert("먼저 프로젝트를 선택해주세요.");
       return;
     }
 
-    const token = getAuthCookie().token;
-    const project = projects.find((p) => p.id === selectedProjectId);
-    console.log("✅ project 응답:", project);
-    if (!project) return;
+    const tempId = `temp-${Date.now()}`;
+    addFile("파일", selectedProjectId, ownerId, tempId);
+    setEditingFileId(tempId);
+  };
+
+  // 파일 이름 입력 완료 시 서버 반영
+  const handleFileNameSubmit = async (fileId: string, newName: string) => {
+    const file = files.find((f) => f.id === fileId);
+    const project = projects.find((p) => p.id === file?.projectId);
+    if (!project || !file || !token) return;
 
     try {
-      const newFile = await createFile(project.projectId, "파일", token);
-      const newFileId = String(newFile.fileId);
-      addFile(newFile.filename, selectedProjectId, newFileId);
+      const result = await createFile(project.projectId, newName, token);
+      const serverId = String(result.fileId);
 
-      // 파일 생성 후 이름 입력 모드 진입
-      setEditingFileId(newFileId);
+      const updatedFiles = files.map((f) =>
+        f.id === fileId ? { ...f, id: serverId, name: newName } : f
+      );
+
+      setFiles(updatedFiles);
     } catch (err) {
       alert("파일 생성 실패");
       console.error(err);
     }
   };
 
-  // 프로젝트 추가
   const handleAddProject = () => {
     setIsAddingProject(true);
     setNewProjectName("");
   };
 
-  // 프로젝트 이름 입력 완료 시 호출
   const handleProjectSubmit = async () => {
     const trimmed = newProjectName.trim();
     if (!trimmed) {
@@ -72,88 +87,67 @@ export default function Sidebar({ projectId }: SidebarProps) {
       return;
     }
 
-    const token = getAuthCookie().token;
-    const ownerId = getAuthCookie().userId;
     if (!token) {
-      console.error("로그인 토큰이 없습니다.");
       alert("로그인이 필요합니다.");
       return;
     }
 
     try {
-      const project = await createProject(trimmed, token, Number(ownerId));
+      const project = await createProject(trimmed, token, ownerId);
       addProject({
-        id: project.id, // UUID
+        id: project.id,
         name: project.name,
-        projectId: project.projectId, // number형 ID
+        projectId: project.projectId,
       });
-      console.log("✅ project 응답:", project);
     } catch (err) {
       console.error("프로젝트 생성 실패", err);
     }
 
-    setIsAddingProject(false); // 입력창 닫기
+    setIsAddingProject(false);
   };
 
-  // 선택한 프로젝트 이동
   const handleGoToProject = () => {
-    let targetProjectUUID: string | null = null;
+    let targetUUID: string | null = null;
 
     if (selectedProjectId) {
-    // 선택된 프로젝트가 있는 경우 → 바로 UUID 사용
-    targetProjectUUID = selectedProjectId;
-  } else if (currentFileId) {
-    // 파일이 선택된 경우 → 해당 파일의 projectId를 추적
-    const file = files.find((f) => f.id === currentFileId);
-    if (file) {
-      const project = projects.find((p) => p.projectId === Number(file.projectId));
-      if (project) {
-        targetProjectUUID = project.id; // UUID
-      }
+      targetUUID = selectedProjectId;
+    } else if (currentFileId) {
+      const file = files.find((f) => f.id === currentFileId);
+      const project = projects.find(
+        (p) => p.projectId === Number(file?.projectId)
+      );
+      if (project) targetUUID = project.id;
     }
-  }
 
-  if (!targetProjectUUID) {
-    alert("이동할 프로젝트를 찾을 수 없습니다.");
-    return;
-  }
+    if (!targetUUID) {
+      alert("이동할 프로젝트를 찾을 수 없습니다.");
+      return;
+    }
 
-  router.push(`/project/${targetProjectUUID}`);
-};
+    router.push(`/project/${targetUUID}`);
+  };
 
-  // 삭제 기능 통합 (파일 + 프로젝트)
   const handleDelete = async () => {
-    const token = getAuthCookie().token;
-
-    // 프로젝트 삭제
     if (selectedProjectId && !currentFileId) {
-      const confirmProjectDelete =
-        window.confirm("이 프로젝트를 삭제하시겠습니까?");
-      if (!confirmProjectDelete) return;
+      const confirmDelete = confirm("이 프로젝트를 삭제하시겠습니까?");
+      if (!confirmDelete) return;
 
       const project = projects.find((p) => p.id === selectedProjectId);
-      if (!project) {
-        alert("프로젝트 정보를 찾을 수 없습니다.");
-        return;
-      }
+      if (!project || !token) return;
 
       try {
-        await deleteProject(project.projectId, token);  //  서버에서 제거
-        removeProject(selectedProjectId);  //  상태 제거
-        setSelectedProjectId(null);  //  선택 해제
+        await deleteProject(project.projectId, token);
+        removeProject(selectedProjectId);
+        setSelectedProjectId(null);
       } catch (err) {
         console.error("❌ 프로젝트 삭제 실패:", err);
-        alert("프로젝트 삭제 중 오류가 발생했습니다.");
       }
-
       return;
     }
 
     if (currentFileId) {
-      const confirmFileDelete = window.confirm(
-        "정말로 이 파일을 삭제하시겠습니까?"
-      );
-      if (!confirmFileDelete) return;
+      const confirmDelete = confirm("이 파일을 삭제하시겠습니까?");
+      if (!confirmDelete) return;
       deleteFile(currentFileId);
       return;
     }
@@ -163,15 +157,11 @@ export default function Sidebar({ projectId }: SidebarProps) {
 
   return (
     <aside className="w-[280px] min-w-[280px] h-screen border-tonedown border-[1px] bg-gray700 text-white flex flex-col">
-      {/* 상단 로고 */}
       <div className="flex px-5 py-3 content-center text-lg font-bold border-b border-gray-700 bg-tonedown">
-        <div>
-          <EvenIcon />
-        </div>
+        <EvenIcon />
         <h1 className="text-3xl font-light ml-3">even ide</h1>
       </div>
 
-      {/* 버튼 영역 */}
       <div className="flex gap-3 px-3 py-3 border-b border-gray-700">
         <button className="ml-auto" title="파일 추가" onClick={handleAddFile}>
           <FileNewIcon className="w-4 h-4" />
@@ -187,7 +177,6 @@ export default function Sidebar({ projectId }: SidebarProps) {
         </button>
       </div>
 
-      {/* 프로젝트 입력창 */}
       {isAddingProject && (
         <div className="px-4 py-3">
           <input
@@ -206,13 +195,13 @@ export default function Sidebar({ projectId }: SidebarProps) {
         </div>
       )}
 
-      {/* 파일 탐색기 */}
       <div className="flex-1 overflow-y-auto">
         <FileExplorer
           onProjectClick={
             projectId ? () => {} : (id) => setSelectedProjectId(id)
           }
-          selectedProjectId={selectedProjectId ?? ""} // null 방지 처리
+          selectedProjectId={selectedProjectId ?? ""}
+          onFileNameSubmit={handleFileNameSubmit}
         />
       </div>
     </aside>
