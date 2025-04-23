@@ -24,10 +24,10 @@ export const removeAuthCookie = () => {
 
 export const getAuthCookie = (): { token: string | null; userId: number | null; } => {
   const token = getCookie(ACCESS_TOKEN);
-  const uid = getCookie(USER_ID);
+  const userId = getCookie(USER_ID);
 
   return {
     token: typeof token === "string" ? token : null,
-    userId: typeof uid === "string" ? Number(uid) : null,
+    userId: typeof userId === "string" ? Number(userId) : null,
   };
 };
