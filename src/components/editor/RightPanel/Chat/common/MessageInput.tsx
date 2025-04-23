@@ -3,9 +3,10 @@ import SendButton from "./SendButton";
 
 interface MessageInputProps {
 	onSubmit: (message: string) => void;
+	disabled?: boolean;
 }
 
-const MessageInput = ({ onSubmit }: MessageInputProps) => {
+const MessageInput = ({ onSubmit, disabled }: MessageInputProps) => {
 	const textAreaRef = useRef<HTMLTextAreaElement>(null);
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const [message, setMessage] = useState("");
@@ -55,7 +56,10 @@ const MessageInput = ({ onSubmit }: MessageInputProps) => {
 				onCompositionEnd={() => setIsComposing(false)}
 				value={message}
 			/>
-			<SendButton disabled={message.trim() === ""} onClick={handleSend} />
+			<SendButton
+				disabled={message.trim() === "" || disabled}
+				onClick={handleSend}
+			/>
 		</div>
 	);
 };
