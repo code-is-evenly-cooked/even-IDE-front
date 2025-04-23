@@ -25,15 +25,14 @@ export const createFile = async (
 
 /* 파일 코드, 파일 언어 저장 API */
 export const updateFileCode = async (
-  projectId: string,
+  projectId: number,
   fileId: string,
-  fileName: string,
   language: string,
   content: string,
   token: string
 ) => {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/projects/${projectId}/files/${fileId}/code`,
+    `${API_BASE_URL}/projects/${projectId}/files/${fileId}/code`,
     {
       method: "PATCH",
       headers: {
@@ -41,8 +40,6 @@ export const updateFileCode = async (
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        fileId: Number(fileId), // 서버는 숫자로 필요할 수 있음
-        fileName,
         language,
         content,
       }),
@@ -55,6 +52,30 @@ export const updateFileCode = async (
   }
 
   return await res.json();
+};
+
+/* 파일 단건 조회 API */
+export const fetchFileContent = async (
+  projectId: number,
+  fileId: string,
+  token: string
+) => {
+  const res = await fetch(
+    `${API_BASE_URL}/projects/${projectId}/files/${fileId}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!res.ok) {
+    const error = await res.text();
+    throw new Error(`파일 불러오기 실패: ${error}`);
+  }
+
+  return res.json();
 };
 
 /* 파일 이름 변경 API */
