@@ -31,7 +31,6 @@ interface PageProps {
 export default function ProjectPage({ params }: PageProps) {
   const projectId = params.uuid;
   const terminalRef = useRef<XtermType | null>(null);
-  //const [activePanel, setActivePanel] = useState<PanelType | null>(null);
   const language = useLanguageStore((state) => state.language);
   const { setProjects } = useProjectStore();
   const { setFiles } = useIdeStore();

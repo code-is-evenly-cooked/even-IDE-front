@@ -29,7 +29,6 @@ type ProjectResponse = {
 
 export default function EditorPage() {
 	const terminalRef = useRef<XtermType | null>(null);
-	//const [activePanel, setActivePanel] = useState<PanelType | null>(null);
 	const language = useLanguageStore((state) => state.language);
 	const { setProjects, setProjectId } = useProjectStore();
 
