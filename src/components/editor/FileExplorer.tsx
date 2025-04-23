@@ -45,7 +45,7 @@ export default function FileExplorer({
               className={clsx(
                 "flex text-sm px-3 py-2 cursor-pointer",
                 selectedProjectId === project.id
-                  ? "bg-gray500 font-bold"
+                  ? "text-gray200 font-bold"
                   : "hover:bg-gray700 text-white"
               )}
             >
