@@ -2,7 +2,7 @@
 
 import Sidebar from "@/components/layout/Sidebar/Sidebar";
 import Header from "@/components/layout/Header/Header";
-import { useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import type { Terminal as XtermType } from "xterm";
 import dynamic from "next/dynamic";
 import { useLanguageStore } from "@/stores/useLanguageStore";
@@ -31,6 +31,7 @@ interface PageProps {
 export default function ProjectPage({ params }: PageProps) {
   const projectId = params.uuid;
   const terminalRef = useRef<XtermType | null>(null);
+  const [numericProjectId, setNumericProjectId] = useState<number | null>(null); //  projectId 저장용
   const language = useLanguageStore((state) => state.language);
   const { setProjects } = useProjectStore();
   const { setFiles } = useIdeStore();
@@ -64,20 +65,26 @@ export default function ProjectPage({ params }: PageProps) {
 
     fetchProject(projectId, token)
       .then((data) => {
+        console.log("📦 fetchProject 응답:", data);
         setProjects([
           {
             id: data.sharedUUID,
             name: data.projectName,
-            projectId: data.projectId,
+            projectId: data.id,
           },
         ]);
-
+        setNumericProjectId(data.id);
         setFiles(
-          (data.files as FileItem[]).map((file) => ({
+          data.files.map((file: FileItem) => ({
             id: String(file.id),
             name: file.name,
-            content: "",
-            projectId: data.sharedUUID,
+            content: "", // 서버에서 코드 본문은 아직 안 넘겨줌
+            projectId: data.sharedUUID, // UUID
+            language: file.language ?? "javascript", // 없으면 기본값
+            updatedAt: file.updatedAt ?? new Date().toISOString(),
+            ownerId: Number(file.ownerId) ?? 0,
+            locked: file.locked ?? false,
+            editLocked: file.editLocked ?? false,
           }))
         );
       })
@@ -89,7 +96,13 @@ export default function ProjectPage({ params }: PageProps) {
   return (
     <div>
       <div className="flex">
-        <Sidebar projectId={projectId} /> {/* 전달 */}
+        {numericProjectId !== null && (
+          <Sidebar
+            projectId={projectId}
+            numericProjectId={numericProjectId ?? undefined}
+          />
+        )}{" "}
+        {/* 전달 */}
         <div className="flex flex-1 flex-col min-w-0">
           <Header onRun={handleRun} />
           <div className="flex min-w-0">
