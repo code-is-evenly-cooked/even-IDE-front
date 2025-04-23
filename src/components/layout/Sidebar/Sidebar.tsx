@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import FileExplorer from "@/components/editor/FileExplorer";
 import { useIdeStore } from "@/stores/useIdeStore";
 import { useProjectStore } from "@/stores/useProjectStore";
@@ -30,6 +31,7 @@ export default function Sidebar({ projectId }: SidebarProps) {
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
     null
   );
+  const router = useRouter();
 
   // 파일 추가
   const handleAddFile = async () => {
@@ -92,6 +94,21 @@ export default function Sidebar({ projectId }: SidebarProps) {
 
     setIsAddingProject(false); // 입력창 닫기
   };
+  // 프로젝트 이동
+  const handleGoToProject = () => {
+    if (!selectedProjectId) {
+      alert("먼저 이동할 프로젝트를 선택해주세요.");
+      return;
+    }
+  
+    const project = projects.find((p) => p.id === selectedProjectId);
+    if (!project) {
+      alert("선택한 프로젝트 정보를 찾을 수 없습니다.");
+      return;
+    }
+  
+    router.push(`/project/${project.id}`);
+  };
 
   // 삭제 기능 통합 (파일 + 프로젝트)
   const handleDelete = async () => {
@@ -151,7 +168,7 @@ export default function Sidebar({ projectId }: SidebarProps) {
         <button title="프로젝트 추가" onClick={handleAddProject}>
           <FolderNewIcon className="w-4 h-4" />
         </button>
-        <button title="되돌리기">
+        <button title="프로젝트 이동" onClick={handleGoToProject}>
           <BackIcon className="w-4 h-4" />
         </button>
         <button title="삭제" onClick={handleDelete}>
