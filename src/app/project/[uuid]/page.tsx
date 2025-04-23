@@ -14,6 +14,7 @@ import { fetchProject } from "@/service/project";
 import { useProjectStore } from "@/stores/useProjectStore";
 import { useIdeStore } from "@/stores/useIdeStore";
 import type { FileItem } from "@/types/file";
+import { useParams } from "next/navigation";
 
 const CodeEditor = dynamic(() => import("@/components/editor/CodeEditor"), {
   ssr: false,
@@ -22,14 +23,9 @@ const TerminalView = dynamic(() => import("@/components/editor/Terminal"), {
   ssr: false,
 });
 
-interface PageProps {
-  params: {
-    uuid: string;
-  };
-}
-
-export default function ProjectPage({ params }: PageProps) {
-  const projectId = params.uuid;
+export default function ProjectPage() {
+  const params = useParams();
+  const projectId = params?.uuid as string;
   const terminalRef = useRef<XtermType | null>(null);
   const [numericProjectId, setNumericProjectId] = useState<number | null>(null); //  projectId 저장용
   const language = useLanguageStore((state) => state.language);
