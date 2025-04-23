@@ -23,9 +23,9 @@ type IdeStore = {
     addFile: (name: string, id?: string) => void;
     deleteFile: (id: string) => void;
 
+    renameFile: (id: string, newName: string) => void;
     editingFileId: string | null;
     setEditingFileId: (id: string | null) => void;
-    renameFile: (id: string, newName: string) => void;
 
     currentCode: string;
     setCurrentCode: (code: string) => void;
