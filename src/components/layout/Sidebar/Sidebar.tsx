@@ -7,6 +7,7 @@ import { useProjectStore } from "@/stores/useProjectStore";
 import { createProject } from "@/service/project";
 import { createFile } from "@/service/file";
 import { getAuthCookie } from "@/lib/cookie";
+import { deleteProject } from "@/service/project";
 import {
   EvenIcon,
   FileNewIcon,
@@ -23,7 +24,6 @@ export default function Sidebar({ projectId }: SidebarProps) {
   const { addFile, deleteFile, currentFileId, setEditingFileId } =
     useIdeStore();
   const { addProject, removeProject, projects } = useProjectStore();
-  
 
   const [isAddingProject, setIsAddingProject] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");
@@ -94,22 +94,42 @@ export default function Sidebar({ projectId }: SidebarProps) {
   };
 
   // 삭제 기능 통합 (파일 + 프로젝트)
-  const handleDelete = () => {
+  const handleDelete = async () => {
+    const token = getAuthCookie().token;
+
+    // 프로젝트 삭제
     if (selectedProjectId && !currentFileId) {
-      const confirmProjectDelete = window.confirm("정말로 이 프로젝트를 삭제하시겠습니까?");
+      const confirmProjectDelete =
+        window.confirm("이 프로젝트를 삭제하시겠습니까?");
       if (!confirmProjectDelete) return;
-      removeProject(selectedProjectId);
-      setSelectedProjectId(null);
+
+      const project = projects.find((p) => p.id === selectedProjectId);
+      if (!project) {
+        alert("프로젝트 정보를 찾을 수 없습니다.");
+        return;
+      }
+
+      try {
+        await deleteProject(project.projectId, token);  //  서버에서 제거
+        removeProject(selectedProjectId);  //  상태 제거
+        setSelectedProjectId(null);  //  선택 해제
+      } catch (err) {
+        console.error("❌ 프로젝트 삭제 실패:", err);
+        alert("프로젝트 삭제 중 오류가 발생했습니다.");
+      }
+
       return;
     }
-  
+
     if (currentFileId) {
-      const confirmFileDelete = window.confirm("정말로 이 파일을 삭제하시겠습니까?");
+      const confirmFileDelete = window.confirm(
+        "정말로 이 파일을 삭제하시겠습니까?"
+      );
       if (!confirmFileDelete) return;
       deleteFile(currentFileId);
       return;
     }
-  
+
     alert("삭제할 항목을 선택해주세요.");
   };
 

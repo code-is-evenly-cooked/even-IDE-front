@@ -5,7 +5,6 @@ export const createProject = async (
   token: string,
   ownerId: number
 ) => {
-
   const res = await fetch(`${API_BASE_URL}/projects`, {
     method: "POST",
     headers: {
@@ -35,24 +34,39 @@ export const createProject = async (
   }
 
   return {
-    id: data.sharedUUID,           //  UUID
-    name: data.projectName,        //  프로젝트 이름
-    projectId: Number(data.id),    //  숫자형 projectId
+    id: data.sharedUUID, //  UUID
+    name: data.projectName, //  프로젝트 이름
+    projectId: Number(data.id), //  숫자형 projectId
   };
 };
 
 export const fetchProject = async (uuid: string, token: string) => {
-    const res = await fetch(`${API_BASE_URL}/projects/${uuid}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  
-    if (!res.ok) {
-      const error = await res.text();
-      throw new Error(`프로젝트 조회 실패: ${error}`);
-    }
-  
-    return await res.json();
-  };
+  const res = await fetch(`${API_BASE_URL}/projects/${uuid}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    const error = await res.text();
+    throw new Error(`프로젝트 조회 실패: ${error}`);
+  }
+
+  return await res.json();
+};
+
+// 프로젝트 삭제
+export const deleteProject = async (projectId: number, token: string) => {
+  const res = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    const error = await res.text();
+    throw new Error(`프로젝트 삭제 실패: ${error}`);
+  }
+}
