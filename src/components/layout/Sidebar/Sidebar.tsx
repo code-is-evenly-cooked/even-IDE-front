@@ -22,7 +22,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ projectId }: SidebarProps) {
-  const { addFile, deleteFile, currentFileId, setEditingFileId } =
+  const { addFile, deleteFile, currentFileId, setEditingFileId, files } =
     useIdeStore();
   const { addProject, removeProject, projects } = useProjectStore();
 
@@ -94,21 +94,32 @@ export default function Sidebar({ projectId }: SidebarProps) {
 
     setIsAddingProject(false); // 입력창 닫기
   };
-  // 프로젝트 이동
+
+  // 선택한 프로젝트 이동
   const handleGoToProject = () => {
-    if (!selectedProjectId) {
-      alert("먼저 이동할 프로젝트를 선택해주세요.");
-      return;
+    let targetProjectUUID: string | null = null;
+
+    if (selectedProjectId) {
+    // 선택된 프로젝트가 있는 경우 → 바로 UUID 사용
+    targetProjectUUID = selectedProjectId;
+  } else if (currentFileId) {
+    // 파일이 선택된 경우 → 해당 파일의 projectId를 추적
+    const file = files.find((f) => f.id === currentFileId);
+    if (file) {
+      const project = projects.find((p) => p.projectId === Number(file.projectId));
+      if (project) {
+        targetProjectUUID = project.id; // UUID
+      }
     }
-  
-    const project = projects.find((p) => p.id === selectedProjectId);
-    if (!project) {
-      alert("선택한 프로젝트 정보를 찾을 수 없습니다.");
-      return;
-    }
-  
-    router.push(`/project/${project.id}`);
-  };
+  }
+
+  if (!targetProjectUUID) {
+    alert("이동할 프로젝트를 찾을 수 없습니다.");
+    return;
+  }
+
+  router.push(`/project/${targetProjectUUID}`);
+};
 
   // 삭제 기능 통합 (파일 + 프로젝트)
   const handleDelete = async () => {
