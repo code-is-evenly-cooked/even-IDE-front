@@ -9,7 +9,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 export async function GET(req: NextRequest) {
 	const { searchParams } = new URL(req.url);
 	const projectId = searchParams.get("projectId");
-	const token = getAuthCookie();
+	const token = getAuthCookie().token;
 
 	if (!projectId) {
 		return NextResponse.json(

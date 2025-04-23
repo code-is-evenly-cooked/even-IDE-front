@@ -3,16 +3,35 @@
 @tailwind utilities;
 
 :root {
-	--background: #1e1e1e;
-	--foreground: #ffffff;
+  --background: #1e1e1e;
+  --foreground: #ffffff;
 }
 
 body {
-	background: var(--background);
-	color: var(--foreground);
-	font-family: Arial, Helvetica, sans-serif;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-	display: none;
+  display: none;
+}
+
+.scrollbar-thumb::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollbar-thumb::-webkit-scrollbar-thumb {
+  background-color: #3f3f46;
+  border-radius: 6px;
+}
+.scrollbar-thumb::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.memo-icon {
+	background: url('/icons/memo-icon.svg') center center no-repeat;
+	background-size: contain;
+	width: 16px;
+	height: 16px;
+	margin-left: 12px;
 }

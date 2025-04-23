@@ -38,7 +38,7 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
 		if (clientRef.current?.connected) {
 			clientRef.current.deactivate();
 		}
-		const accessToken = getAuthCookie();
+		const accessToken = getAuthCookie().token;
 
 		try {
 			// 입장 API 호출
