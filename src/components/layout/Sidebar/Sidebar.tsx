@@ -23,6 +23,7 @@ export default function Sidebar({ projectId }: SidebarProps) {
   const { addFile, deleteFile, currentFileId, setEditingFileId } =
     useIdeStore();
   const { addProject, removeProject, projects } = useProjectStore();
+  
 
   const [isAddingProject, setIsAddingProject] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");
@@ -94,23 +95,18 @@ export default function Sidebar({ projectId }: SidebarProps) {
 
   // 삭제 기능 통합 (파일 + 프로젝트)
   const handleDelete = () => {
-    const selectedFile = currentFileId;
-    const selectedProject = selectedProjectId;
-  
-    // 파일이 선택된 경우
-    if (selectedFile) {
-      const confirmFileDelete = window.confirm("정말로 이 파일을 삭제하시겠습니까?");
-      if (!confirmFileDelete) return;
-      deleteFile(selectedFile);
+    if (selectedProjectId && !currentFileId) {
+      const confirmProjectDelete = window.confirm("정말로 이 프로젝트를 삭제하시겠습니까?");
+      if (!confirmProjectDelete) return;
+      removeProject(selectedProjectId);
+      setSelectedProjectId(null);
       return;
     }
   
-    // 프로젝트가 선택된 경우
-    if (selectedProject) {
-      const confirmProjectDelete = window.confirm("정말로 이 프로젝트를 삭제하시겠습니까?");
-      if (!confirmProjectDelete) return;
-      removeProject(selectedProject);
-      setSelectedProjectId(null); // 선택 해제
+    if (currentFileId) {
+      const confirmFileDelete = window.confirm("정말로 이 파일을 삭제하시겠습니까?");
+      if (!confirmFileDelete) return;
+      deleteFile(currentFileId);
       return;
     }
   
