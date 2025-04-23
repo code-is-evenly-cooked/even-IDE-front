@@ -1,10 +1,6 @@
 import React, { useRef, useState } from "react";
-import SendButton from "./SendButton";
 import { useChat } from "@/hooks/useChat";
-
-// interface ChatInputProps {
-// 	projectId: string;
-// }
+import SendButton from "../SendButton";
 
 const ChatInput = () => {
 	const textAreaRef = useRef<HTMLTextAreaElement>(null);
