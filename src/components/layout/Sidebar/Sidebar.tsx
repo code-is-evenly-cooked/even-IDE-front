@@ -55,13 +55,6 @@ export default function Sidebar({ projectId }: SidebarProps) {
     }
   };
 
-  // 파일 삭제
-  const handleDeleteFile = () => {
-    if (currentFileId) {
-      deleteFile(currentFileId);
-    }
-  };
-
   // 프로젝트 추가
   const handleAddProject = () => {
     setIsAddingProject(true);
@@ -99,18 +92,29 @@ export default function Sidebar({ projectId }: SidebarProps) {
     setIsAddingProject(false); // 입력창 닫기
   };
 
-  // 프로젝트 삭제
-  const handleDeleteProject = () => {
-    if (!selectedProjectId) {
-      alert("삭제할 프로젝트를 선택해주세요.");
+  // 삭제 기능 통합 (파일 + 프로젝트)
+  const handleDelete = () => {
+    const selectedFile = currentFileId;
+    const selectedProject = selectedProjectId;
+  
+    // 파일이 선택된 경우
+    if (selectedFile) {
+      const confirmFileDelete = window.confirm("정말로 이 파일을 삭제하시겠습니까?");
+      if (!confirmFileDelete) return;
+      deleteFile(selectedFile);
       return;
     }
   
-    const confirmDelete = window.confirm("정말로 이 프로젝트를 삭제하시겠습니까?");
-    if (!confirmDelete) return;
+    // 프로젝트가 선택된 경우
+    if (selectedProject) {
+      const confirmProjectDelete = window.confirm("정말로 이 프로젝트를 삭제하시겠습니까?");
+      if (!confirmProjectDelete) return;
+      removeProject(selectedProject);
+      setSelectedProjectId(null); // 선택 해제
+      return;
+    }
   
-    removeProject(selectedProjectId); // Zustand에서 삭제
-    setSelectedProjectId(null); // 선택 해제
+    alert("삭제할 항목을 선택해주세요.");
   };
 
   return (
@@ -134,7 +138,7 @@ export default function Sidebar({ projectId }: SidebarProps) {
         <button title="되돌리기">
           <BackIcon className="w-4 h-4" />
         </button>
-        <button title="삭제" onClick={handleDeleteProject}>
+        <button title="삭제" onClick={handleDelete}>
           <CloseIcon className="w-5 h-5" />
         </button>
       </div>
