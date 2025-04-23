@@ -1,7 +1,6 @@
 "use client";
 
 import useInitAIChat from "@/hooks/useInitAIChat";
-import ChatInput from "../ChatInput";
 import AIMessageList from "./AIMessageList";
 import AITitle from "./AITitle";
 import AIInput from "./AIInput";

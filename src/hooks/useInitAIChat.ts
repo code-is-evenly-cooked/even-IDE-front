@@ -28,7 +28,7 @@ const useInitAIChat = () => {
 
 	useEffect(() => {
 		initMessages();
-	}, []);
+	}, [setMessages]);
 };
 
 export default useInitAIChat;
