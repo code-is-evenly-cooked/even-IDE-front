@@ -27,6 +27,7 @@ interface ChatState {
 	sender: string;
 	nickname: string;
 	setSenderInfo: (sender: string, nickname: string) => void;
+	resetChatUser: () => void;
 }
 
 export const useChatStore = create<ChatState>((set) => ({
@@ -42,4 +43,5 @@ export const useChatStore = create<ChatState>((set) => ({
 	sender: "",
 	nickname: "",
 	setSenderInfo: (sender, nickname) => set({ sender, nickname }),
+	resetChatUser: () => set({ sender: "", nickname: "" }),
 }));

@@ -1,15 +1,8 @@
+import { AIChatMessage } from "@/stores/useAIChatStore";
 import { openDB } from "idb";
 
 const DB_NAME = "ai-chat-db";
 const STORE_NAME = "ai-messages";
-
-export interface AIChatMessage {
-	id: string; // UUID
-	role: "user" | "assistant";
-	content: string;
-	timestamp: number;
-	nickname: string;
-}
 
 export const getDB = () =>
 	openDB(DB_NAME, 1, {
@@ -28,4 +21,9 @@ export const saveMessage = async (message: AIChatMessage) => {
 export const getAllMessages = async (): Promise<AIChatMessage[]> => {
 	const db = await getDB();
 	return db.getAll(STORE_NAME);
+};
+
+export const clearMessages = async () => {
+	const db = await getDB();
+	await db.clear(STORE_NAME);
 };
