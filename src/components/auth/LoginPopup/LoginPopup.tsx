@@ -10,7 +10,10 @@ interface LoginPopupProps {
 
 const LoginPopup = ({ onClose, onLogin }: LoginPopupProps) => {
 	return (
-		<div className="w-full max-w-[33rem] border-none bg-gray700 p-4 rounded-xl">
+		<div
+			className="w-full max-w-[33rem] border-none bg-gray700 p-4 rounded-xl"
+			onClick={(e) => e.stopPropagation()}
+		>
 			<div className="flex justify-end">
 				<IconButton
 					icon={<CloseIcon />}
