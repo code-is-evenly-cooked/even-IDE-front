@@ -1,14 +1,15 @@
 import React, { useRef, useState } from "react";
-import { useChat } from "@/hooks/useChat";
-import SendButton from "../SendButton";
+import SendButton from "./SendButton";
 
-const ChatInput = () => {
+interface MessageInputProps {
+	onSubmit: (message: string) => void;
+}
+
+const MessageInput = ({ onSubmit }: MessageInputProps) => {
 	const textAreaRef = useRef<HTMLTextAreaElement>(null);
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const [message, setMessage] = useState("");
 	const [isComposing, setIsComposing] = useState(false);
-
-	const { sendMessage } = useChat();
 
 	const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		const value = e.target.value;
@@ -20,8 +21,8 @@ const ChatInput = () => {
 	const handleSend = () => {
 		const trimmedMessage = message.trim();
 		if (!trimmedMessage) return;
-		console.log("보낸 메세지", trimmedMessage);
-		sendMessage(trimmedMessage);
+
+		onSubmit(trimmedMessage);
 		setMessage("");
 
 		requestAnimationFrame(() => {
@@ -59,4 +60,4 @@ const ChatInput = () => {
 	);
 };
 
-export default ChatInput;
+export default MessageInput;
