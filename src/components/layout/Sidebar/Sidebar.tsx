@@ -22,7 +22,7 @@ interface SidebarProps {
 export default function Sidebar({ projectId }: SidebarProps) {
   const { addFile, deleteFile, currentFileId, setEditingFileId } =
     useIdeStore();
-  const { addProject, projects } = useProjectStore();
+  const { addProject, removeProject, projects } = useProjectStore();
 
   const [isAddingProject, setIsAddingProject] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");
@@ -46,7 +46,7 @@ export default function Sidebar({ projectId }: SidebarProps) {
       const newFile = await createFile(project.projectId, "파일", token);
       const newFileId = String(newFile.fileId);
       addFile(newFile.filename, selectedProjectId, newFileId);
-      
+
       // 파일 생성 후 이름 입력 모드 진입
       setEditingFileId(newFileId);
     } catch (err) {
@@ -99,6 +99,20 @@ export default function Sidebar({ projectId }: SidebarProps) {
     setIsAddingProject(false); // 입력창 닫기
   };
 
+  // 프로젝트 삭제
+  const handleDeleteProject = () => {
+    if (!selectedProjectId) {
+      alert("삭제할 프로젝트를 선택해주세요.");
+      return;
+    }
+  
+    const confirmDelete = window.confirm("정말로 이 프로젝트를 삭제하시겠습니까?");
+    if (!confirmDelete) return;
+  
+    removeProject(selectedProjectId); // Zustand에서 삭제
+    setSelectedProjectId(null); // 선택 해제
+  };
+
   return (
     <aside className="w-[280px] min-w-[280px] h-screen border-tonedown border-[1px] bg-gray700 text-white flex flex-col">
       {/* 상단 로고 */}
@@ -120,7 +134,7 @@ export default function Sidebar({ projectId }: SidebarProps) {
         <button title="되돌리기">
           <BackIcon className="w-4 h-4" />
         </button>
-        <button title="삭제" onClick={handleDeleteFile}>
+        <button title="삭제" onClick={handleDeleteProject}>
           <CloseIcon className="w-5 h-5" />
         </button>
       </div>

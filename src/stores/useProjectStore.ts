@@ -10,6 +10,7 @@ export type Project = {
 type ProjectState = {
   projects: Project[]; // 전체 프로젝트 목록
   addProject: (project: Project) => void;
+  removeProject: (uuid: string) => void;
   setProjects: (projects: Project[]) => void;
 
   projectId: number | null; // 선택된 프로젝트의 숫자형 ID
@@ -28,4 +29,10 @@ export const useProjectStore = create<ProjectState>((set) => ({
   // 선택된 프로젝트 ID
   projectId: null,
   setProjectId: (id) => set({ projectId: id }),
+
+  // 프로젝트 삭제
+  removeProject: (uuid) =>
+    set((state) => ({
+      projects: state.projects.filter((p) => p.id !== uuid),
+    })),
 }));
