@@ -210,3 +210,16 @@ export const MemoIcon = ({className}: IconProps) => {
         />
     );
 };
+
+export const MemoIcon2 = ({className}: IconProps) => {
+    return (
+        <Image
+            src="/icons/memo-icon-2.svg"
+            alt="메모 아이콘 선택"
+            width={16}
+            height={16}
+            className={className}
+            priority
+        />
+    );
+};
