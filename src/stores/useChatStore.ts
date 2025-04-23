@@ -1,9 +1,10 @@
+import { ChatMessageType } from "@/types/chat";
 import { create } from "zustand";
 
 export type ChatViewMode = "panel" | "modal";
 
 export interface ChatMessage {
-	type: "JOIN" | "MESSAGE";
+	type: ChatMessageType;
 	projectId: string;
 	sender: string;
 	nickname: string;

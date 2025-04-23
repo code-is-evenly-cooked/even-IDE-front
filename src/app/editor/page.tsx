@@ -84,7 +84,7 @@ export default function EditorPage() {
 				<Sidebar />
 				<div className="flex flex-1 flex-col min-w-0">
 					<Header onRun={handleRun} />
-					<div className="flex min-w-0">
+					<div className="flex min-h-0">
 						<main className="min-w-0 overflow-x-hidden flex flex-1 flex-col bg-gray700">
 							<div className="flex flex-col flex-1 min-w-0">
 								<Tabbar />
