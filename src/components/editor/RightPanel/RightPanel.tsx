@@ -3,7 +3,7 @@
 import { usePanelStore } from "@/stores/usePanelState";
 import ChatModal from "./Chat/ChatModal";
 import ChatPanel from "./Chat/ChatPanel";
-import AIPanel from "./AI/AIPanel";
+import AIPanel from "./Chat/AI/AIPanel";
 import { useChatStore } from "@/stores/useChatStore";
 
 const RightPanel = () => {

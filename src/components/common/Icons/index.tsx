@@ -223,3 +223,16 @@ export const AIIcon = ({ className }: IconProps) => {
 		/>
 	);
 };
+
+export const MinusCloseIcon = ({ className }: IconProps) => {
+	return (
+		<Image
+			src="/icons/minus_close.svg"
+			alt="닫기"
+			width={36}
+			height={36}
+			className={className}
+			priority
+		/>
+	);
+};

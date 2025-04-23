@@ -2,7 +2,7 @@
 
 import { useChatStore } from "@/stores/useChatStore";
 import ChatTitle from "./ChatTitle";
-import ChatInput from "./common/ChatInput";
+import ChatInput from "./ChatInput";
 import ChatMessageList from "./ChatMessageList";
 
 const ChatModal = () => {

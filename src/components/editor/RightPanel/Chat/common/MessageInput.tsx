@@ -1,18 +1,16 @@
 import React, { useRef, useState } from "react";
 import SendButton from "./SendButton";
-import { useChat } from "@/hooks/useChat";
 
-// interface ChatInputProps {
-// 	projectId: string;
-// }
+interface MessageInputProps {
+	onSubmit: (message: string) => void;
+	disabled?: boolean;
+}
 
-const ChatInput = () => {
+const MessageInput = ({ onSubmit, disabled }: MessageInputProps) => {
 	const textAreaRef = useRef<HTMLTextAreaElement>(null);
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const [message, setMessage] = useState("");
 	const [isComposing, setIsComposing] = useState(false);
-
-	const { sendMessage } = useChat();
 
 	const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		const value = e.target.value;
@@ -24,8 +22,8 @@ const ChatInput = () => {
 	const handleSend = () => {
 		const trimmedMessage = message.trim();
 		if (!trimmedMessage) return;
-		console.log("보낸 메세지", trimmedMessage);
-		sendMessage(trimmedMessage);
+
+		onSubmit(trimmedMessage);
 		setMessage("");
 
 		requestAnimationFrame(() => {
@@ -58,9 +56,12 @@ const ChatInput = () => {
 				onCompositionEnd={() => setIsComposing(false)}
 				value={message}
 			/>
-			<SendButton disabled={message.trim() === ""} onClick={handleSend} />
+			<SendButton
+				disabled={message.trim() === "" || disabled}
+				onClick={handleSend}
+			/>
 		</div>
 	);
 };
 
-export default ChatInput;
+export default MessageInput;
