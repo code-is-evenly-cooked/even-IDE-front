@@ -11,7 +11,7 @@ const useAuthInitializer = () => {
 	const clearAuth = useAuthStore((state) => state.clearAuth);
 
 	useEffect(() => {
-		const token = getAuthCookie();
+		const token = getAuthCookie().token;
 		if (token) {
 			const decoded = decodeJwt<DecodedToken>(token);
 			if (decoded) {

@@ -66,7 +66,7 @@ const useLoginForm = () => {
 				email: formState.email,
 				password: formState.password,
 			});
-			saveAuthCookie(response.accessToken);
+			saveAuthCookie(response.accessToken, response.userId);
 			useAuthStore.getState().setAuth(response.accessToken, "local", {
 				nickname: response.nickname,
 				userId: response.userId,

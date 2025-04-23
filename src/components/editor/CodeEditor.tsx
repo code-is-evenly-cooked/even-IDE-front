@@ -3,18 +3,18 @@
 import { Editor } from "@monaco-editor/react";
 import { useIdeStore } from "@/stores/useIdeStore";
 import { useEffect, useRef, useState } from "react";
-import MemoIndicator from "./MemoLine";
+import { useLanguageStore } from "@/stores/useLanguageStore";
 import { createPortal } from "react-dom";
 import type * as monacoEditor from "monaco-editor";
+import MemoIndicator from "./MemoLine";
 
 const CodeEditor = () => {
 	const { files, currentFileId, updateFileContent } = useIdeStore();
-	const [editorInstance, setEditorInstance] =
-		useState<monacoEditor.editor.IStandaloneCodeEditor | null>(null);
-	const [monacoInstance, setMonacoInstance] = useState<
-		typeof monacoEditor | null
-	>(null);
-	const [selectedLine, setSelectedLine] = useState<number | null>(null); // 클릭한 코드 라인
+	const { language } = useLanguageStore();
+
+	const [editorInstance, setEditorInstance] = useState<monacoEditor.editor.IStandaloneCodeEditor | null>(null);
+	const [monacoInstance, setMonacoInstance] = useState<typeof monacoEditor | null>(null);
+	const [selectedLine, setSelectedLine] = useState<number | null>(null);
 	const [openedMemoLine, setOpenedMemoLine] = useState<number | null>(null);
 	const [memoContent, setMemoContent] = useState<string>("");
 	const memoRef = useRef<HTMLDivElement | null>(null);
@@ -53,25 +53,25 @@ const CodeEditor = () => {
 		);
 	}
 
-	return (
-		<div className="h-[45vh] min-h-[300px] border-t-[1px] border-t-tonedown min-w-0 relative">
-			<Editor
-				height="100%"
-				defaultLanguage="javascript"
-				value={currentFile?.content ?? ""}
-				theme="vs-dark"
-				options={{
-					fontSize: 14,
-					minimap: { enabled: false },
-					automaticLayout: true,
-					glyphMargin: true,
-				}}
-				onChange={(value) => {
-					updateFileContent(currentFile.id, value ?? "");
-				}}
-				onMount={(editor, monaco) => {
-					setEditorInstance(editor);
-					setMonacoInstance(monaco);
+    return (
+        <div className="h-[45vh] min-h-[300px] border-t-[1px] border-t-tonedown min-w-0 relative">
+            <Editor
+                height="100%"
+                language={language.toLowerCase()}
+                value={currentFile?.content ?? ""}
+                theme="vs-dark"
+                options={{
+                    fontSize: 14,
+                    minimap: {enabled: false},
+                    automaticLayout: true,
+                    glyphMargin: true,
+                }}
+                onChange={(value) => {
+                    updateFileContent(currentFile.id, value ?? "");
+                }}
+                onMount={(editor, monaco) => {
+                    setEditorInstance(editor);
+                    setMonacoInstance(monaco);
 
 					editor.onMouseDown((e) => {
 						if (
