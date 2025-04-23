@@ -1,10 +1,10 @@
 import { GhostIcon } from "../common/Icons";
 
-type CodeEditLockToggleProps = {
+type EditLockToggleProps = {
 	mode: 'active-hover' | 'active' | 'locked';
 };
 
-export default function CodeEditLockToggle({ mode } : CodeEditLockToggleProps) {
+export default function EditLockToggle({ mode } : EditLockToggleProps) {
 	const isEditLocked = mode === 'locked';
 
 	const bgColor =
