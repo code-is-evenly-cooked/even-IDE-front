@@ -4,7 +4,8 @@ import { useState } from "react";
 import FileExplorer from "@/components/editor/FileExplorer";
 import { useIdeStore } from "@/stores/useIdeStore";
 import { useProjectStore } from "@/stores/useProjectStore";
-import { createProject } from "@/service/project"; // API 요청 함수
+import { createProject } from "@/service/project";
+import { createFile } from "@/service/file";
 import { getAuthCookie } from "@/lib/cookie";
 import {
   EvenIcon,
@@ -19,26 +20,33 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ projectId }: SidebarProps) {
-  const { addFile, deleteFile, setEditingFileId, currentFileId } =
-    useIdeStore();
-  const { addProject } = useProjectStore();
+  const { addFile, deleteFile, currentFileId } = useIdeStore();
+  const { addProject, projects } = useProjectStore();
 
   const [isAddingProject, setIsAddingProject] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
-    null
-  );
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
 
   // 파일 추가
-  const handleAddFile = () => {
+  const handleAddFile = async () => {
+    
     if (!selectedProjectId) {
       alert("먼저 프로젝트를 선택해주세요.");
       return;
     }
-    console.log("🧩 선택된 프로젝트로 파일 추가:", selectedProjectId);
-    const id = Date.now().toString();
-    addFile("", selectedProjectId, id);
-    setEditingFileId(id);
+
+    const token = getAuthCookie().token;
+    const project = projects.find((p) => p.id === selectedProjectId);
+    console.log("✅ project 응답:", project);
+    if (!project) return;
+
+    try {
+      const newFile = await createFile(project.projectId, "새 파일", token);
+      addFile(newFile.filename, selectedProjectId, String(newFile.fileId));
+    } catch (err) {
+      alert("파일 생성 실패");
+      console.error(err);
+    }
   };
 
   // 파일 삭제
@@ -64,9 +72,6 @@ export default function Sidebar({ projectId }: SidebarProps) {
 
     const token = getAuthCookie().token;
     const ownerId = getAuthCookie().userId;
-    console.log("📦 요청 전 확인:");
-    console.log("token:", token);
-    console.log("ownerId:", ownerId);
     if (!token) {
       console.error("로그인 토큰이 없습니다.");
       alert("로그인이 필요합니다.");
@@ -74,16 +79,13 @@ export default function Sidebar({ projectId }: SidebarProps) {
     }
 
     try {
-      const project = await createProject(
-        newProjectName,
-        token,
-        Number(ownerId)
-      );
+      const project = await createProject(trimmed, token, Number(ownerId));
       addProject({
-        id: project.id,           // UUID
+        id: project.id, // UUID
         name: project.name,
-        projectId: project.projectId, // 숫자형 ID도 포함해서 넘김
+        projectId: project.projectId, // number형 ID
       });
+      console.log("✅ project 응답:", project);
     } catch (err) {
       console.error("프로젝트 생성 실패", err);
     }
@@ -139,8 +141,8 @@ export default function Sidebar({ projectId }: SidebarProps) {
       {/* 파일 탐색기 */}
       <div className="flex-1 overflow-y-auto">
         <FileExplorer
-          onProjectClick={projectId ? () => {} : setSelectedProjectId}
-          selectedProjectId={selectedProjectId}
+          onProjectClick={projectId ? () => {} : (id) => setSelectedProjectId(id)}
+          selectedProjectId={selectedProjectId ?? ""} // null 방지 처리
         />
       </div>
     </aside>

@@ -20,7 +20,8 @@ const TerminalView = dynamic(() => import("@/components/editor/Terminal"), {
 });
 
 type ProjectResponse = {
-	projectId: string;
+	projectId: number;
+	id?: number;
 	projectName: string;
 	createdAt: string;
 	sharedUUID: string;
@@ -58,28 +59,24 @@ export default function EditorPage() {
 	useEffect(() => {
 		const token = getAuthCookie().token;
 		if (!token) return;
-
+	
 		fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/editor`, {
-			headers: { Authorization: `Bearer ${token}` },
+		  headers: { Authorization: `Bearer ${token}` },
 		})
-			.then((res) => res.json())
-			.then((data: ProjectResponse[]) => {
-				const projects = data.map((project) => ({
-					id: project.sharedUUID, // sharedUUID가 id로 저장됨
-					name: project.projectName,
-					projectId: Number(project.projectId), // projectId도 따로 저장
-				}));
-				setProjects(projects);
-				if (projects.length > 0) setProjectId(projects[0].projectId);
-			})
-			.catch((err) => {
-				console.error("❌ 프로젝트 리스트 불러오기 실패:", err);
-			});
-	}, [setProjects, setProjectId]);
-
-	useEffect(() => {
-		setProjectId(1); // 실제 프로젝트에선 동적 ID로 변경 필요
-	}, [setProjectId]);
+		  .then((res) => res.json())
+		  .then((data: ProjectResponse[]) => {
+			const projects = data.map((project) => ({
+			  id: project.sharedUUID,
+			  name: project.projectName,
+			  projectId: project.projectId ?? project.id,
+			}));
+			setProjects(projects);
+			if (projects.length > 0) setProjectId(projects[0].projectId);
+		  })
+		  .catch((err) => {
+			console.error("❌ 프로젝트 리스트 불러오기 실패:", err);
+		  });
+	  }, [setProjects, setProjectId]);
 
 	return (
 		<div>

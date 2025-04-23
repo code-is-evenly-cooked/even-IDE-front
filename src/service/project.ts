@@ -25,10 +25,19 @@ export const createProject = async (
 
   const data = await res.json();
 
+  console.log("🎯 프로젝트 생성 응답 data:", data);
+
+  // ✅ projectId가 숫자인지 먼저 확인
+  const parsedId = typeof data.id === "number" ? data.id : Number(data.id);
+
+  if (Number.isNaN(parsedId)) {
+    console.warn("⚠️ projectId 값이 NaN입니다. 응답을 확인해주세요.");
+  }
+
   return {
-    id: data.sharedUUID,
-    name: data.projectName,
-    projectId: data.id,
+    id: data.sharedUUID,           //  UUID
+    name: data.projectName,        //  프로젝트 이름
+    projectId: Number(data.id),    //  숫자형 projectId
   };
 };
 
