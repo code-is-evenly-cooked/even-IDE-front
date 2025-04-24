@@ -1,3 +1,4 @@
+import { fetchWithJson } from "@/lib/fetch";
 import { getAuthCookie } from "@/lib/cookie";
 import { UpdateFileCodeResponse } from "@/types/file";
 
@@ -59,6 +60,25 @@ export const updateFileCode = async (
   }
 
   return await res.json();
+};
+
+/* 코드 잠금 API */
+export const requestToggleEditLock = async ({
+	projectId,
+	fileId,
+	token,
+}: {
+	projectId: number;
+	fileId: string;
+	token: string;
+}): Promise<{ editLocked: boolean }> => {
+	return await fetchWithJson(
+		`/api/projects/${projectId}/files/${fileId}/edit/lock`,
+		{
+			method: "PATCH",
+			headers: { Authorization: token },
+		}
+	);
 };
 
 /* 파일 단건 조회 API */

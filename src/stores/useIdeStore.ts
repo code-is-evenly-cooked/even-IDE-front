@@ -21,12 +21,15 @@ type IdeStore = {
 
   selectFile: (id: string | null) => void;
   updateFileContent: (id: string, newContent: string) => void;
+  updateEditLock: (id: string, editLocked: boolean) => void;
+
   addFile: (
     name: string,
     projectId: string,
     ownerId: number,
     id?: string
   ) => void;
+
   deleteFile: (id: string) => void;
 
   setCurrentFileId: (id: string | null) => void;
@@ -57,6 +60,14 @@ export const useIdeStore = create<IdeStore>()((set, get) => ({
     set((state) => ({
       files: state.files.map((file) =>
         file.id === id ? { ...file, content } : file
+      ),
+    })),
+
+  // 코드 잠금 상태 변경 함수
+  updateEditLock: (id: string, editLocked: boolean) =>
+    set((state) => ({
+      files: state.files.map((file) =>
+        file.id === id ? { ...file, editLocked } : file
       ),
     })),
 

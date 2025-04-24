@@ -64,7 +64,7 @@ export default function ProjectPage() {
             projectId: data.sharedUUID, // UUID
             language: file.language ?? "javascript", // 없으면 기본값
             updatedAt: file.updatedAt ?? new Date().toISOString(),
-            ownerId: Number(file.ownerId) ?? 0,
+            ownerId: data.ownerId,
             locked: file.locked ?? false,
             editLocked: file.editLocked ?? false,
           }))
