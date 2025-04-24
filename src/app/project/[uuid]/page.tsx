@@ -2,7 +2,7 @@
 
 import Sidebar from "@/components/layout/Sidebar/Sidebar";
 import Header from "@/components/layout/Header/Header";
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import type { Terminal as XtermType } from "xterm";
 import dynamic from "next/dynamic";
 import { useLanguageStore } from "@/stores/useLanguageStore";
@@ -27,9 +27,8 @@ export default function ProjectPage() {
   const params = useParams();
   const projectId = params?.uuid as string;
   const terminalRef = useRef<XtermType | null>(null);
-  const [numericProjectId, setNumericProjectId] = useState<number | null>(null); //  projectId 저장용
   const language = useLanguageStore((state) => state.language);
-  const { setProjects } = useProjectStore();
+  const { setProjects, setProjectId } = useProjectStore();
   const { setFiles } = useIdeStore();
 
   const handleRun = (code: string) => {
@@ -69,7 +68,7 @@ export default function ProjectPage() {
             projectId: data.id,
           },
         ]);
-        setNumericProjectId(data.id);
+        setProjectId(data.id);  // 여기서 projectId 전역 저장
         setFiles(
           data.files.map((file: FileItem) => ({
             id: String(file.id),
@@ -87,17 +86,12 @@ export default function ProjectPage() {
       .catch((err) => {
         console.error("❌ 프로젝트 불러오기 실패:", err);
       });
-  }, [projectId, setProjects, setFiles]);
+  }, [projectId, setProjects, setFiles, setProjectId]);
 
   return (
     <div>
       <div className="flex">
-        {numericProjectId !== null && (
-          <Sidebar
-            projectId={projectId}
-            numericProjectId={numericProjectId ?? undefined}
-          />
-        )}{" "}
+          <Sidebar />
         {/* 전달 */}
         <div className="flex flex-1 flex-col min-w-0">
           <Header onRun={handleRun} />
