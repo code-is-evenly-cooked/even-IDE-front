@@ -27,7 +27,7 @@ export default function Sidebar() {
     files,
     setFiles,
   } = useIdeStore();
-  const { addProject, removeProject, projects, projectId, setProjectId } =
+  const { addProject, removeProject, projects, setProjectId } =
     useProjectStore();
 
   const [isAddingProject, setIsAddingProject] = useState(false);
@@ -131,22 +131,23 @@ export default function Sidebar() {
       if (!confirmDelete) return;
 
       const file = files.find((f) => f.id === currentFileId);
+      const numericProjectId = projects.find((p) => p.id === file?.projectId)?.projectId;
+
       console.log("🟡 currentFileId:", currentFileId);
       console.log("🟢 file:", file);
       console.log("🧩 file.projectId:", file?.projectId);
       console.log("📂 all projects:", projects);
-      const project = projects.find((p) => p.id === file?.projectId); // ✅ UUID로 찾기
 
-      if (!file || !project || !projectId || !token) {
+      if (!file || numericProjectId === undefined || !token) {
         alert("파일 정보를 찾을 수 없습니다.");
         return;
       }
 
       try {
-        await deleteFileById(projectId, file.id, token); // ✅ API 호출
-        deleteFile(file.id); // ✅ Zustand 상태 삭제
+        await deleteFileById(numericProjectId, file.id, token); // API 호출
+        deleteFile(file.id); // Zustand 상태 삭제
       } catch (err) {
-        console.error("❌ 파일 삭제 실패:", err);
+        console.error("파일 삭제 실패:", err);
         alert("파일 삭제 중 오류가 발생했습니다.");
       }
 
@@ -154,7 +155,7 @@ export default function Sidebar() {
     }
 
     if (selectedProjectId && !currentFileId) {
-      // ✅ 프로젝트 삭제 처리
+      // 프로젝트 삭제 처리
       const confirmDelete = confirm("이 프로젝트를 삭제하시겠습니까?");
       if (!confirmDelete) return;
 
@@ -169,7 +170,7 @@ export default function Sidebar() {
         removeProject(selectedProjectId); // 상태에서도 삭제
         setSelectedProjectId(null); // 선택 해제
       } catch (err) {
-        console.error("❌ 프로젝트 삭제 실패:", err);
+        console.error("프로젝트 삭제 실패:", err);
         alert("프로젝트 삭제 중 오류가 발생했습니다.");
       }
 
