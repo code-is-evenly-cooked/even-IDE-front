@@ -11,12 +11,16 @@ interface FileExplorerProps {
   onProjectClick: (projectId: string) => void;
   selectedProjectId: string | null;
   onFileNameSubmit: (fileId: string, newName: string) => void;
+  onFileClick?: (fileId: string) => void;
+  onClearProjectSelection?: () => void;
 }
 
 export default function FileExplorer({
   onProjectClick,
   selectedProjectId,
   onFileNameSubmit,
+  onFileClick,
+  onClearProjectSelection,
 }: FileExplorerProps) {
   const {
     files,
@@ -31,6 +35,12 @@ export default function FileExplorer({
   const { projects } = useProjectStore();
   const { projectId: numericProjectId } = useProjectStore();
   const token = getAuthCookie().token;
+
+  const handleClick = (fileId: string) => {
+    if (onFileClick) {
+      onFileClick(fileId);
+    }
+  };
 
   return (
     <div className="flex-1 overflow-y-auto">
@@ -51,7 +61,7 @@ export default function FileExplorer({
               className={clsx(
                 "flex text-sm px-3 py-2 cursor-pointer",
                 selectedProjectId === project.id
-                  ? "text-gray200 font-bold"
+                  ? "bg-gray500 font-bold"
                   : "hover:bg-gray700 text-white"
               )}
             >
@@ -65,7 +75,7 @@ export default function FileExplorer({
                 .filter((file) => file.projectId === project.id)
                 .map((file) =>
                   editingFileId === file.id ? (
-                    <li key={file.id} className="px-8 py-2">
+                    <li key={file.id} onClick={() => handleClick(file.id)} className="px-8 py-2">
                       <div className="text-xs text-gray200 mb-1 ml-1">
                         이름 입력
                       </div>
@@ -101,8 +111,8 @@ export default function FileExplorer({
                     <li
                       key={file.id}
                       onClick={async () => {
-                        openFile(file.id); // 기존 기능 유지
-
+                        openFile(file.id);  //  파일 선택
+                        if (onClearProjectSelection) onClearProjectSelection(); //  프로젝트 선택 해제
                         // 파일 내용 fetch
                         if (numericProjectId && token) {
                           try {

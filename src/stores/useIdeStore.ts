@@ -24,6 +24,7 @@ type IdeStore = {
   addFile: (name: string, projectId: string, ownerId: number, id?: string) => void;
   deleteFile: (id: string) => void;
 
+  setCurrentFileId: (id: string | null) => void;
   editingFileId: string | null;
   setEditingFileId: (id: string | null) => void;
   renameFile: (id: string, newName: string) => void;
@@ -42,6 +43,7 @@ export const useIdeStore = create<IdeStore>()(
     openedFileIds: [],
 
     setFiles: (files) => set({ files }),
+    setCurrentFileId: (id) => set({ currentFileId: id }),
 
     // 파일 선택
     selectFile: (id) => set({ currentFileId: id }),

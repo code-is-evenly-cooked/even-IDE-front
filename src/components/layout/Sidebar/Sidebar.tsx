@@ -22,6 +22,7 @@ export default function Sidebar() {
     addFile,
     deleteFile,
     currentFileId,
+    setCurrentFileId,
     setEditingFileId,
     files,
     setFiles,
@@ -166,9 +167,9 @@ export default function Sidebar() {
       }
 
       try {
-        await deleteProject(project.projectId, token); // ✅ 서버에서 삭제
-        removeProject(selectedProjectId); // ✅ 상태에서도 삭제
-        setSelectedProjectId(null); // ✅ 선택 해제
+        await deleteProject(project.projectId, token); // 서버에서 삭제
+        removeProject(selectedProjectId); // 상태에서도 삭제
+        setSelectedProjectId(null); // 선택 해제
       } catch (err) {
         console.error("❌ 프로젝트 삭제 실패:", err);
         alert("프로젝트 삭제 중 오류가 발생했습니다.");
@@ -223,7 +224,9 @@ export default function Sidebar() {
       <div className="flex-1 overflow-y-auto">
         <FileExplorer
           onProjectClick={(id) => {
-            setSelectedProjectId(id);
+            setSelectedProjectId(id);  // 프로젝트 선택
+            setCurrentFileId(null);   // 파일 선택 해제
+
             const project = projects.find((p) => p.id === id);
             if (project) {
               setProjectId(project.projectId);
@@ -231,6 +234,8 @@ export default function Sidebar() {
           }}
           selectedProjectId={selectedProjectId ?? ""}
           onFileNameSubmit={handleFileNameSubmit}
+          onFileClick={() => setSelectedProjectId(null)}
+          onClearProjectSelection={() => setSelectedProjectId(null)}
         />
       </div>
     </aside>
