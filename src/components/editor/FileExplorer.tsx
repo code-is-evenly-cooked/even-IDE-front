@@ -4,15 +4,19 @@ import { useIdeStore } from "@/stores/useIdeStore";
 import { clsx } from "clsx";
 import { FolderIcon, FileIcon } from "@/components/common/Icons";
 import { useProjectStore } from "@/stores/useProjectStore";
+import { getAuthCookie } from "@/lib/cookie";
+import { fetchFileContent } from "@/service/file";
 
 interface FileExplorerProps {
   onProjectClick: (projectId: string) => void;
   selectedProjectId: string | null;
+  onFileNameSubmit: (fileId: string, newName: string) => void;
 }
 
 export default function FileExplorer({
   onProjectClick,
   selectedProjectId,
+  onFileNameSubmit,
 }: FileExplorerProps) {
   const {
     files,
@@ -20,11 +24,13 @@ export default function FileExplorer({
     openFile,
     editingFileId,
     setEditingFileId,
-    renameFile,
     deleteFile,
   } = useIdeStore();
 
+  const { updateFileContent } = useIdeStore();
   const { projects } = useProjectStore();
+  const { projectId: numericProjectId } = useProjectStore();
+  const token = getAuthCookie().token;
 
   return (
     <div className="flex-1 overflow-y-auto">
@@ -70,7 +76,7 @@ export default function FileExplorer({
                         onBlur={(e) => {
                           const newName = e.currentTarget.value.trim();
                           if (newName) {
-                            renameFile(file.id, newName);
+                            onFileNameSubmit(file.id, newName);
                           } else {
                             deleteFile(file.id);
                           }
@@ -79,7 +85,7 @@ export default function FileExplorer({
                           if (e.key === "Enter") {
                             const newName = e.currentTarget.value.trim();
                             if (newName) {
-                              renameFile(file.id, newName);
+                              onFileNameSubmit(file.id, newName);
                             } else {
                               deleteFile(file.id);
                             }
@@ -94,7 +100,23 @@ export default function FileExplorer({
                   ) : (
                     <li
                       key={file.id}
-                      onClick={() => openFile(file.id)}
+                      onClick={async () => {
+                        openFile(file.id); // 기존 기능 유지
+
+                        // 파일 내용 fetch
+                        if (numericProjectId && token) {
+                          try {
+                            const result = await fetchFileContent(
+                              numericProjectId,
+                              file.id,
+                              token
+                            );
+                            updateFileContent(file.id, result.content); // Zustand store 업데이트
+                          } catch (err) {
+                            console.error("파일 내용 불러오기 실패:", err);
+                          }
+                        }
+                      }}
                       onDoubleClick={() => setEditingFileId(file.id)}
                       className={clsx(
                         "flex cursor-pointer px-8 py-2 text-sm transition-colors",
