@@ -29,11 +29,10 @@ export default function FileExplorer({
     editingFileId,
     setEditingFileId,
     deleteFile,
+    updateFileContent,
   } = useIdeStore();
 
-  const { updateFileContent } = useIdeStore();
   const { projects } = useProjectStore();
-  const { projectId: numericProjectId } = useProjectStore();
   const token = getAuthCookie().token;
 
   const handleClick = (fileId: string) => {
@@ -73,8 +72,11 @@ export default function FileExplorer({
             <ul>
               {files
                 .filter((file) => file.projectId === project.id)
-                .map((file) =>
-                  editingFileId === file.id ? (
+                .map((file) => {
+                  const numericProjectId =
+                    projects.find((p) => p.id === file.projectId)?.projectId;
+
+                  return editingFileId === file.id ? (
                     <li
                       key={file.id}
                       onClick={() => handleClick(file.id)}
@@ -115,20 +117,24 @@ export default function FileExplorer({
                     <li
                       key={file.id}
                       onClick={async () => {
-                        openFile(file.id); //  파일 선택
-                        if (onClearProjectSelection) onClearProjectSelection(); //  프로젝트 선택 해제
-                        // 파일 내용 fetch
-                        if (numericProjectId && token) {
-                          try {
-                            const result = await fetchFileContent(
-                              numericProjectId,
-                              file.id,
-                              token
-                            );
-                            updateFileContent(file.id, result.content); // Zustand store 업데이트
-                          } catch (err) {
-                            console.error("파일 내용 불러오기 실패:", err);
-                          }
+                        openFile(file.id);
+                        if (onClearProjectSelection)
+                          onClearProjectSelection();
+
+                        if (!numericProjectId) {
+                          console.warn("프로젝트 ID를 찾을 수 없습니다.");
+                          return;
+                        }
+
+                        try {
+                          const result = await fetchFileContent(
+                            numericProjectId,
+                            file.id,
+                            token ?? ""
+                          );
+                          updateFileContent(file.id, result.content);
+                        } catch (err) {
+                          console.error("파일 내용 불러오기 실패:", err);
                         }
                       }}
                       onDoubleClick={() => setEditingFileId(file.id)}
@@ -142,8 +148,8 @@ export default function FileExplorer({
                       <FileIcon className="w-5 h-5" />
                       <span className="ml-2">{file.name}</span>
                     </li>
-                  )
-                )}
+                  );
+                })}
             </ul>
           </li>
         ))}
