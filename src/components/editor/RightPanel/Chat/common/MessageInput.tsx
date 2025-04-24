@@ -43,7 +43,8 @@ const MessageInput = ({ onSubmit, disabled }: MessageInputProps) => {
 				rounded-2xl resize-none placeholder:text-gray500 bg-gray900
 				focus:border-violet600 focus:shadow-violetGlow focus:outline-none focus:ring-0
 				"
-				placeholder="내용을 입력하세요"
+				placeholder={disabled ? "프로젝트를 선택하세요" : "내용을 입력하세요"}
+				disabled={disabled}
 				onKeyDown={(e) => {
 					if (e.key === "Enter" && !e.shiftKey && !isComposing) {
 						e.preventDefault();
