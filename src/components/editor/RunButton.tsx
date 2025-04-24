@@ -19,7 +19,7 @@ export default function RunButton({ terminalRef }: RunButtonProps) {
   const handleRun = async () => {
     if (!terminalRef.current) return;
     if (!code) {
-      terminalRef.current.write("❗ 실행할 코드가 없습니다\r\n");
+      terminalRef.current.write("실행할 코드가 없습니다\r\n");
       return;
     }
 
@@ -29,7 +29,7 @@ export default function RunButton({ terminalRef }: RunButtonProps) {
     try {
       const result = await executeCode(language.toLowerCase(), code);
       console.log(result)
-      terminalRef.current.write(`결과:\r\n${result.output}\r\n`);
+      terminalRef.current.write(`결과:\r\n${result.result}\r\n`);
     } catch (err: unknown) {
       if (err instanceof Error) {
         terminalRef.current.write(`오류:\r\n${err.message}\r\n`);

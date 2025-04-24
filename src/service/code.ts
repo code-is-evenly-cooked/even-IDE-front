@@ -3,7 +3,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 export const executeCode = async (
   language: string,
   content: string
-): Promise<{ output: string }> => {
+): Promise<{ result: string }> => {
   const res = await fetch(`${API_BASE_URL}/code/execute`, {
     method: "POST",
     headers: {
@@ -17,5 +17,5 @@ export const executeCode = async (
     throw new Error(`코드 실행 실패: ${error}`);
   }
 
-  return await res.json(); // { output: string }
+  return await res.json();
 };
