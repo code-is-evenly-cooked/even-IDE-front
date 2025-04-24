@@ -14,6 +14,7 @@ import { fetchProject } from "@/service/project";
 import { useProjectStore } from "@/stores/useProjectStore";
 import { useIdeStore } from "@/stores/useIdeStore";
 import type { FileItem } from "@/types/file";
+import { useParams } from "next/navigation";
 
 const CodeEditor = dynamic(() => import("@/components/editor/CodeEditor"), {
   ssr: false,
@@ -22,17 +23,12 @@ const TerminalView = dynamic(() => import("@/components/editor/Terminal"), {
   ssr: false,
 });
 
-interface PageProps {
-  params: {
-    uuid: string;
-  };
-}
-
-export default function ProjectPage({ params }: PageProps) {
-  const projectId = params.uuid;
+export default function ProjectPage() {
+  const params = useParams();
+  const projectId = params?.uuid as string;
   const terminalRef = useRef<XtermType | null>(null);
   const language = useLanguageStore((state) => state.language);
-  const { setProjects } = useProjectStore();
+  const { setProjects, setProjectId } = useProjectStore();
   const { setFiles } = useIdeStore();
 
   const handleRun = (code: string) => {
@@ -64,32 +60,39 @@ export default function ProjectPage({ params }: PageProps) {
 
     fetchProject(projectId, token)
       .then((data) => {
+        console.log("📦 fetchProject 응답:", data);
         setProjects([
           {
             id: data.sharedUUID,
             name: data.projectName,
-            projectId: data.projectId,
+            projectId: data.id,
           },
         ]);
-
+        setProjectId(data.id);  // 여기서 projectId 전역 저장
         setFiles(
-          (data.files as FileItem[]).map((file) => ({
+          data.files.map((file: FileItem) => ({
             id: String(file.id),
             name: file.name,
-            content: "",
-            projectId: data.sharedUUID,
+            content: "", // 서버에서 코드 본문은 아직 안 넘겨줌
+            projectId: data.sharedUUID, // UUID
+            language: file.language ?? "javascript", // 없으면 기본값
+            updatedAt: file.updatedAt ?? new Date().toISOString(),
+            ownerId: Number(file.ownerId) ?? 0,
+            locked: file.locked ?? false,
+            editLocked: file.editLocked ?? false,
           }))
         );
       })
       .catch((err) => {
         console.error("❌ 프로젝트 불러오기 실패:", err);
       });
-  }, [projectId, setProjects, setFiles]);
+  }, [projectId, setProjects, setFiles, setProjectId]);
 
   return (
     <div>
       <div className="flex">
-        <Sidebar projectId={projectId} /> {/* 전달 */}
+          <Sidebar />
+        {/* 전달 */}
         <div className="flex flex-1 flex-col min-w-0">
           <Header onRun={handleRun} />
           <div className="flex min-w-0">
