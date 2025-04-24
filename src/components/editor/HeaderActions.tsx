@@ -71,7 +71,7 @@ export default function HeaderActions() {
     }
 
     try {
-      await updateFileCode(projectId, file.id, file.language, file.content, token);
+      await updateFileCode(projectId, file.id, file.language, file.content);
       alert("파일이 성공적으로 저장되었습니다.");
     } catch (err) {
       console.error("❌ 저장 실패:", err);
