@@ -1,4 +1,5 @@
 import { getAuthCookie } from "@/lib/cookie";
+import { UpdateFileCodeResponse } from "@/types/file";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -31,7 +32,7 @@ export const updateFileCode = async (
   fileId: string,
   language: string,
   content: string
-) => {
+): Promise<UpdateFileCodeResponse> => {
   const token = getAuthCookie().token;
   if (!token) {
     throw new Error("인증 토큰이 없습니다.");
