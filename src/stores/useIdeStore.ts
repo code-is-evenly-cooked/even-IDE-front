@@ -21,6 +21,7 @@ type IdeStore = {
 
   selectFile: (id: string | null) => void;
   updateFileContent: (id: string, newContent: string) => void;
+  updateEditLock: (id: string, editLocked: boolean) => void;
   addFile: (name: string, projectId: string, ownerId: number, id?: string) => void;
   deleteFile: (id: string) => void;
 
@@ -53,6 +54,14 @@ export const useIdeStore = create<IdeStore>()(
           file.id === id ? { ...file, content } : file
         ),
       })),
+
+		// 코드 잠금 상태 변경 함수
+		updateEditLock: (id: string, editLocked: boolean) =>
+			set((state => ({
+				files: state.files.map((file) => 
+					file.id === id ? { ...file, editLocked } : file
+				)
+			}))),
 
     // 새 파일 생성 -> 자동으로 탭 열기 + 선택 상태
     addFile: (name: string, projectId: string, ownerId: number, id = Date.now().toString()) => {
