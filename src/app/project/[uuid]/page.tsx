@@ -31,6 +31,19 @@ export default function ProjectPage() {
   const { setProjects, setProjectId } = useProjectStore();
   const { setFiles } = useIdeStore();
 
+  // 로그인 사용자 여부 확인 콘솔 (임시)
+  useEffect(() => {
+    const auth = getAuthCookie();
+    const token = auth?.token ?? undefined;
+  
+    if (token) {
+      console.log("🔐 로그인된 사용자입니다.");
+    } else {
+      console.log("🚪 로그인되지 않은 사용자입니다.");
+    }
+  }, []);
+
+  // 코드 실행
   const handleRun = (code: string) => {
     if (!terminalRef.current) return;
 
@@ -49,14 +62,13 @@ export default function ProjectPage() {
         }
       }
     } else {
-      // 지원되지 않는 언어에 대한 메시지
       terminalRef.current.write(`\r\n[아직 지원되지 않는 언어입니다]\r\n`);
     }
   };
 
+  // 프로젝트 단 건 조회 (비로그인 사용자도 가능)
   useEffect(() => {
-    const token = getAuthCookie().token;
-    if (!token) return;
+    const token = getAuthCookie().token ?? undefined;
 
     fetchProject(projectId, token)
       .then((data) => {
