@@ -75,7 +75,11 @@ export default function FileExplorer({
                 .filter((file) => file.projectId === project.id)
                 .map((file) =>
                   editingFileId === file.id ? (
-                    <li key={file.id} onClick={() => handleClick(file.id)} className="px-8 py-2">
+                    <li
+                      key={file.id}
+                      onClick={() => handleClick(file.id)}
+                      className="px-8 py-2"
+                    >
                       <div className="text-xs text-gray200 mb-1 ml-1">
                         이름 입력
                       </div>
@@ -111,7 +115,7 @@ export default function FileExplorer({
                     <li
                       key={file.id}
                       onClick={async () => {
-                        openFile(file.id);  //  파일 선택
+                        openFile(file.id); //  파일 선택
                         if (onClearProjectSelection) onClearProjectSelection(); //  프로젝트 선택 해제
                         // 파일 내용 fetch
                         if (numericProjectId && token) {

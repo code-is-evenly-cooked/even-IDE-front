@@ -68,7 +68,7 @@ export default function ProjectPage() {
             projectId: data.id,
           },
         ]);
-        setProjectId(data.id);  // 여기서 projectId 전역 저장
+        setProjectId(data.id); // 여기서 projectId 전역 저장
         setFiles(
           data.files.map((file: FileItem) => ({
             id: String(file.id),
@@ -91,7 +91,7 @@ export default function ProjectPage() {
   return (
     <div>
       <div className="flex">
-          <Sidebar />
+        <Sidebar />
         {/* 전달 */}
         <div className="flex flex-1 flex-col min-w-0">
           <Header onRun={handleRun} />

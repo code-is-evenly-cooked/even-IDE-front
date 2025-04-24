@@ -30,13 +30,13 @@ export const updateFileCode = async (
   projectId: number,
   fileId: string,
   language: string,
-  content: string,
+  content: string
 ) => {
   const token = getAuthCookie().token;
   if (!token) {
     throw new Error("인증 토큰이 없습니다.");
   }
-  
+
   const res = await fetch(
     `${API_BASE_URL}/projects/${projectId}/files/${fileId}/code`,
     {

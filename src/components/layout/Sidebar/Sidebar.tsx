@@ -224,8 +224,8 @@ export default function Sidebar() {
       <div className="flex-1 overflow-y-auto">
         <FileExplorer
           onProjectClick={(id) => {
-            setSelectedProjectId(id);  // 프로젝트 선택
-            setCurrentFileId(null);   // 파일 선택 해제
+            setSelectedProjectId(id); // 프로젝트 선택
+            setCurrentFileId(null); // 파일 선택 해제
 
             const project = projects.find((p) => p.id === id);
             if (project) {

@@ -87,4 +87,4 @@ export const deleteProject = async (projectId: number, token: string) => {
     const error = await res.text();
     throw new Error(`프로젝트 삭제 실패: ${error}`);
   }
-}
+};
