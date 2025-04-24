@@ -67,7 +67,13 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
 			setMessages(historyData);
 
 			// WebSocket 연결
-			const socket = new SockJS(`${process.env.NEXT_PUBLIC_API_BASE_URL!}/ws`);
+			const socket = new SockJS(
+				`${process.env.NEXT_PUBLIC_API_BASE_URL!}/ws`,
+				[],
+				{
+					withCredentials: true,
+				}
+			);
 			const client = new Client({
 				webSocketFactory: () => socket,
 				reconnectDelay: 5000,
