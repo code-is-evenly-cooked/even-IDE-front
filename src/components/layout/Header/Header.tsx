@@ -25,6 +25,8 @@ const Header = ({ terminalRef }: HeaderProps) => {
     useChatStore.getState().resetChatUser();
     await clearMessages();
     useAIChatStore.getState().clearMessages();
+
+	window.location.reload();
   };
 
   return (
