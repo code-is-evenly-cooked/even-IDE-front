@@ -59,7 +59,7 @@ export default function EditLockToggle({
         onClick={handleClick}
         className={`w-[60px] h-[30px] rounded-full p-1 flex items-center transition-colors duration-500 ${
           editLocked
-            ? "bg-[#3E3655]"
+            ? "bg-tonedown"
             : isOwner
             ? "bg-gray800 group-hover:bg-violet300"
             : "bg-gray800"
