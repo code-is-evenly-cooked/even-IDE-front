@@ -40,8 +40,6 @@ export default function Sidebar() {
   const ownerId = Number(getAuthCookie().userId);
   const token = getAuthCookie().token;
 
-  console.log("프로젝트 숫자 ID:", projectId);
-
   // 파일 추가 (임시 생성 → 이름 입력 후 서버로 생성)
   const handleAddFile = async () => {
     if (!selectedProjectId) {
