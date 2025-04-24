@@ -7,18 +7,17 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { removeAuthCookie } from "@/lib/cookie";
 import HeaderActions from "@/components/editor/HeaderActions";
 import LanguageDropdown from "@/components/editor/LanguageDropdown";
-import { useLanguageStore } from "@/stores/useLanguageStore";
 import { useChatStore } from "@/stores/useChatStore";
 import { clearMessages } from "@/lib/indexedDB";
 import { useAIChatStore } from "@/stores/useAIChatStore";
+import type { Terminal as XtermType } from "xterm";
 
 type HeaderProps = {
-  onRun: (code: string, language: string) => void;
+  terminalRef: React.RefObject<XtermType>;
 };
 
-const Header = ({ onRun }: HeaderProps) => {
+const Header = ({ terminalRef }: HeaderProps) => {
   const { isLoggedIn, clearAuth } = useAuthStore();
-  const { language } = useLanguageStore();
 
   const handleLogout = async () => {
     removeAuthCookie();
@@ -39,7 +38,7 @@ const Header = ({ onRun }: HeaderProps) => {
         <LanguageDropdown />
 
         {/* 실행 버튼 */}
-        <RunButton onRun={(code) => onRun(code, language)} />
+        <RunButton terminalRef={terminalRef} />
         <HeaderActions />
       </div>
       <div className="flex">
