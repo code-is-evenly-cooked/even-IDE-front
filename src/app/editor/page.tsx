@@ -21,6 +21,27 @@ const TerminalView = dynamic(() => import("@/components/editor/Terminal"), {
   ssr: false,
 });
 
+export type FileResponse = {
+  id: number;
+  name: string;
+  content?: string;
+  language?: string;
+  updatedAt?: string;
+  ownerId?: number;
+  locked: boolean;
+  editLocked: boolean;
+};
+
+export type ProjectResponse = {
+  id: number;
+  projectId?: number;
+  projectName: string;
+  sharedUUID: string;
+  createdAt: string;
+  ownerId: number;
+  files: FileResponse[];
+};
+
 export default function EditorPage() {
   const terminalRef = useRef<XtermType | null>(null);
   const language = useLanguageStore((state) => state.language);
@@ -56,15 +77,15 @@ export default function EditorPage() {
 
     fetchAllProjects(token)
       .then((data) => {
-        const projectList = data.map((project) => ({
+        const projectList = data.map((project: ProjectResponse) => ({
           id: project.sharedUUID,
           name: project.projectName,
           projectId: project.id,
         }));
         setProjects(projectList);
 
-        const allFiles = data.flatMap((project) =>
-          project.files.map((file: any) => ({
+        const allFiles = data.flatMap((project: ProjectResponse) =>
+          project.files.map((file: FileResponse) => ({
             id: String(file.id),
             name: file.name,
             content: "", // ❗️ GET /editor는 content가 없음
