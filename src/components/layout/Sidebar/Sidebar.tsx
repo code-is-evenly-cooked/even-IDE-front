@@ -17,14 +17,7 @@ import {
   CloseIcon,
 } from "../../common/Icons";
 
-interface SidebarProps {
-  projectId?: string; // UUID
-  numericProjectId?: number; // 실제 API 호출용 숫자 ID
-}
-
-export default function Sidebar({ projectId, numericProjectId }: SidebarProps) {
-  console.log("🧭 Sidebar props - UUID:", projectId);
-  console.log("🧮 Sidebar props - 숫자 ID:", numericProjectId);
+export default function Sidebar() {
   const {
     addFile,
     deleteFile,
@@ -33,17 +26,20 @@ export default function Sidebar({ projectId, numericProjectId }: SidebarProps) {
     files,
     setFiles,
   } = useIdeStore();
-  const { addProject, removeProject, projects } = useProjectStore();
+  const { addProject, removeProject, projects, projectId, setProjectId } =
+    useProjectStore();
 
   const [isAddingProject, setIsAddingProject] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
     null
   );
-  const router = useRouter();
 
+  const router = useRouter();
   const ownerId = Number(getAuthCookie().userId);
   const token = getAuthCookie().token;
+
+  console.log("프로젝트 숫자 ID:", projectId);
 
   // 파일 추가 (임시 생성 → 이름 입력 후 서버로 생성)
   const handleAddFile = async () => {
@@ -142,13 +138,13 @@ export default function Sidebar({ projectId, numericProjectId }: SidebarProps) {
       console.log("📂 all projects:", projects);
       const project = projects.find((p) => p.id === file?.projectId); // ✅ UUID로 찾기
 
-      if (!file || !project || !numericProjectId || !token) {
+      if (!file || !project || !projectId || !token) {
         alert("파일 정보를 찾을 수 없습니다.");
         return;
       }
 
       try {
-        await deleteFileById(numericProjectId, file.id, token); // ✅ API 호출
+        await deleteFileById(projectId, file.id, token); // ✅ API 호출
         deleteFile(file.id); // ✅ Zustand 상태 삭제
       } catch (err) {
         console.error("❌ 파일 삭제 실패:", err);
@@ -226,9 +222,13 @@ export default function Sidebar({ projectId, numericProjectId }: SidebarProps) {
 
       <div className="flex-1 overflow-y-auto">
         <FileExplorer
-          onProjectClick={
-            projectId ? () => {} : (id) => setSelectedProjectId(id)
-          }
+          onProjectClick={(id) => {
+            setSelectedProjectId(id);
+            const project = projects.find((p) => p.id === id);
+            if (project) {
+              setProjectId(project.projectId);
+            }
+          }}
           selectedProjectId={selectedProjectId ?? ""}
           onFileNameSubmit={handleFileNameSubmit}
         />
