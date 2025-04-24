@@ -1,3 +1,5 @@
+import { getAuthCookie } from "@/lib/cookie";
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 /* 파일 생성 API */
@@ -29,8 +31,12 @@ export const updateFileCode = async (
   fileId: string,
   language: string,
   content: string,
-  token: string
 ) => {
+  const token = getAuthCookie().token;
+  if (!token) {
+    throw new Error("인증 토큰이 없습니다.");
+  }
+  
   const res = await fetch(
     `${API_BASE_URL}/projects/${projectId}/files/${fileId}/code`,
     {
