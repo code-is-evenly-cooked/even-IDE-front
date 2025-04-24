@@ -11,7 +11,7 @@ import { getAuthCookie } from "@/lib/cookie";
 export default function HeaderActions() {
   const [isShareOpen, setIsShareOpen] = useState(false);
   const { files, currentFileId } = useIdeStore.getState();
-  const { projectId } = useProjectStore();
+  const { projects } = useProjectStore();
 
   // 확장자 별 MIME 타입 (내보내기에서 사용)
   const getMimeType = (filename: string): string => {
@@ -60,7 +60,10 @@ export default function HeaderActions() {
     const file = files.find((f) => f.id === currentFileId);
     const token = getAuthCookie().token;
 
-    if (!file || !projectId || !token) {
+    // UUID → 숫자형 projectId 변환
+    const numericProjectId = projects.find((p) => p.id === file?.projectId)?.projectId;
+    
+    if (!file || !numericProjectId || !token) {
       alert("저장할 수 있는 파일 정보가 없습니다.");
       return;
     }
@@ -71,7 +74,7 @@ export default function HeaderActions() {
     }
 
     try {
-      await updateFileCode(projectId, file.id, file.language, file.content);
+      await updateFileCode(numericProjectId, file.id, file.language, file.content);
       alert("파일이 성공적으로 저장되었습니다.");
     } catch (err) {
       console.error("❌ 저장 실패:", err);
