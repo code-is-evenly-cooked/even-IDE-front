@@ -67,7 +67,7 @@ export const requestToggleEditLock = async ({
 	fileId,
 	token,
 }: {
-	projectId: string;
+	projectId: number;
 	fileId: string;
 	token: string;
 }): Promise<{ editLocked: boolean }> => {
