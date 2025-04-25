@@ -9,6 +9,7 @@ import { createProject } from "@/service/project";
 import { createFile, deleteFileById, updateFileName } from "@/service/file";
 import { getAuthCookie } from "@/lib/cookie";
 import { deleteProject } from "@/service/project";
+import { usePathname } from "next/navigation";
 import {
   EvenIcon,
   FileNewIcon,
@@ -39,9 +40,24 @@ export default function Sidebar() {
   const router = useRouter();
   const ownerId = Number(getAuthCookie().userId);
   const token = getAuthCookie().token;
+  const pathname = usePathname();
+  const isInProjectPage = pathname.startsWith("/project/");
 
   // 파일 추가 (임시 생성 → 이름 입력 후 서버로 생성)
   const handleAddFile = async () => {
+
+    // 프로젝트 페이지 프로젝트 선택 없이 파일 추가 가능
+    if (isInProjectPage) {
+      const project = projects[0]; // 상태에 저장된 하나의 프로젝트
+      if (!project || !token) return;
+
+      const tempId = `temp-${Date.now()}`;
+      addFile("파일", project.id, ownerId, tempId);
+      setEditingFileId(tempId);
+      return;
+    }
+
+    // 에디터 페이지는 프로젝트 선택 필수
     if (!selectedProjectId) {
       alert("먼저 프로젝트를 선택해주세요.");
       return;
