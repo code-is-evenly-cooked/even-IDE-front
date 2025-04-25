@@ -36,6 +36,7 @@ export default function Sidebar() {
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
     null
   );
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const router = useRouter();
   const ownerId = Number(getAuthCookie().userId);
@@ -109,15 +110,25 @@ export default function Sidebar() {
     setNewProjectName("");
   };
 
+  /* 프로젝트 생성 */
   const handleProjectSubmit = async () => {
+
+    // 중복 호출 방지
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
+    // 공백 방지
     const trimmed = newProjectName.trim();
     if (!trimmed) {
       setIsAddingProject(false);
+      setIsSubmitting(false);
       return;
     }
 
+    // 로그인 여부 확인
     if (!token) {
       alert("로그인이 필요합니다.");
+      setIsSubmitting(false);
       return;
     }
 
@@ -133,6 +144,7 @@ export default function Sidebar() {
     }
 
     setIsAddingProject(false);
+    setIsSubmitting(false);
   };
 
   // 프로젝트 이동
