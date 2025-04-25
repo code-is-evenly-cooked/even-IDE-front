@@ -221,14 +221,14 @@ export default function Sidebar() {
   return (
     <aside className="w-[280px] min-w-[280px] h-screen border-tonedown border-[1px] bg-gray700 text-white flex flex-col">
       <div
-        className="flex px-5 py-3 content-center text-lg font-bold border-b border-gray-700 bg-tonedown cursor-pointer"
+        className="flex px-5 py-3 content-center text-lg font-bold border-b border-gray700 bg-tonedown cursor-pointer"
         onClick={() => router.push("/editor")}
       >
         <EvenIcon />
         <h1 className="text-3xl font-light ml-3">even ide</h1>
       </div>
 
-      <div className="flex gap-3 px-3 py-3 border-b border-gray-700">
+      <div className="flex gap-3 px-3 py-3 mb-1 border-b border-tonedown">
         <button className="ml-auto" title="파일 추가" onClick={handleAddFile}>
           <FileNewIcon className="w-4 h-4" />
         </button>
