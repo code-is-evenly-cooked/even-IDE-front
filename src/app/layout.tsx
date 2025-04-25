@@ -7,6 +7,9 @@ import LoginModals from "@/components/modal/LoginModals";
 export const metadata: Metadata = {
 	title: "Even IDE",
 	description: "Coding with Even IDE",
+	icons: {
+		icon: `favicon.svg`
+	},
 };
 
 export default function RootLayout({
