@@ -107,18 +107,19 @@ export const fetchFileContent = async (
 
 /* 파일 이름 변경 API */
 export const updateFileName = async (
+  projectId: number,
   fileId: string,
   newName: string,
   token: string
 ) => {
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-  const res = await fetch(`${API_BASE_URL}/files/${fileId}`, {
+  const res = await fetch(`${API_BASE_URL}/projects/${projectId}/files/${fileId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ name: newName }),
+    body: JSON.stringify({ fileName: newName }),
   });
 
   if (!res.ok) {
