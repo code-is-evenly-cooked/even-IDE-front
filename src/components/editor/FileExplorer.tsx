@@ -7,6 +7,8 @@ import { useProjectStore } from "@/stores/useProjectStore";
 import { getAuthCookie } from "@/lib/cookie";
 import { fetchFileContent } from "@/service/file";
 import { useLanguageStore } from "@/stores/useLanguageStore";
+import { useState } from "react";
+import { updateProjectName } from "@/service/project";
 
 interface FileExplorerProps {
   onProjectClick: (projectId: string) => void;
@@ -34,13 +36,42 @@ export default function FileExplorer({
   } = useIdeStore();
 
   const { setLanguage } = useLanguageStore();
-  const { projects } = useProjectStore();
+  const { projects, setProjects } = useProjectStore();
   const token = getAuthCookie().token;
+
+  const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
+  const [newProjectName, setNewProjectName] = useState("");
 
   const handleClick = (fileId: string) => {
     if (onFileClick) {
       onFileClick(fileId);
     }
+  };
+
+  /* 프로젝트 이름 변경 */
+  const handleProjectRename = async (projectUUID: string) => {
+    const ownerId = Number(getAuthCookie().userId);
+
+    const target = projects.find((p) => p.id === projectUUID);
+    if (!target) return;
+
+    if (!newProjectName.trim() || newProjectName === target.name || !token) {
+      setEditingProjectId(null);
+      return;
+    }
+
+    try {
+      await updateProjectName(target.projectId, newProjectName, ownerId, token); // API 호출
+
+      const updated = projects.map((p) =>
+        p.id === projectUUID ? { ...p, name: newProjectName } : p
+      );
+      setProjects(updated);
+    } catch (err) {
+      console.error("🚨 프로젝트 이름 변경 실패", err);
+    }
+
+    setEditingProjectId(null); // 수정 모드 종료
   };
 
   return (
@@ -52,6 +83,10 @@ export default function FileExplorer({
             {/* 프로젝트 클릭 */}
             <div
               onClick={() => onProjectClick(project.id)}
+              onDoubleClick={() => {
+                setEditingProjectId(project.id); // 수정 모드 진입
+                setNewProjectName(project.name); // 초기값
+              }}
               className={clsx(
                 "flex text-sm px-3 py-2 cursor-pointer",
                 selectedProjectId === project.id
@@ -60,7 +95,21 @@ export default function FileExplorer({
               )}
             >
               <FolderIcon className="w-5 h-5" />
-              <span className="ml-3">{project.name}</span>
+              {editingProjectId === project.id ? (
+                <input
+                  autoFocus
+                  value={newProjectName}
+                  onChange={(e) => setNewProjectName(e.target.value)}
+                  onBlur={() => handleProjectRename(project.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleProjectRename(project.id);
+                    if (e.key === "Escape") setEditingProjectId(null);
+                  }}
+                  className="ml-2 px-1 py-0.5 rounded bg-gray600 text-white text-sm w-[120px]"
+                />
+              ) : (
+                <span className="ml-3">{project.name}</span>
+              )}
             </div>
 
             {/* 하위 파일들 */}
@@ -68,8 +117,9 @@ export default function FileExplorer({
               {files
                 .filter((file) => file.projectId === project.id)
                 .map((file) => {
-                  const numericProjectId =
-                    projects.find((p) => p.id === file.projectId)?.projectId;
+                  const numericProjectId = projects.find(
+                    (p) => p.id === file.projectId
+                  )?.projectId;
 
                   return editingFileId === file.id ? (
                     <li
@@ -114,8 +164,7 @@ export default function FileExplorer({
                       onClick={async () => {
                         openFile(file.id);
                         setLanguage(file.language);
-                        if (onClearProjectSelection)
-                          onClearProjectSelection();
+                        if (onClearProjectSelection) onClearProjectSelection();
 
                         if (!numericProjectId) {
                           console.warn("프로젝트 ID를 찾을 수 없습니다.");
