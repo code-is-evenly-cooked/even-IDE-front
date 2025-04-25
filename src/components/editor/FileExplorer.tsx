@@ -46,8 +46,6 @@ export default function FileExplorer({
   return (
     <div className="flex-1 overflow-y-auto">
       {/* 프로젝트 영역 */}
-
-
       <ul className="space-y-1">
         {projects.map((project) => (
           <li key={project.id}>

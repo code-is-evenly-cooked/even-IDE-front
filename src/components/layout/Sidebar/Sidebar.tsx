@@ -182,7 +182,7 @@ export default function Sidebar() {
 
   return (
     <aside className="w-[280px] min-w-[280px] h-screen border-tonedown border-[1px] bg-gray700 text-white flex flex-col">
-      <div className="flex px-5 py-3 content-center text-lg font-bold border-b border-gray-700 bg-tonedown">
+      <div className="flex px-5 py-3 content-center text-lg font-bold border-b border-gray-700 bg-tonedown cursor-pointer" onClick={() => router.push("/editor")}>
         <EvenIcon />
         <h1 className="text-3xl font-light ml-3">even ide</h1>
       </div>
