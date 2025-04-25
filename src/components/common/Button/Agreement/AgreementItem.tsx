@@ -37,8 +37,11 @@ const AgreementItem = ({
 					>
 						{checked && <Check className="w-4 h-4 text-white" />}
 					</div>
-
-					<span className="flex text-white text-sm gap-1">
+					
+					<span className="flex text-white text-sm gap-1"
+						onClick={() => {
+							onTermClick?.();
+						}}>
 						{required && <span className="text-violet600">필수</span>}
 						{label}
 					</span>
