@@ -34,7 +34,7 @@ export default function LanguageDropdown() {
         onClick={() => setOpen(!open)}
         className="flex w-full justify-between"
       >
-        <span className="">{language}</span>
+        <span className="">{language.charAt(0).toUpperCase() + language.slice(1).toLowerCase()}</span>
         <div>▼</div>
       </button>
 
