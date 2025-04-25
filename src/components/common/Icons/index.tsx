@@ -256,3 +256,16 @@ export const GhostIcon = ({ className }: IconProps) => {
 		</svg>
 	);
 };
+
+export const MenuIcon = ({ className }: IconProps) => {
+	return (
+		<Image
+			src="/icons/menu.svg"
+			alt="닫기"
+			width={30}
+			height={30}
+			className={className}
+			priority
+		/>
+	);
+};

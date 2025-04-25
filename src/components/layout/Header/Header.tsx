@@ -11,6 +11,7 @@ import { useChatStore } from "@/stores/useChatStore";
 import { clearMessages } from "@/lib/indexedDB";
 import { useAIChatStore } from "@/stores/useAIChatStore";
 import type { Terminal as XtermType } from "xterm";
+import { MenuIcon } from "@/components/common/Icons";
 
 type HeaderProps = {
   terminalRef: React.RefObject<XtermType>;
@@ -32,8 +33,8 @@ const Header = ({ terminalRef }: HeaderProps) => {
   return (
     <header className="h-[3rem] flex justify-between items-center p-4">
       <div className="flex items-center gap-4">
-        <button className="text-xl hover:text-gray-300" aria-label="메뉴 열기">
-          ☰
+        <button className="text-xl" aria-label="메뉴 열기">
+          <MenuIcon />
         </button>
 
         {/* 언어 선택 드롭 박스 */}
