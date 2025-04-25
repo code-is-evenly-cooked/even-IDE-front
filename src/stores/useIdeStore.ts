@@ -22,6 +22,7 @@ type IdeStore = {
   selectFile: (id: string | null) => void;
   updateFileContent: (id: string, newContent: string) => void;
   updateEditLock: (id: string, editLocked: boolean) => void;
+  updateFileLanguage: (id: string, newLang: string) => void;
 
   addFile: (
     name: string,
@@ -148,4 +149,12 @@ export const useIdeStore = create<IdeStore>()((set, get) => ({
   // 현재 코드 값 저장 (Monaco Editor 외부에서도 접근 가능)
   currentCode: "",
   setCurrentCode: (code) => set({ currentCode: code }),
+
+  // 언어 선택 정보 저장
+  updateFileLanguage: (id: string, newLang: string) =>
+    set((state) => ({
+      files: state.files.map((file) =>
+        file.id === id ? { ...file, language: newLang } : file
+      ),
+    })),
 }));

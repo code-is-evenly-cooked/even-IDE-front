@@ -6,9 +6,10 @@ import FileExplorer from "@/components/editor/FileExplorer";
 import { useIdeStore } from "@/stores/useIdeStore";
 import { useProjectStore } from "@/stores/useProjectStore";
 import { createProject } from "@/service/project";
-import { createFile, deleteFileById } from "@/service/file";
+import { createFile, deleteFileById, updateFileName } from "@/service/file";
 import { getAuthCookie } from "@/lib/cookie";
 import { deleteProject } from "@/service/project";
+import { usePathname } from "next/navigation";
 import {
   EvenIcon,
   FileNewIcon,
@@ -39,9 +40,23 @@ export default function Sidebar() {
   const router = useRouter();
   const ownerId = Number(getAuthCookie().userId);
   const token = getAuthCookie().token;
+  const pathname = usePathname();
+  const isInProjectPage = pathname.startsWith("/project/");
 
   // 파일 추가 (임시 생성 → 이름 입력 후 서버로 생성)
   const handleAddFile = async () => {
+    // 프로젝트 페이지 프로젝트 선택 없이 파일 추가 가능
+    if (isInProjectPage) {
+      const project = projects[0]; // 상태에 저장된 하나의 프로젝트
+      if (!project || !token) return;
+
+      const tempId = `temp-${Date.now()}`;
+      addFile("파일", project.id, ownerId, tempId);
+      setEditingFileId(tempId);
+      return;
+    }
+
+    // 에디터 페이지는 프로젝트 선택 필수
     if (!selectedProjectId) {
       alert("먼저 프로젝트를 선택해주세요.");
       return;
@@ -52,21 +67,37 @@ export default function Sidebar() {
     setEditingFileId(tempId);
   };
 
-  // 파일 이름 입력 완료 시 서버 반영
+  // 파일 이름 입력 완료 시 서버 반영 (이름 수정도 분기 처리)
   const handleFileNameSubmit = async (fileId: string, newName: string) => {
     const file = files.find((f) => f.id === fileId);
     const project = projects.find((p) => p.id === file?.projectId);
+
     if (!project || !file || !token) return;
 
+    const isTempFile = fileId.startsWith("temp-");
+
     try {
-      const result = await createFile(project.projectId, newName, token);
-      const serverId = String(result.fileId);
+      if (isTempFile) {
+        // 임시 파일이면 파일 생성
+        const result = await createFile(project.projectId, newName, token);
+        const serverId = String(result.fileId);
 
-      const updatedFiles = files.map((f) =>
-        f.id === fileId ? { ...f, id: serverId, name: newName } : f
-      );
+        const updatedFiles = files.map((f) =>
+          f.id === fileId ? { ...f, id: serverId, name: newName } : f
+        );
 
-      setFiles(updatedFiles);
+        setFiles(updatedFiles);
+      } else {
+        // 기존 파일이면 이름만 변경
+        await updateFileName(project.projectId, fileId, newName, token);
+
+        const updatedFiles = files.map((f) =>
+          f.id === fileId ? { ...f, name: newName } : f
+        );
+
+        setFiles(updatedFiles);
+        setEditingFileId(null);
+      }
     } catch (err) {
       alert("파일 생성 실패");
       console.error(err);
@@ -104,15 +135,20 @@ export default function Sidebar() {
     setIsAddingProject(false);
   };
 
+  // 프로젝트 이동
   const handleGoToProject = () => {
     let targetUUID: string | null = null;
-
+    
+    // 프로젝트 선택 시
     if (selectedProjectId) {
       targetUUID = selectedProjectId;
-    } else if (currentFileId) {
+    } 
+
+    // 파일 선택 시
+    else if (currentFileId) {
       const file = files.find((f) => f.id === currentFileId);
       const project = projects.find(
-        (p) => p.projectId === Number(file?.projectId)
+        (p) => p.id === file?.projectId
       );
       if (project) targetUUID = project.id;
     }
@@ -131,7 +167,9 @@ export default function Sidebar() {
       if (!confirmDelete) return;
 
       const file = files.find((f) => f.id === currentFileId);
-      const numericProjectId = projects.find((p) => p.id === file?.projectId)?.projectId;
+      const numericProjectId = projects.find(
+        (p) => p.id === file?.projectId
+      )?.projectId;
 
       console.log("🟡 currentFileId:", currentFileId);
       console.log("🟢 file:", file);
@@ -182,12 +220,15 @@ export default function Sidebar() {
 
   return (
     <aside className="w-[280px] min-w-[280px] h-screen border-tonedown border-[1px] bg-gray700 text-white flex flex-col">
-      <div className="flex px-5 py-3 content-center text-lg font-bold border-b border-gray-700 bg-tonedown">
+      <div
+        className="flex px-5 py-3 content-center text-lg font-bold border-b border-gray700 bg-tonedown cursor-pointer"
+        onClick={() => router.push("/editor")}
+      >
         <EvenIcon />
         <h1 className="text-3xl font-light ml-3">even ide</h1>
       </div>
 
-      <div className="flex gap-3 px-3 py-3 border-b border-gray-700">
+      <div className="flex gap-3 px-3 py-3 mb-1 border-b border-tonedown">
         <button className="ml-auto" title="파일 추가" onClick={handleAddFile}>
           <FileNewIcon className="w-4 h-4" />
         </button>
