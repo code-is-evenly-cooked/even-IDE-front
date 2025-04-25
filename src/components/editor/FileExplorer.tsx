@@ -96,17 +96,22 @@ export default function FileExplorer({
             >
               <FolderIcon className="w-5 h-5" />
               {editingProjectId === project.id ? (
-                <input
-                  autoFocus
-                  value={newProjectName}
-                  onChange={(e) => setNewProjectName(e.target.value)}
-                  onBlur={() => handleProjectRename(project.id)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") handleProjectRename(project.id);
-                    if (e.key === "Escape") setEditingProjectId(null);
-                  }}
-                  className="ml-2 px-1 py-0.5 rounded bg-gray600 text-white text-sm w-[120px]"
-                />
+                <div className="flex flex-col ml-2 w-full">
+                  <span className="text-xs font-normal text-white mb-1 ml-1">
+                    프로젝트 이름 입력
+                  </span>
+                  <input
+                    autoFocus
+                    value={newProjectName}
+                    onChange={(e) => setNewProjectName(e.target.value)}
+                    onBlur={() => handleProjectRename(project.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleProjectRename(project.id);
+                      if (e.key === "Escape") setEditingProjectId(null);
+                    }}
+                    className="px-2 py-1 w-full rounded bg-gray500 text-white text-sm outline-none border-[1px] border-white focus:ring-0"
+                  />
+                </div>
               ) : (
                 <span className="ml-3">{project.name}</span>
               )}
@@ -128,7 +133,7 @@ export default function FileExplorer({
                       className="px-8 py-2"
                     >
                       <div className="text-xs text-gray200 mb-1 ml-1">
-                        이름 입력
+                        파일 이름 입력
                       </div>
                       <input
                         autoFocus
