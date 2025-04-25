@@ -2,11 +2,13 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useLanguageStore } from "@/stores/useLanguageStore";
+import { useIdeStore } from "@/stores/useIdeStore";
 
 const languages = ["Java", "Javascript", "Python"];
 
 export default function LanguageDropdown() {
   const { language, setLanguage } = useLanguageStore();
+  const { currentFileId, updateFileLanguage } = useIdeStore();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -43,6 +45,9 @@ export default function LanguageDropdown() {
               key={lang}
               onClick={() => {
                 setLanguage(lang);
+                if (currentFileId) {
+                  updateFileLanguage(currentFileId, lang); // 새로운 함수로 파일 상태 내 언어도 바꿔줌
+                }
                 setOpen(false);
               }}
               className={`px-4 py-2 hover:bg-gray500 cursor-pointer ${
