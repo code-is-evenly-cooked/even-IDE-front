@@ -6,6 +6,7 @@ import { FolderIcon, FileIcon } from "@/components/common/Icons";
 import { useProjectStore } from "@/stores/useProjectStore";
 import { getAuthCookie } from "@/lib/cookie";
 import { fetchFileContent } from "@/service/file";
+import { useLanguageStore } from "@/stores/useLanguageStore";
 
 interface FileExplorerProps {
   onProjectClick: (projectId: string) => void;
@@ -32,6 +33,7 @@ export default function FileExplorer({
     updateFileContent,
   } = useIdeStore();
 
+  const { setLanguage } = useLanguageStore();
   const { projects } = useProjectStore();
   const token = getAuthCookie().token;
 
@@ -44,13 +46,6 @@ export default function FileExplorer({
   return (
     <div className="flex-1 overflow-y-auto">
       {/* 프로젝트 영역 */}
-      <div className="flex justify-between items-center mb-2 px-3 pt-3">
-        <div className="flex text-sm text-white font-medium">
-          <FolderIcon className="w-5 h-5" />
-          <span className="ml-3">프로젝트</span>
-        </div>
-      </div>
-
       <ul className="space-y-1">
         {projects.map((project) => (
           <li key={project.id}>
@@ -118,6 +113,7 @@ export default function FileExplorer({
                       key={file.id}
                       onClick={async () => {
                         openFile(file.id);
+                        setLanguage(file.language);
                         if (onClearProjectSelection)
                           onClearProjectSelection();
 
@@ -133,6 +129,7 @@ export default function FileExplorer({
                             token ?? ""
                           );
                           updateFileContent(file.id, result.content);
+                          setLanguage(result.language);
                         } catch (err) {
                           console.error("파일 내용 불러오기 실패:", err);
                         }

@@ -77,12 +77,12 @@ export default function ProjectPage() {
 
   return (
     <div>
-      <div className="flex">
+      <div className="flex h-screen">
         <Sidebar />
         {/* 전달 */}
         <div className="flex flex-1 flex-col min-w-0">
           <Header terminalRef={terminalRef as React.MutableRefObject<XtermType>} />
-          <div className="flex min-w-0">
+          <div className="flex min-h-0">
             <main className="min-w-0 overflow-x-hidden flex flex-1 flex-col bg-gray700">
               <div className="flex flex-col flex-1 min-w-0">
                 <Tabbar />
