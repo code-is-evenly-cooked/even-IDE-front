@@ -45,7 +45,6 @@ export default function Sidebar() {
 
   // 파일 추가 (임시 생성 → 이름 입력 후 서버로 생성)
   const handleAddFile = async () => {
-
     // 프로젝트 페이지 프로젝트 선택 없이 파일 추가 가능
     if (isInProjectPage) {
       const project = projects[0]; // 상태에 저장된 하나의 프로젝트
@@ -136,15 +135,20 @@ export default function Sidebar() {
     setIsAddingProject(false);
   };
 
+  // 프로젝트 이동
   const handleGoToProject = () => {
     let targetUUID: string | null = null;
-
+    
+    // 프로젝트 선택 시
     if (selectedProjectId) {
       targetUUID = selectedProjectId;
-    } else if (currentFileId) {
+    } 
+
+    // 파일 선택 시
+    else if (currentFileId) {
       const file = files.find((f) => f.id === currentFileId);
       const project = projects.find(
-        (p) => p.projectId === Number(file?.projectId)
+        (p) => p.id === file?.projectId
       );
       if (project) targetUUID = project.id;
     }
