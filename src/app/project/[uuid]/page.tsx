@@ -5,7 +5,6 @@ import Header from "@/components/layout/Header/Header";
 import { useRef, useEffect } from "react";
 import type { Terminal as XtermType } from "xterm";
 import dynamic from "next/dynamic";
-import { useLanguageStore } from "@/stores/useLanguageStore";
 import Tabbar from "@/components/editor/Tabbar";
 import Toolbox from "@/components/editor/Toolbox/Toolbox";
 import RightPanel from "@/components/editor/RightPanel/RightPanel";
@@ -27,36 +26,24 @@ export default function ProjectPage() {
   const params = useParams();
   const projectId = params?.uuid as string;
   const terminalRef = useRef<XtermType | null>(null);
-  const language = useLanguageStore((state) => state.language);
   const { setProjects, setProjectId } = useProjectStore();
   const { setFiles } = useIdeStore();
 
-  const handleRun = (code: string) => {
-    if (!terminalRef.current) return;
-
-    terminalRef.current.clear();
-
-    if (language.toLowerCase() === "javascript") {
-      try {
-        const result = eval(code); // 코드 실행
-
-        terminalRef.current.write(`\r\n[결과] ${String(result)}\r\n`);
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          terminalRef.current.write(`\r\n[오류] ${error.message}\r\n`);
-        } else {
-          terminalRef.current.write(`\r\n[오류] 알 수 없는 오류입니다\r\n`);
-        }
-      }
-    } else {
-      // 지원되지 않는 언어에 대한 메시지
-      terminalRef.current.write(`\r\n[아직 지원되지 않는 언어입니다]\r\n`);
-    }
-  };
-
+  // 로그인 사용자 여부 확인 콘솔 (임시)
   useEffect(() => {
-    const token = getAuthCookie().token;
-    if (!token) return;
+    const auth = getAuthCookie();
+    const token = auth?.token ?? undefined;
+  
+    if (token) {
+      console.log("🔐 로그인된 사용자입니다.");
+    } else {
+      console.log("🚪 로그인되지 않은 사용자입니다.");
+    }
+  }, []);
+
+  // 프로젝트 단 건 조회 (비로그인 사용자도 가능)
+  useEffect(() => {
+    const token = getAuthCookie().token ?? undefined;
 
     fetchProject(projectId, token)
       .then((data) => {
@@ -68,7 +55,7 @@ export default function ProjectPage() {
             projectId: data.id,
           },
         ]);
-        setProjectId(data.id);  // 여기서 projectId 전역 저장
+        setProjectId(data.id); // 여기서 projectId 전역 저장
         setFiles(
           data.files.map((file: FileItem) => ({
             id: String(file.id),
@@ -91,10 +78,10 @@ export default function ProjectPage() {
   return (
     <div>
       <div className="flex">
-          <Sidebar />
+        <Sidebar />
         {/* 전달 */}
         <div className="flex flex-1 flex-col min-w-0">
-          <Header onRun={handleRun} />
+          <Header terminalRef={terminalRef as React.MutableRefObject<XtermType>} />
           <div className="flex min-w-0">
             <main className="min-w-0 overflow-x-hidden flex flex-1 flex-col bg-gray700">
               <div className="flex flex-col flex-1 min-w-0">

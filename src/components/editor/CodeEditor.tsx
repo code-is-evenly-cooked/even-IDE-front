@@ -90,48 +90,46 @@ const CodeEditor = () => {
           />
         </div>
       )}
-
       <Editor
         height="100%"
         language={language.toLowerCase()}
         value={currentFile?.content ?? ""}
         theme="vs-dark"
         options={{
-          fontSize: 14,
-          minimap: { enabled: false },
-          automaticLayout: true,
-          glyphMargin: true,
-          readOnly:
-            currentFile.editLocked && currentFile.ownerId !== Number(userId),
-        }}
-        onChange={(value) => {
-          if (!currentFile.editLocked) {
-            updateFileContent(currentFile.id, value ?? "");
-          }
-        }}
-        onMount={(editor, monaco) => {
-          setEditorInstance(editor);
-          setMonacoInstance(monaco);
-
-          editor.onMouseDown((e) => {
-            if (
-              e.target.type ===
-              monaco.editor.MouseTargetType.GUTTER_GLYPH_MARGIN
-            ) {
-              return;
-            }
-
-            if (e.target.position) {
-              setSelectedLine(e.target.position.lineNumber);
-            }
-          });
-
-          editor.onDidChangeCursorPosition((e) => {
-            setSelectedLine(e.position.lineNumber);
-          });
-        }}
-      />
-
+			fontSize: 14,
+			minimap: { enabled: false },
+			automaticLayout: true,
+			glyphMargin: true,
+			readOnly:
+			  currentFile.editLocked && currentFile.ownerId !== Number(userId),
+		  }}
+		  onChange={(value) => {
+			if (!currentFile.editLocked) {
+			  updateFileContent(currentFile.id, value ?? "");
+			}
+		  }}
+		  onMount={(editor, monaco) => {
+			setEditorInstance(editor);
+			setMonacoInstance(monaco);
+  
+			editor.onMouseDown((e) => {
+			  if (
+				e.target.type ===
+				monaco.editor.MouseTargetType.GUTTER_GLYPH_MARGIN
+			  ) {
+				return;
+			  }
+  
+			  if (e.target.position) {
+				setSelectedLine(e.target.position.lineNumber);
+			  }
+			});
+  
+			editor.onDidChangeCursorPosition((e) => {
+			  setSelectedLine(e.position.lineNumber);
+			});
+		  }}
+		/>
       {/* 메모 입력창 */}
       {openedMemoLine !== null &&
         editorInstance &&

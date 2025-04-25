@@ -7,39 +7,41 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { removeAuthCookie } from "@/lib/cookie";
 import HeaderActions from "@/components/editor/HeaderActions";
 import LanguageDropdown from "@/components/editor/LanguageDropdown";
-import { useLanguageStore } from "@/stores/useLanguageStore";
 import { useChatStore } from "@/stores/useChatStore";
 import { clearMessages } from "@/lib/indexedDB";
 import { useAIChatStore } from "@/stores/useAIChatStore";
+import type { Terminal as XtermType } from "xterm";
+import { MenuIcon } from "@/components/common/Icons";
 
 type HeaderProps = {
-  onRun: (code: string, language: string) => void;
+  terminalRef: React.RefObject<XtermType>;
 };
 
-const Header = ({ onRun }: HeaderProps) => {
+const Header = ({ terminalRef }: HeaderProps) => {
   const { isLoggedIn, clearAuth } = useAuthStore();
-  const { language } = useLanguageStore();
 
-	const handleLogout = async () => {
-		removeAuthCookie();
-		clearAuth();
-		useChatStore.getState().resetChatUser();
-		await clearMessages();
-		useAIChatStore.getState().clearMessages();
-	};
+  const handleLogout = async () => {
+    removeAuthCookie();
+    clearAuth();
+    useChatStore.getState().resetChatUser();
+    await clearMessages();
+    useAIChatStore.getState().clearMessages();
 
-	return (
-		<header className="h-[3rem] flex justify-between items-center p-4">
-			<div className="flex items-center gap-4">
-				<button className="text-xl hover:text-gray-300" aria-label="메뉴 열기">
-					☰
-				</button>
+	window.location.reload();
+  };
+
+  return (
+    <header className="h-[3rem] flex justify-between items-center p-4">
+      <div className="flex items-center gap-4">
+        <button className="text-xl" aria-label="메뉴 열기">
+          <MenuIcon />
+        </button>
 
         {/* 언어 선택 드롭 박스 */}
         <LanguageDropdown />
 
         {/* 실행 버튼 */}
-        <RunButton onRun={(code) => onRun(code, language)} />
+        <RunButton terminalRef={terminalRef} />
         <HeaderActions />
       </div>
       <div className="flex">

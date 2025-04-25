@@ -58,12 +58,16 @@ export const createProject = async (
   };
 };
 
-export const fetchProject = async (uuid: string, token: string) => {
+// 프로젝트 단 건 리스트 조회 (비로그인 가능)
+export const fetchProject = async (uuid: string, token?: string) => {
+  const headers: Record<string, string> = {};
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
   const res = await fetch(`${API_BASE_URL}/projects/${uuid}`, {
     method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers,
   });
 
   if (!res.ok) {
@@ -73,6 +77,7 @@ export const fetchProject = async (uuid: string, token: string) => {
 
   return await res.json();
 };
+
 
 // 프로젝트 삭제
 export const deleteProject = async (projectId: number, token: string) => {
@@ -87,4 +92,4 @@ export const deleteProject = async (projectId: number, token: string) => {
     const error = await res.text();
     throw new Error(`프로젝트 삭제 실패: ${error}`);
   }
-}
+};

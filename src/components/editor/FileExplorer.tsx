@@ -11,12 +11,16 @@ interface FileExplorerProps {
   onProjectClick: (projectId: string) => void;
   selectedProjectId: string | null;
   onFileNameSubmit: (fileId: string, newName: string) => void;
+  onFileClick?: (fileId: string) => void;
+  onClearProjectSelection?: () => void;
 }
 
 export default function FileExplorer({
   onProjectClick,
   selectedProjectId,
   onFileNameSubmit,
+  onFileClick,
+  onClearProjectSelection,
 }: FileExplorerProps) {
   const {
     files,
@@ -25,12 +29,17 @@ export default function FileExplorer({
     editingFileId,
     setEditingFileId,
     deleteFile,
+    updateFileContent,
   } = useIdeStore();
 
-  const { updateFileContent } = useIdeStore();
   const { projects } = useProjectStore();
-  const { projectId: numericProjectId } = useProjectStore();
   const token = getAuthCookie().token;
+
+  const handleClick = (fileId: string) => {
+    if (onFileClick) {
+      onFileClick(fileId);
+    }
+  };
 
   return (
     <div className="flex-1 overflow-y-auto">
@@ -51,7 +60,7 @@ export default function FileExplorer({
               className={clsx(
                 "flex text-sm px-3 py-2 cursor-pointer",
                 selectedProjectId === project.id
-                  ? "text-gray200 font-bold"
+                  ? "bg-gray500 font-bold"
                   : "hover:bg-gray700 text-white"
               )}
             >
@@ -63,9 +72,16 @@ export default function FileExplorer({
             <ul>
               {files
                 .filter((file) => file.projectId === project.id)
-                .map((file) =>
-                  editingFileId === file.id ? (
-                    <li key={file.id} className="px-8 py-2">
+                .map((file) => {
+                  const numericProjectId =
+                    projects.find((p) => p.id === file.projectId)?.projectId;
+
+                  return editingFileId === file.id ? (
+                    <li
+                      key={file.id}
+                      onClick={() => handleClick(file.id)}
+                      className="px-8 py-2"
+                    >
                       <div className="text-xs text-gray200 mb-1 ml-1">
                         이름 입력
                       </div>
@@ -101,20 +117,24 @@ export default function FileExplorer({
                     <li
                       key={file.id}
                       onClick={async () => {
-                        openFile(file.id); // 기존 기능 유지
+                        openFile(file.id);
+                        if (onClearProjectSelection)
+                          onClearProjectSelection();
 
-                        // 파일 내용 fetch
-                        if (numericProjectId && token) {
-                          try {
-                            const result = await fetchFileContent(
-                              numericProjectId,
-                              file.id,
-                              token
-                            );
-                            updateFileContent(file.id, result.content); // Zustand store 업데이트
-                          } catch (err) {
-                            console.error("파일 내용 불러오기 실패:", err);
-                          }
+                        if (!numericProjectId) {
+                          console.warn("프로젝트 ID를 찾을 수 없습니다.");
+                          return;
+                        }
+
+                        try {
+                          const result = await fetchFileContent(
+                            numericProjectId,
+                            file.id,
+                            token ?? ""
+                          );
+                          updateFileContent(file.id, result.content);
+                        } catch (err) {
+                          console.error("파일 내용 불러오기 실패:", err);
                         }
                       }}
                       onDoubleClick={() => setEditingFileId(file.id)}
@@ -128,8 +148,8 @@ export default function FileExplorer({
                       <FileIcon className="w-5 h-5" />
                       <span className="ml-2">{file.name}</span>
                     </li>
-                  )
-                )}
+                  );
+                })}
             </ul>
           </li>
         ))}
