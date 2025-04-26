@@ -1,10 +1,12 @@
 "use client";
 
 import { usePanelStore } from "@/stores/usePanelState";
+import { useChatStore } from "@/stores/useChatStore";
+
 import ChatModal from "./Chat/ChatModal";
 import ChatPanel from "./Chat/ChatPanel";
 import AIPanel from "./Chat/AI/AIPanel";
-import { useChatStore } from "@/stores/useChatStore";
+import MemoPanel from "./Memo/MemoPanel";
 
 const RightPanel = () => {
 	const { viewMode } = useChatStore();
@@ -16,6 +18,7 @@ const RightPanel = () => {
 		<>
 			{activePanel === "chat" && viewMode === "panel" && <ChatPanel />}
 			{activePanel === "chat" && viewMode === "modal" && <ChatModal />}
+			{activePanel === "memo" && <MemoPanel />}
 			{activePanel === "ai" && <AIPanel />}
 		</>
 	);
