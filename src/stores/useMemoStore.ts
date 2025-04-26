@@ -10,6 +10,9 @@ export interface Memo {
     content: string;
     code_snapshot: string;
     created_at: string;
+
+    writerId?: string;
+    writerNickName?: string;
 }
 
 interface MemoStore {
@@ -28,7 +31,7 @@ export const useMemoStore = create<MemoStore>((set) => ({
     setVisible: (visible) => set({ isVisible: visible }),
     setViewMode: (mode) => set({ viewMode: mode }),
 
-    aaddMemo: (content: string, fileName: string, fileId: string) =>
+    addMemo: (content: string, fileName: string, fileId: string) =>
         set((state) => ({
             memos: [
                 ...state.memos,
