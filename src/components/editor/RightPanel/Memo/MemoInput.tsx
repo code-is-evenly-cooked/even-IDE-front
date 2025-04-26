@@ -1,29 +1,69 @@
 "use client";
 
-import { useState, useRef } from "react";
+import {useState, useRef, useEffect} from "react";
 import { useMemoStore } from "@/stores/useMemoStore";
 import { useProjectStore } from "@/stores/useProjectStore";
 import { useIdeStore } from "@/stores/useIdeStore";
 import { ArrowUpIcon } from "lucide-react";
 import clsx from "clsx";
+import { createMemo } from "@/service/memo";
 
 const MemoInput = () => {
     const [content, setContent] = useState("");
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const { addMemo } = useMemoStore();
-    const { currentFileId, files } = useIdeStore();
+    // const { currentFileId, files } = useIdeStore();
+    const { files, currentFileId, setFiles, setCurrentFileId } = useIdeStore();
     const currentFile = files.find((f) => f.id === currentFileId);
     const currentFileName = currentFile?.name ?? null;
     const currentFileIdStr = currentFile?.id ?? null;
     const { projectId } = useProjectStore();
     const disabled = !currentFileName;
 
-    const handleAdd = () => {
-        const handleAdd = () => {
-            if (!content.trim() || !currentFileIdStr || !currentFileName) return;
-            addMemo(content, currentFileName, currentFileIdStr);
+    useEffect(() => {
+        if (files.length === 0) {
+            const dummyFile = {
+                id: "dummy-file-id",
+                name: "테스트파일.js",
+                content: "",
+                projectId: "dummy-project-id",
+                language: "javascript",
+                updatedAt: new Date().toISOString(),
+                ownerId: 1,
+                locked: false,
+                editLocked: false,
+            };
+            setFiles([dummyFile]);
+            setCurrentFileId(dummyFile.id);
+        }
+    }, []);
+
+    const handleAdd = async () => {
+        if (!content.trim() || !currentFileIdStr || !currentFileName) return;
+
+        try {
+            const result = await createMemo({
+                projectId,
+                fileId: currentFileIdStr,
+                memo: content,
+            });
+
+            addMemo({
+                id: result.memoId,
+                file_id: Number(currentFileIdStr),
+                file_name: currentFileName,
+                line_number: 1,
+                content: result.memo,
+                code_snapshot: "",
+                created_at: new Date().toISOString(),
+                writerId: result.writerId,
+                writerNickName: result.writerNickName,
+            });
+
             setContent("");
-        };
+        } catch (error) {
+            console.error("메모 추가 실패", error);
+        }
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
