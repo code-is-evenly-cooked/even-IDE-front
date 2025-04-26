@@ -192,7 +192,7 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
 	}, [projectId, accessToken]);
 
 	useEffect(() => {
-		if (currentFileId) {
+		if (clientRef.current?.connected && currentFileId) {
 			subscribeToFile();
 		}
 	}, [currentFileId]);
