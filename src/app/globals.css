@@ -53,3 +53,22 @@ body {
 .xterm-screen {
   width: 100% !important;
 }
+
+/* 커스텀 스크롤 */
+.custom-scrollbar {
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: #4b5563 transparent; /* 바 색, 트랙 색 */
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #4b5563;
+    border-radius: 4px;
+}
