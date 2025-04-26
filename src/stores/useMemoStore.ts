@@ -5,6 +5,7 @@ type ViewMode = "panel" | "modal";
 export interface Memo {
     id: number;
     file_id: number;
+    file_name: string;
     line_number: number;
     content: string;
     code_snapshot: string;
@@ -17,7 +18,7 @@ interface MemoStore {
     memos: Memo[];
     setVisible: (visible: boolean) => void;
     setViewMode: (mode: ViewMode) => void;
-    addMemo: (content: string) => void;
+    addMemo: (content: string, fileName: string, fileId: string | null) => void;
 }
 
 export const useMemoStore = create<MemoStore>((set) => ({
@@ -27,13 +28,14 @@ export const useMemoStore = create<MemoStore>((set) => ({
     setVisible: (visible) => set({ isVisible: visible }),
     setViewMode: (mode) => set({ viewMode: mode }),
 
-    addMemo: (content) =>
+    aaddMemo: (content: string, fileName: string, fileId: string) =>
         set((state) => ({
             memos: [
                 ...state.memos,
                 {
-                    id: Date.now(), // 간단한 임시 ID
-                    file_id: 1,
+                    id: Date.now(),
+                    file_id: Number(fileId), // fileId는 string → number 변환
+                    file_name: fileName,
                     line_number: 1,
                     content,
                     code_snapshot: "",
