@@ -43,10 +43,10 @@ const MemoInput = () => {
                 disabled={disabled}
                 className={clsx(
                     `
-					w-full px-3 py-2 text-white text-sm font-medium
-					bg-gray900 border border-gray700 rounded-2xl resize-none
+					w-full px-3 py-2 text-white text-body-2 font-medium
+					border border-gray700 rounded-2xl resize-none
 					scrollbar-thumb-gray600 scrollbar-track-transparent scrollbar-thin
-					placeholder:text-gray500
+					placeholder:text-gray500 bg-gray900
 					focus:border-violet600 focus:shadow-violetGlow focus:outline-none focus:ring-0
 					transition-colors duration-200
 					`,
@@ -59,7 +59,7 @@ const MemoInput = () => {
                 disabled={disabled || content.trim() === ""}
                 className={clsx(
                     `
-					w-9 h-9 flex items-center justify-center rounded-full transition-colors
+					w-11 h-9 flex items-center justify-center rounded-full transition-colors
 					`,
                     disabled || content.trim() === ""
                         ? "bg-gray500/80 text-white cursor-not-allowed"
