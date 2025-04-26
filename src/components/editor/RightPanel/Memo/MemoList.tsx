@@ -24,7 +24,7 @@ const MemoList = () => {
                         onClick={() => toggleExpand(memo.id)}
                     >
                         <div className="text-xs text-gray400 mb-1">
-                            프로젝트 {memo.line_number}
+                            {memo.file_name}
                         </div>
                         <div
                             className={clsx(
