@@ -17,6 +17,7 @@ import { useIdeStore } from "@/stores/useIdeStore";
 
 interface ChatContextValue {
 	sendMessage: (content: string) => void;
+	sendCodeUpdate: (content: string) => void; 
 }
 
 export const ChatContext = createContext<ChatContextValue | null>(null);
@@ -157,7 +158,29 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
 		currentFileSubscriptionRef.current = subscription;
 	};
 
+	//코드 수정시
+	const sendCodeUpdate = (content: string) => {
+		const client = clientRef.current;
+	
+		if (!client || !client.connected || !projectId || !currentFileId || !sender || !nickname) return;
+	
+		const payload = {
+			type: "CODE_UPDATE",
+			projectId,
+			fileId: currentFileId,
+			sender,
+			nickname,
+			content,
+			timestamp: new Date().toISOString(),
+		};
 
+		console.log("코드 업데이트 전송:", payload);
+	
+		client.publish({
+			destination: `/app/code.update`,
+			body: JSON.stringify(payload),
+		});
+	};
 
 	useEffect(() => {
 		if (!projectId) return;
@@ -168,8 +191,14 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
 		};
 	}, [projectId, accessToken]);
 
+	useEffect(() => {
+		if (currentFileId) {
+			subscribeToFile();
+		}
+	}, [currentFileId]);
+
 	return (
-		<ChatContext.Provider value={{ sendMessage }}>
+		<ChatContext.Provider value={{ sendMessage, sendCodeUpdate }}>
 			{children}
 		</ChatContext.Provider>
 	);
