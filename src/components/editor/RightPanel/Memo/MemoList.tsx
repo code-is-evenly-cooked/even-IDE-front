@@ -10,7 +10,7 @@ const MemoList = () => {
             {memos.map((memo) => (
                 <div key={memo.id} className="bg-gray700 p-2 rounded">
                     <div className="text-xs text-gray400">라인 {memo.line_number}</div>
-                    <div className="mt-1">{memo.content}</div>
+                    <div className="mt-1 whitespace-pre-line">{memo.content}</div>
                 </div>
             ))}
         </div>
