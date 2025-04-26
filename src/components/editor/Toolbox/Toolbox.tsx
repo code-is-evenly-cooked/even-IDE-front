@@ -3,22 +3,15 @@
 import React, { ReactNode } from "react";
 import { MessageCircleCodeIcon } from "lucide-react";
 import IconButton from "@/components/common/Button/IconButton";
-import { PanelType } from "@/types/panel";
+import { AIIcon, MemoIcon, MemoIcon2 } from "@/components/common/Icons";
 import { useChatStore } from "@/stores/useChatStore";
 import { useMemoStore } from "@/stores/useMemoStore";
-import { MemoIcon, MemoIcon2 } from "@/components/common/Icons";
+import { PanelType, usePanelStore } from "@/stores/usePanelState";
 
 const Toolbox = () => {
-    const {
-        isVisible: isChatVisible,
-        toggleVisibility: toggleChat,
-    } = useChatStore();
-
-    const {
-        isVisible: isMemoVisible,
-        setVisible: setMemoVisible,
-        setViewMode: setMemoMode,
-    } = useMemoStore();
+    const { activePanel, togglePanel } = usePanelStore();
+    const { isVisible: isChatVisible, toggleVisibility: toggleChat } = useChatStore();
+    const { isVisible: isMemoVisible, setVisible: setMemoVisible, setViewMode: setMemoMode } = useMemoStore();
 
     const TOOLBOX_ITEMS: {
         panel: PanelType;
@@ -34,7 +27,7 @@ const Toolbox = () => {
             isActive: isChatVisible,
             onClick: () => {
                 toggleChat();
-                setMemoVisible(false);
+                setMemoVisible(false); // 메모 닫기
             },
         },
         {
@@ -47,20 +40,31 @@ const Toolbox = () => {
             label: "메모",
             isActive: isMemoVisible,
             onClick: () => {
-                if (isChatVisible) toggleChat();
+                if (isChatVisible) toggleChat(); // 채팅 닫기
                 setMemoVisible(true);
                 setMemoMode("panel");
+                togglePanel("memo");
+            },
+        },
+        {
+            panel: "ai",
+            icon: <AIIcon />,
+            label: "AI",
+            isActive: activePanel === "ai",
+            onClick: () => {
+                setMemoVisible(false);
+                togglePanel("ai");
             },
         },
     ];
 
     return (
-        <aside className="flex flex-col w-9 mx-1 bg-gray900 shrink-0">
+        <aside className="flex flex-col w-9 mx-1 bg-gray900 shrink-0 gap-1">
             {TOOLBOX_ITEMS.map(({ panel, icon, label, isActive, onClick }) => (
                 <IconButton
                     key={panel}
                     icon={icon}
-                    label={label}
+                    label={isActive ? `${label} 닫기` : `${label} 열기`}
                     color="gray700"
                     isActive={isActive}
                     onClick={onClick}

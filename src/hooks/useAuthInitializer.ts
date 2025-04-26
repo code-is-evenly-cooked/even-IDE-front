@@ -11,11 +11,11 @@ const useAuthInitializer = () => {
 	const clearAuth = useAuthStore((state) => state.clearAuth);
 
 	useEffect(() => {
-		const token = getAuthCookie();
+		const token = getAuthCookie().token;
 		if (token) {
 			const decoded = decodeJwt<DecodedToken>(token);
 			if (decoded) {
-				const provider = decoded.provider || null;
+				const provider = decoded.provider || "local";
 				setAuth(token, provider);
 			} else {
 				clearAuth();

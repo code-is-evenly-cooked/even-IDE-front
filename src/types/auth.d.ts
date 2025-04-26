@@ -1,3 +1,5 @@
+export type AuthProvider = "local" | "google" | "kakao";
+
 interface SignupCredentials {
 	email: string;
 	password: string;
@@ -18,6 +20,9 @@ interface AuthCredentials {
 interface AuthResponse {
 	accessToken: string;
 	refreshToken: string;
+	userId: number;
+	nickname: string;
+	provider: AuthProvider;
 }
 
 export interface DecodedToken {
@@ -25,5 +30,5 @@ export interface DecodedToken {
 	role: string;
 	iat: number; // 생성 시간
 	exp: number; // 만료 시간
-	provider?: "local" | "google" | "kakao";
+	provider?: AuthProvider;
 }

@@ -1,40 +1,56 @@
-import { passwordReset } from "@/service/auth";
-import { validateEmail } from "@/utils/validate";
+import { resetPassword } from "@/service/auth";
+import { validatePassword } from "@/utils/validate";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 
-const useResetPasswordForm = () => {
-	const [email, setEmail] = useState("");
-	const [emailError, setEmailError] = useState("");
+type FormType = "password" | "passwordConfirm";
+
+interface PasswordResetErrors {
+	password?: string;
+	passwordConfirm?: string;
+}
+
+const usePasswordResetForm = (token: string) => {
+	const router = useRouter();
+	const [formState, setFormState] = useState({
+		password: "",
+		passwordConfirm: "",
+	});
+	const [errors, setErrors] = useState<PasswordResetErrors>({});
 	const [isLoading, setIsLoading] = useState(false);
 
 	const validateForm = useCallback(() => {
-		const error = validateEmail(email);
-		if (error) {
-			setEmailError(error);
-			return false;
-		}
-		setEmailError("");
-		return true;
-	}, [email]);
+		const newErrors: PasswordResetErrors = {};
 
-	const handleEmailChange = useCallback(
-		(e: ChangeEvent<HTMLInputElement>) => {
-			setEmail(e.target.value);
-			if (emailError) setEmailError("");
+		const passwordError = validatePassword(formState.password);
+		if (passwordError) newErrors.password = passwordError;
+
+		if (formState.password !== formState.passwordConfirm) {
+			newErrors.passwordConfirm = "비밀번호가 다릅니다.";
+		}
+
+		setErrors(newErrors);
+		return Object.keys(newErrors).length === 0;
+	}, [formState.password, formState.passwordConfirm]);
+
+	const handleFormChange = useCallback(
+		(key: FormType) => (e: ChangeEvent<HTMLInputElement>) => {
+			const { value } = e.target;
+			setFormState((prev) => ({ ...prev, [key]: value }));
+			setErrors((prev) => ({ ...prev, [key]: "" }));
 		},
-		[emailError]
+		[]
 	);
 
-	const handleSubmit = async (e: FormEvent) => {
+	const handleResetPassword = async (e: FormEvent) => {
 		e.preventDefault();
 		if (!validateForm()) return;
 
 		setIsLoading(true);
 		try {
-			await passwordReset(email);
-			// TODO: 로그 제거 필요
-
-			alert("비밀번호 재설정 메일이 발송되었습니다.");
+			await resetPassword(token, formState.password);
+			alert("비밀번호가 성공적으로 변경되었습니다.");
+			router.replace("/login");
 		} catch (err) {
 			if (err instanceof Error) {
 				alert(err.message);
@@ -47,12 +63,12 @@ const useResetPasswordForm = () => {
 	};
 
 	return {
-		email,
-		emailError,
+		formState,
+		errors,
 		isLoading,
-		handleEmailChange,
-		handleSubmit,
+		handleFormChange,
+		handleResetPassword,
 	};
 };
 
-export default useResetPasswordForm;
+export default usePasswordResetForm;

@@ -28,8 +28,9 @@ export async function fetchWithJson<T = unknown>(
 export async function parseJSON<T = unknown>(
 	res: Response
 ): Promise<T | string> {
+	const cloned = res.clone();
 	try {
-		return await res.json();
+		return await cloned.json();
 	} catch {
 		return await res.text();
 	}

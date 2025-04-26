@@ -1,10 +1,16 @@
 import IconButton from "@/components/common/Button/IconButton";
-import { ChatTransferIcon, CloseIcon } from "@/components/common/Icons";
+import {
+	ChatTransferIcon,
+	CloseIcon,
+	MinusCloseIcon,
+} from "@/components/common/Icons";
 import { useChatStore } from "@/stores/useChatStore";
+import { usePanelStore } from "@/stores/usePanelState";
 import React from "react";
 
 const ChatTitle = () => {
-	const { viewMode, toggleVisibility, setViewMode } = useChatStore();
+	const { viewMode, setViewMode } = useChatStore();
+	const { closePanel } = usePanelStore();
 
 	return (
 		<div className="p-4 text-md font-semibold text-white text-center flex justify-between items-center">
@@ -18,11 +24,11 @@ const ChatTitle = () => {
 					onClick={() => setViewMode(viewMode === "modal" ? "panel" : "modal")}
 				/>
 				<IconButton
-					icon={<CloseIcon />}
+					icon={viewMode === "modal" ? <CloseIcon /> : <MinusCloseIcon />}
 					size="sm"
-					label={viewMode === "modal" ? "패널로 보기" : "모달로 보기"}
+					label="닫기"
 					transparent
-					onClick={toggleVisibility}
+					onClick={closePanel}
 				/>
 			</div>
 		</div>

@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
 
 		return await handleAPIResponse<SignupResponse>(
 			response,
-			"비밀번호 재설정 실패"
+			"비밀번호 초기화 실패"
 		);
 	} catch (err) {
 		console.error("[POST /auth/password-reset]", err);

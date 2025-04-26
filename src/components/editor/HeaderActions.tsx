@@ -1,12 +1,18 @@
-import { Download, Upload, Share2, Github } from "lucide-react";
+import { Download, Upload, Share2, Github, Save } from "lucide-react";
 import IconButton from "@/components/common/Button/IconButton";
 import { QnaIcon } from "@/components/common/Icons";
 import { useIdeStore } from "@/stores/useIdeStore";
 import ShareQR from "./ShareQR";
 import { useState } from "react";
+import { useProjectStore } from "@/stores/useProjectStore";
+import { updateFileCode } from "@/service/file";
+import { getAuthCookie } from "@/lib/cookie";
 
 export default function HeaderActions() {
   const [isShareOpen, setIsShareOpen] = useState(false);
+  const { files, currentFileId } = useIdeStore.getState();
+  const { projects } = useProjectStore();
+
   // 확장자 별 MIME 타입 (내보내기에서 사용)
   const getMimeType = (filename: string): string => {
     if (filename.endsWith(".html")) return "text/html";
@@ -19,38 +25,74 @@ export default function HeaderActions() {
     return "text/plain"; // 기본값
   };
 
-	// 내보내기 기능
-	const handleExport = () => {
-		const { files, currentFileId } = useIdeStore.getState(); // 열려있는 파일 상태 조회
+  // 내보내기 기능
+  const handleExport = () => {
+    const { files, currentFileId } = useIdeStore.getState(); // 열려있는 파일 상태 조회
 
-		// 파일이 선택 중인지 확인
-		const currentFile = files.find((f) => f.id === currentFileId);
-		if (!currentFile) {
-			alert("내보낼 파일이 선택되지 않았습니다.");
-			return;
-		}
+    // 파일이 선택 중인지 확인
+    const currentFile = files.find((f) => f.id === currentFileId);
+    if (!currentFile) {
+      alert("내보낼 파일이 선택되지 않았습니다.");
+      return;
+    }
 
-		// 내보내기 여부 확인
-		const confirmExport = window.confirm(
-			`"${currentFile.name}" 파일을 내보내시겠습니까?`
-		);
-		if (!confirmExport) return; // 취소 시 동작 중단
+    // 내보내기 여부 확인
+    const confirmExport = window.confirm(
+      `"${currentFile.name}" 파일을 내보내시겠습니까?`
+    );
+    if (!confirmExport) return; // 취소 시 동작 중단
 
-		const mimeType = getMimeType(currentFile.name);
-		const blob = new Blob([currentFile.content], { type: mimeType }); // 파일 내용과 타입
-		const url = URL.createObjectURL(blob);
+    const mimeType = getMimeType(currentFile.name);
+    const blob = new Blob([currentFile.content], { type: mimeType }); // 파일 내용과 타입
+    const url = URL.createObjectURL(blob);
 
-		const a = document.createElement("a");
-		a.href = url;
-		a.download = currentFile.name || "untitled.txt"; // 파일 이름
-		a.click();
-		URL.revokeObjectURL(url);
-	};
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = currentFile.name || "untitled.txt"; // 파일 이름
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   const projectUrl = typeof window !== "undefined" ? window.location.href : "";
 
+  // 파일 저장
+  const handleSave = async () => {
+    const file = files.find((f) => f.id === currentFileId);
+    const token = getAuthCookie().token;
+
+    // UUID → 숫자형 projectId 변환
+    const numericProjectId = projects.find((p) => p.id === file?.projectId)?.projectId;
+    
+    if (!file || !numericProjectId || !token) {
+      alert("저장할 수 있는 파일 정보가 없습니다.");
+      return;
+    }
+
+    if (!currentFileId) {
+      alert("저장할 파일이 선택되지 않았습니다.");
+      return;
+    }
+
+    try {
+      await updateFileCode(numericProjectId, file.id, file.language, file.content);
+      alert("파일이 성공적으로 저장되었습니다.");
+    } catch (err) {
+      console.error("❌ 저장 실패:", err);
+      alert("파일 저장에 실패했습니다.");
+    }
+  };
+
   return (
     <div className="flex gap-1 px-3">
+      <IconButton
+        icon={<Save className="w-5 h-5" />}
+        label="저장"
+        onClick={handleSave}
+        color="gray500"
+        size="md"
+        className="hover:bg-slate-400"
+        transparent
+      />
       <IconButton
         icon={<Download className="w-5 h-5" />}
         label="내보내기"

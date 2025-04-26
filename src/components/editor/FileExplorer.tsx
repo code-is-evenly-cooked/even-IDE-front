@@ -1,77 +1,155 @@
+"use client";
+
 import { useIdeStore } from "@/stores/useIdeStore";
 import { clsx } from "clsx";
 import { FolderIcon, FileIcon } from "@/components/common/Icons";
+import { useProjectStore } from "@/stores/useProjectStore";
+import { getAuthCookie } from "@/lib/cookie";
+import { fetchFileContent } from "@/service/file";
+import { useLanguageStore } from "@/stores/useLanguageStore";
 
-export default function FileExplorer() {
+interface FileExplorerProps {
+  onProjectClick: (projectId: string) => void;
+  selectedProjectId: string | null;
+  onFileNameSubmit: (fileId: string, newName: string) => void;
+  onFileClick?: (fileId: string) => void;
+  onClearProjectSelection?: () => void;
+}
+
+export default function FileExplorer({
+  onProjectClick,
+  selectedProjectId,
+  onFileNameSubmit,
+  onFileClick,
+  onClearProjectSelection,
+}: FileExplorerProps) {
   const {
     files,
     currentFileId,
     openFile,
     editingFileId,
     setEditingFileId,
-    renameFile,
     deleteFile,
+    updateFileContent,
   } = useIdeStore();
+
+  const { setLanguage } = useLanguageStore();
+  const { projects } = useProjectStore();
+  const token = getAuthCookie().token;
+
+  const handleClick = (fileId: string) => {
+    if (onFileClick) {
+      onFileClick(fileId);
+    }
+  };
 
   return (
     <div className="flex-1 overflow-y-auto">
-      <div className="flex justify-between items-center mb-2 px-3 pt-3">
-        <div className="flex text-sm text-white font-medium">
-          <FolderIcon className="w-5 h-5" />
-          <span className="ml-3">프로젝트</span>
-        </div>
-      </div>
-
+      {/* 프로젝트 영역 */}
       <ul className="space-y-1">
-        {files.map((file) =>
-          editingFileId === file.id ? (
-            <li key={file.id} className="px-8 py-2">
-              <div className="text-xs text-gray200 mb-1 ml-1">이름 입력</div>
-              <input
-                autoFocus
-                type="text"
-                defaultValue={file.name}
-                onBlur={(e) => {
-                  const newName = e.currentTarget.value.trim();
-                  if (newName) {
-                    renameFile(file.id, newName);
-                  } else {
-                    deleteFile(file.id);
-                  }
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    const newName = e.currentTarget.value.trim();
-                    if (newName) {
-                      renameFile(file.id, newName);
-                    } else {
-                      deleteFile(file.id);
-                    }
-                  }
-                  if (e.key === "Escape") {
-                    deleteFile(file.id);
-                  }
-                }}
-                className="w-full rounded bg-gray500 px-2 py-1 text-sm text-white outline-none"
-              />
-            </li>
-          ) : (
-            <li
-              key={file.id}
-              onClick={() => openFile(file.id)}
-              onDoubleClick={() => setEditingFileId(file.id)}
+        {projects.map((project) => (
+          <li key={project.id}>
+            {/* 프로젝트 클릭 */}
+            <div
+              onClick={() => onProjectClick(project.id)}
               className={clsx(
-                "flex cursor-pointer px-8 py-2 text-sm transition-colors",
-                currentFileId === file.id
-                  ? "bg-gray500 text-white font-bold"
-                  : "text-white hover:bg-gray700"
+                "flex text-sm px-3 py-2 cursor-pointer",
+                selectedProjectId === project.id
+                  ? "bg-gray500 font-bold"
+                  : "hover:bg-gray700 text-white"
               )}
             >
-              <FileIcon className="w-5 h-5" />
-              <span className="ml-2">{file.name}</span>
-            </li>
-          )
-        )}
+              <FolderIcon className="w-5 h-5" />
+              <span className="ml-3">{project.name}</span>
+            </div>
+
+            {/* 하위 파일들 */}
+            <ul>
+              {files
+                .filter((file) => file.projectId === project.id)
+                .map((file) => {
+                  const numericProjectId =
+                    projects.find((p) => p.id === file.projectId)?.projectId;
+
+                  return editingFileId === file.id ? (
+                    <li
+                      key={file.id}
+                      onClick={() => handleClick(file.id)}
+                      className="px-8 py-2"
+                    >
+                      <div className="text-xs text-gray200 mb-1 ml-1">
+                        이름 입력
+                      </div>
+                      <input
+                        autoFocus
+                        type="text"
+                        defaultValue={file.name}
+                        onBlur={(e) => {
+                          const newName = e.currentTarget.value.trim();
+                          if (newName) {
+                            onFileNameSubmit(file.id, newName);
+                          } else {
+                            deleteFile(file.id);
+                          }
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            const newName = e.currentTarget.value.trim();
+                            if (newName) {
+                              onFileNameSubmit(file.id, newName);
+                            } else {
+                              deleteFile(file.id);
+                            }
+                          }
+                          if (e.key === "Escape") {
+                            deleteFile(file.id);
+                          }
+                        }}
+                        className="w-full rounded bg-gray500 px-2 py-1 text-sm text-white outline-none"
+                      />
+                    </li>
+                  ) : (
+                    <li
+                      key={file.id}
+                      onClick={async () => {
+                        openFile(file.id);
+                        setLanguage(file.language);
+                        if (onClearProjectSelection)
+                          onClearProjectSelection();
+
+                        if (!numericProjectId) {
+                          console.warn("프로젝트 ID를 찾을 수 없습니다.");
+                          return;
+                        }
+
+                        try {
+                          const result = await fetchFileContent(
+                            numericProjectId,
+                            file.id,
+                            token ?? ""
+                          );
+                          updateFileContent(file.id, result.content);
+                          setLanguage(result.language);
+                        } catch (err) {
+                          console.error("파일 내용 불러오기 실패:", err);
+                        }
+                      }}
+                      onDoubleClick={() => setEditingFileId(file.id)}
+                      className={clsx(
+                        "flex cursor-pointer px-8 py-2 text-sm transition-colors",
+                        currentFileId === file.id
+                          ? "bg-gray500 text-white font-bold"
+                          : "text-white hover:bg-gray700"
+                      )}
+                    >
+                      <FileIcon className="w-5 h-5" />
+                      <span className="ml-2">{file.name}</span>
+                    </li>
+                  );
+                })}
+            </ul>
+          </li>
+        ))}
       </ul>
     </div>
   );

@@ -1,4 +1,4 @@
-export type ChatMessageType = "JOIN" | "MESSAGE";
+export type ChatMessageType = "JOIN" | "MESSAGE" | "DATE";
 
 export interface ChatMessage {
 	type: ChatMessageType;
