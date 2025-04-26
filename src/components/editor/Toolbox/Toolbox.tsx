@@ -4,13 +4,11 @@ import React, { ReactNode } from "react";
 import { MessageCircleCodeIcon } from "lucide-react";
 import IconButton from "@/components/common/Button/IconButton";
 import { AIIcon, MemoIcon, MemoIcon2 } from "@/components/common/Icons";
-import { useChatStore } from "@/stores/useChatStore";
 import { useMemoStore } from "@/stores/useMemoStore";
 import { PanelType, usePanelStore } from "@/stores/usePanelState";
 
 const Toolbox = () => {
     const { activePanel, togglePanel } = usePanelStore();
-    const { isVisible: isChatVisible, toggleVisibility: toggleChat } = useChatStore();
     const { isVisible: isMemoVisible, setVisible: setMemoVisible, setViewMode: setMemoMode } = useMemoStore();
 
     const TOOLBOX_ITEMS: {
@@ -24,10 +22,10 @@ const Toolbox = () => {
             panel: "chat",
             icon: <MessageCircleCodeIcon width={16} height={16} />,
             label: "채팅",
-            isActive: isChatVisible,
+            isActive: activePanel === "chat",
             onClick: () => {
-                toggleChat();
-                setMemoVisible(false); // 메모 닫기
+                togglePanel("chat");
+                setMemoVisible(false);
             },
         },
         {
@@ -38,9 +36,8 @@ const Toolbox = () => {
                 <MemoIcon className="w-4 h-4" />
             ),
             label: "메모",
-            isActive: isMemoVisible,
+            isActive: activePanel === "memo",
             onClick: () => {
-                if (isChatVisible) toggleChat(); // 채팅 닫기
                 setMemoVisible(true);
                 setMemoMode("panel");
                 togglePanel("memo");
