@@ -2,7 +2,7 @@
 
 import { Editor } from "@monaco-editor/react";
 import { useIdeStore } from "@/stores/useIdeStore";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLanguageStore } from "@/stores/useLanguageStore";
 import { getAuthCookie } from "@/lib/cookie";
 import EditLockToggle from "./EditLockToggle";
