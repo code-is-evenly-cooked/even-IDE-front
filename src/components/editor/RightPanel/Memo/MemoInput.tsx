@@ -1,43 +1,72 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useMemoStore } from "@/stores/useMemoStore";
+import { useProjectStore } from "@/stores/useProjectStore";
+import { ArrowUpIcon } from "lucide-react";
+import clsx from "clsx";
 
 const MemoInput = () => {
     const [content, setContent] = useState("");
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
     const { addMemo } = useMemoStore();
+    const { projectId } = useProjectStore();
+
+    const disabled = !projectId;
 
     const handleAdd = () => {
-        if (!content.trim()) return;
+        if (disabled || !content.trim()) return;
         addMemo(content);
         setContent("");
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
+        const isMac = navigator.platform.toUpperCase().includes("MAC");
         const isSaveShortcut =
             (isMac && e.metaKey && e.key === "s") || (!isMac && e.ctrlKey && e.key === "s");
 
         if (isSaveShortcut) {
-            e.preventDefault(); // 브라우저 기본 저장 방지
+            e.preventDefault();
             handleAdd();
         }
     };
 
     return (
-        <div className="p-2 border-t border-gray700">
+        <div className="p-4 flex items-end gap-2">
             <textarea
+                ref={textareaRef}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="메모를 입력하세요"
-                className="w-full h-20 p-2 text-sm text-white bg-gray800 border border-gray700 rounded resize-none"
+                rows={1}
+                placeholder={disabled ? "프로젝트를 선택하세요" : "메모를 입력하세요"}
+                disabled={disabled}
+                className={clsx(
+                    `
+					w-full px-3 py-2 text-white text-sm font-medium
+					bg-gray900 border border-gray700 rounded-2xl resize-none
+					scrollbar-thumb-gray600 scrollbar-track-transparent scrollbar-thin
+					placeholder:text-gray500
+					focus:border-violet600 focus:shadow-violetGlow focus:outline-none focus:ring-0
+					transition-colors duration-200
+					`,
+                    disabled && "opacity-60 cursor-not-allowed"
+                )}
             />
             <button
+                type="button"
                 onClick={handleAdd}
-                className="mt-2 px-3 py-1 bg-primary rounded text-white text-sm hover:bg-primary-dark"
+                disabled={disabled || content.trim() === ""}
+                className={clsx(
+                    `
+					w-9 h-9 flex items-center justify-center rounded-full transition-colors
+					`,
+                    disabled || content.trim() === ""
+                        ? "bg-gray500/80 text-white cursor-not-allowed"
+                        : "bg-violet300 hover:bg-violet300/80 text-white"
+                )}
             >
-                추가
+                <ArrowUpIcon size={16} />
             </button>
         </div>
     );
