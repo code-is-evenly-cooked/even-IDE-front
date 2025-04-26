@@ -1,12 +1,35 @@
 "use client";
 
 import { useMemoStore } from "@/stores/useMemoStore";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import clsx from "clsx";
+import { fetchMemos } from "@/service/memo";
+import {useIdeStore} from "@/stores/useIdeStore";
+import {useProjectStore} from "@/stores/useProjectStore";
 
 const MemoList = () => {
-    const { memos } = useMemoStore();
+    const { memos, setMemos } = useMemoStore();
     const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
+    const { currentFileId } = useIdeStore();
+    const { projectId } = useProjectStore();
+
+    useEffect(() => {
+        if (!projectId || !currentFileId) return;
+
+        const loadMemos = async () => {
+            try {
+                const data = await fetchMemos({
+                    projectId,
+                    fileId: currentFileId,
+                });
+                setMemos(data);
+            } catch (error) {
+                console.error("메모 조회 실패", error);
+            }
+        };
+
+        loadMemos();
+    }, [projectId, currentFileId, setMemos]);
 
     const toggleExpand = (id: number) => {
         setExpandedMemoId(prev => (prev === id ? null : id));
