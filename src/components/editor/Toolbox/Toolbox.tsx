@@ -1,35 +1,73 @@
+"use client";
+
 import React, { ReactNode } from "react";
 import { MessageCircleCodeIcon } from "lucide-react";
 import IconButton from "@/components/common/Button/IconButton";
 import { PanelType } from "@/types/panel";
 import { useChatStore } from "@/stores/useChatStore";
+import { useMemoStore } from "@/stores/useMemoStore";
+import { MemoIcon, MemoIcon2 } from "@/components/common/Icons";
 
 const Toolbox = () => {
-	const { isVisible, toggleVisibility } = useChatStore();
+    const {
+        isVisible: isChatVisible,
+        toggleVisibility: toggleChat,
+    } = useChatStore();
 
-	const TOOLBOX_ITEMS: { panel: PanelType; icon: ReactNode; label: string }[] =
-		[
-			{
-				panel: "chat",
-				icon: <MessageCircleCodeIcon width={16} height={16} />,
-				label: "채팅",
-			},
-		];
+    const {
+        isVisible: isMemoVisible,
+        setVisible: setMemoVisible,
+        setViewMode: setMemoMode,
+    } = useMemoStore();
 
-	return (
-		<aside className="flex flex-col w-9 mx-1 bg-gray900 shrink-0">
-			{TOOLBOX_ITEMS.map(({ panel, icon, label }) => (
-				<IconButton
-					key={panel}
-					icon={icon}
-					label={isVisible ? `${label} 닫기` : `${label} 열기`}
-					color="gray700"
-					isActive={isVisible}
-					onClick={toggleVisibility}
-				/>
-			))}
-		</aside>
-	);
+    const TOOLBOX_ITEMS: {
+        panel: PanelType;
+        icon: ReactNode;
+        label: string;
+        isActive: boolean;
+        onClick: () => void;
+    }[] = [
+        {
+            panel: "chat",
+            icon: <MessageCircleCodeIcon width={16} height={16} />,
+            label: "채팅",
+            isActive: isChatVisible,
+            onClick: () => {
+                toggleChat();
+                setMemoVisible(false);
+            },
+        },
+        {
+            panel: "memo",
+            icon: isMemoVisible ? (
+                <MemoIcon2 className="w-4 h-4" />
+            ) : (
+                <MemoIcon className="w-4 h-4" />
+            ),
+            label: "메모",
+            isActive: isMemoVisible,
+            onClick: () => {
+                if (isChatVisible) toggleChat();
+                setMemoVisible(true);
+                setMemoMode("panel");
+            },
+        },
+    ];
+
+    return (
+        <aside className="flex flex-col w-9 mx-1 bg-gray900 shrink-0">
+            {TOOLBOX_ITEMS.map(({ panel, icon, label, isActive, onClick }) => (
+                <IconButton
+                    key={panel}
+                    icon={icon}
+                    label={label}
+                    color="gray700"
+                    isActive={isActive}
+                    onClick={onClick}
+                />
+            ))}
+        </aside>
+    );
 };
 
 export default Toolbox;
