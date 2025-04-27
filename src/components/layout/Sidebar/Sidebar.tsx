@@ -8,6 +8,7 @@ import { useProjectStore } from "@/stores/useProjectStore";
 import { createProject } from "@/service/project";
 import { createFile, deleteFileById, updateFileName } from "@/service/file";
 import { getAuthCookie } from "@/lib/cookie";
+import { useToastStore } from "@/stores/useToastStore";
 import { deleteProject } from "@/service/project";
 import { usePathname } from "next/navigation";
 import {
@@ -43,10 +44,11 @@ export default function Sidebar() {
   const token = getAuthCookie().token;
   const pathname = usePathname();
   const isInProjectPage = pathname.startsWith("/project/");
+  const { addToast } = useToastStore();
 
   // 파일 추가 (임시 생성 → 이름 입력 후 서버로 생성)
   const handleAddFile = async () => {
-    // 프로젝트 페이지 프로젝트 선택 없이 파일 추가 가능
+    // 프로젝트 페이지 프로젝트 선택 없이 파일 추가 가능
     if (isInProjectPage) {
       const project = projects[0]; // 상태에 저장된 하나의 프로젝트
       if (!project || !token) return;
@@ -59,7 +61,7 @@ export default function Sidebar() {
 
     // 에디터 페이지는 프로젝트 선택 필수
     if (!selectedProjectId) {
-      alert("먼저 프로젝트를 선택해주세요.");
+      addToast("먼저 프로젝트를 선택해주세요.", "error");
       return;
     }
 
@@ -100,7 +102,7 @@ export default function Sidebar() {
         setEditingFileId(null);
       }
     } catch (err) {
-      alert("파일 생성 실패");
+      addToast("파일 생성 실패", "error");
       console.error(err);
     }
   };
@@ -127,7 +129,7 @@ export default function Sidebar() {
 
     // 로그인 여부 확인
     if (!token) {
-      alert("로그인이 필요합니다.");
+      addToast("로그인이 필요합니다.", "error");
       setIsSubmitting(false);
       return;
     }
@@ -166,7 +168,7 @@ export default function Sidebar() {
     }
 
     if (!targetUUID) {
-      alert("이동할 프로젝트를 찾을 수 없습니다.");
+      addToast("이동할 프로젝트를 찾을 수 없습니다.", "error");
       return;
     }
 
@@ -189,7 +191,7 @@ export default function Sidebar() {
       console.log("📂 all projects:", projects);
 
       if (!file || numericProjectId === undefined || !token) {
-        alert("파일 정보를 찾을 수 없습니다.");
+        addToast("파일 정보를 찾을 수 없습니다.", "error");
         return;
       }
 
@@ -198,7 +200,7 @@ export default function Sidebar() {
         deleteFile(file.id); // Zustand 상태 삭제
       } catch (err) {
         console.error("파일 삭제 실패:", err);
-        alert("파일 삭제 중 오류가 발생했습니다.");
+        addToast("파일 삭제 중 오류가 발생했습니다.", "error");
       }
 
       return;
@@ -211,7 +213,7 @@ export default function Sidebar() {
 
       const project = projects.find((p) => p.id === selectedProjectId);
       if (!project || !token) {
-        alert("프로젝트 정보를 찾을 수 없습니다.");
+        addToast("프로젝트 정보를 찾을 수 없습니다.", "error");
         return;
       }
 
@@ -221,13 +223,13 @@ export default function Sidebar() {
         setSelectedProjectId(null); // 선택 해제
       } catch (err) {
         console.error("프로젝트 삭제 실패:", err);
-        alert("프로젝트 삭제 중 오류가 발생했습니다.");
+        addToast("프로젝트 삭제 중 오류가 발생했습니다.", "error");
       }
 
       return;
     }
 
-    alert("삭제할 항목을 선택해주세요.");
+    addToast("삭제할 항목을 선택해주세요.", "error");
   };
 
   return (
