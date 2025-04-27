@@ -3,6 +3,7 @@ import "@/app/globals.css";
 import Layout from "@/components/layout/Layout";
 import AppProviders from "@/providers/AppProviders";
 import LoginModals from "@/components/modal/LoginModals";
+import ToastContainer from "@/components/common/Toast/ToastContainer";
 
 export const metadata: Metadata = {
 	title: "Even IDE",
@@ -23,6 +24,7 @@ export default function RootLayout({
 				<AppProviders>
 					<Layout>
 						{children}
+						<ToastContainer />
 						<LoginModals />
 					</Layout>
 				</AppProviders>
