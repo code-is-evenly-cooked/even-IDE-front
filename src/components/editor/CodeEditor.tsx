@@ -14,7 +14,7 @@ const CodeEditor = () => {
     const { files, currentFileId, updateFileContent, updateEditLock } = useIdeStore();
     const { language } = useLanguageStore();
     const { projectId } = useProjectStore();
-    const [typingTimeoutRef] = useState<React.MutableRefObject<NodeJS.Timeout | null>>(useRef(null)); // ✅ 추가
+    const [typingTimeoutRef] = useState<React.MutableRefObject<NodeJS.Timeout | null>>(useRef(null));
 
     const currentFile = files.find((f) => f.id === currentFileId);
 
