@@ -44,3 +44,17 @@ export const deleteMemoApi = async (projectId: number, fileId: string, memoId: n
     );
     return res.data;
 };
+
+export const updateMemoApi = async (projectId: number, fileId: number, memoId: number, memo: string) => {
+    const { accessToken } = getAuthCookie();
+    const res = await axiosInstance.patch(
+        `/projects/${projectId}/file/${fileId}/memos/${memoId}`,
+        { memo },
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        }
+    );
+    return res.data;
+};

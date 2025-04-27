@@ -6,16 +6,16 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import clsx from "clsx";
 import { toast } from "react-hot-toast";
-import { deleteMemoApi } from "@/service/memo";
+import { deleteMemoApi, updateMemoApi } from "@/service/memo";
+import { useProjectStore } from "@/stores/useProjectStore";
 
 const MemoList = () => {
-    const { memos, deleteMemo } = useMemoStore();
+    const { memos, deleteMemo, updateMemo } = useMemoStore();
     const { currentFileId } = useIdeStore();
-    const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
+    const { projectId } = useProjectStore();
 
-    const toggleExpand = (id: number) => {
-        setExpandedMemoId((prev) => (prev === id ? null : id));
-    };
+    const [editingMemoId, setEditingMemoId] = useState<number | null>(null);
+    const [editContent, setEditContent] = useState<string>("");
 
     const handleDelete = async (memoId: number) => {
         if (!currentFileId) return;
@@ -31,7 +31,23 @@ const MemoList = () => {
         }
     };
 
-    // 선택한 파일의 메모만 필터링
+    const handleEditSave = async (memoId: number) => {
+        if (!editContent.trim()) {
+            toast.error("메모 내용이 비어있습니다.");
+            return;
+        }
+
+        try {
+            await updateMemoApi(projectId, currentFileId, memoId, editContent);
+            updateMemo({ id: memoId, content: editContent }); // zustand store 업데이트
+            toast.success("메모 수정 완료");
+            setEditingMemoId(null);
+        } catch (error) {
+            console.error("메모 수정 실패", error);
+            toast.error("메모 수정 실패");
+        }
+    };
+
     const filteredMemos = memos.filter((memo) => memo.file_id === Number(currentFileId));
 
     return (
@@ -42,24 +58,43 @@ const MemoList = () => {
                 </div>
             ) : (
                 filteredMemos.map((memo) => {
-                    const isExpanded = expandedMemoId === memo.id;
+                    const isEditing = editingMemoId === memo.id;
                     return (
                         <div
                             key={memo.id}
                             className="bg-gray700 p-2 rounded relative group"
-                            onClick={() => toggleExpand(memo.id)}
+                            onClick={() => {
+                                setEditingMemoId(memo.id);
+                                setEditContent(memo.content); // 현재 메모 내용 불러오기
+                            }}
                         >
                             <div className="text-xs text-gray400 mb-1">
                                 {memo.file_name || "파일명 없음"}
                             </div>
-                            <div
-                                className={clsx(
-                                    "whitespace-pre-line break-words transition-all duration-300",
-                                    isExpanded ? "line-clamp-none" : "line-clamp-1"
-                                )}
-                            >
-                                {memo.content}
-                            </div>
+
+                            {isEditing ? (
+                                <textarea
+                                    autoFocus
+                                    className="w-full bg-gray700 text-white rounded p-2 resize-none"
+                                    value={editContent}
+                                    onChange={(e) => setEditContent(e.target.value)} // 수정할 때마다 editContent 업데이트
+                                    onBlur={() => handleEditSave(memo.id)} // 포커스 아웃 시 저장
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter" && !e.shiftKey) {
+                                            e.preventDefault();
+                                            handleEditSave(memo.id);
+                                        }
+                                    }}
+                                />
+                            ) : (
+                                <div
+                                    className={clsx(
+                                        "whitespace-pre-line break-words transition-all duration-300 line-clamp-1"
+                                    )}
+                                >
+                                    {memo.content}
+                                </div>
+                            )}
 
                             <button
                                 type="button"
