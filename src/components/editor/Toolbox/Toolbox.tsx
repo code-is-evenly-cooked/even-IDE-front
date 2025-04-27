@@ -3,13 +3,13 @@
 import React, { ReactNode } from "react";
 import { MessageCircleCodeIcon } from "lucide-react";
 import IconButton from "@/components/common/Button/IconButton";
-import { AIIcon, MemoIcon, MemoIcon2 } from "@/components/common/Icons";
+import { AIIcon, MemoIcon, SelectedMemoIcon } from "@/components/common/Icons";
 import { useMemoStore } from "@/stores/useMemoStore";
 import { PanelType, usePanelStore } from "@/stores/usePanelState";
 
 const Toolbox = () => {
     const { activePanel, togglePanel } = usePanelStore();
-    const { isVisible: isMemoVisible, setVisible: setMemoVisible, setViewMode: setMemoMode } = useMemoStore();
+    const { isVisible: isMemoVisible, setVisible: setMemoVisible } = useMemoStore();
 
     const TOOLBOX_ITEMS: {
         panel: PanelType;
@@ -31,7 +31,7 @@ const Toolbox = () => {
         {
             panel: "memo",
             icon: isMemoVisible ? (
-                <MemoIcon2 className="w-4 h-4" />
+                <SelectedMemoIcon className="w-4 h-4" />
             ) : (
                 <MemoIcon className="w-4 h-4" />
             ),
@@ -39,7 +39,6 @@ const Toolbox = () => {
             isActive: activePanel === "memo",
             onClick: () => {
                 setMemoVisible(true);
-                setMemoMode("panel");
                 togglePanel("memo");
             },
         },
