@@ -16,16 +16,20 @@ export const createMemo = async ({ projectId, fileId, memo }: { projectId: numbe
 };
 
 export const fetchMemos = async (projectId: number, fileId: string) => {
-    const { accessToken } = getAuthCookie();
-    const res = await axiosInstance.get(
-        `/projects/${projectId}/file/${fileId}/memos`,
-        {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        }
-    );
-    return res.data;
+    const res = await axiosInstance.get(`/projects/${projectId}/files/${fileId}/memos`);
+    const memos = res.data;
+
+    return memos.map((memo: any) => ({
+        id: memo.memoId,
+        file_id: Number(fileId),
+        file_name: memo.fileName || "",
+        line_number: 1,
+        content: memo.memo,
+        code_snapshot: "",
+        created_at: memo.createdAt || "",
+        writerId: memo.writerId?.toString(),
+        writerNickName: memo.writerNickName,
+    }));
 };
 
 export const deleteMemoApi = async (projectId: number, fileId: string, memoId: number) => {

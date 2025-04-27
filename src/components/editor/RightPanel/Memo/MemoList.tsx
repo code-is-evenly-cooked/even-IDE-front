@@ -1,27 +1,24 @@
 "use client";
 
 import { useMemoStore } from "@/stores/useMemoStore";
-import { deleteMemoApi } from "@/service/memo";
-import { useProjectStore } from "@/stores/useProjectStore";
 import { useIdeStore } from "@/stores/useIdeStore";
 import { useState } from "react";
 import { X } from "lucide-react";
 import clsx from "clsx";
 import { toast } from "react-hot-toast";
+import { deleteMemoApi } from "@/service/memo";
 
 const MemoList = () => {
-    const {memos, deleteMemo} = useMemoStore();
-    const {projectId} = useProjectStore();
-    const {currentFileId} = useIdeStore();
+    const { memos, deleteMemo } = useMemoStore();
+    const { currentFileId } = useIdeStore();
     const [expandedMemoId, setExpandedMemoId] = useState<number | null>(null);
 
     const toggleExpand = (id: number) => {
-        setExpandedMemoId(prev => (prev === id ? null : id));
+        setExpandedMemoId((prev) => (prev === id ? null : id));
     };
 
     const handleDelete = async (memoId: number) => {
-        if (!projectId || !currentFileId) return;
-
+        if (!currentFileId) return;
         if (!confirm("정말 이 메모를 삭제할까요?")) return;
 
         try {
@@ -34,16 +31,18 @@ const MemoList = () => {
         }
     };
 
+    // 선택한 파일의 메모만 필터링
+    const filteredMemos = memos.filter((memo) => memo.file_id === Number(currentFileId));
+
     return (
         <div className="flex flex-col gap-4 text-white text-sm">
-            {memos.length === 0 ? (
+            {filteredMemos.length === 0 ? (
                 <div className="text-center text-gray-400 mt-10">
                     작성된 메모가 없습니다! 📝
                 </div>
             ) : (
-                memos.map((memo) => {
+                filteredMemos.map((memo) => {
                     const isExpanded = expandedMemoId === memo.id;
-
                     return (
                         <div
                             key={memo.id}
@@ -51,7 +50,7 @@ const MemoList = () => {
                             onClick={() => toggleExpand(memo.id)}
                         >
                             <div className="text-xs text-gray400 mb-1">
-                                {memo.file_name}
+                                {memo.file_name || "파일명 없음"}
                             </div>
                             <div
                                 className={clsx(
@@ -70,7 +69,7 @@ const MemoList = () => {
                                 }}
                                 className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
                             >
-                                <X size={16}/>
+                                <X size={16} />
                             </button>
                         </div>
                     );
