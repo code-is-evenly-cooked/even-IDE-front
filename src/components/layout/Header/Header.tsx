@@ -59,9 +59,7 @@ const Header = ({ terminalRef }: HeaderProps) => {
 	return (
 		<header className="h-[3rem] flex justify-between items-center p-4">
 			<div className="flex items-center gap-4">
-				<button className="text-xl" aria-label="메뉴 열기">
-					<MenuIcon />
-				</button>
+				<IconButton icon={<MenuIcon />} label="메뉴 열기" transparent />
 
 				{/* 언어 선택 드롭 박스 */}
 				<LanguageDropdown />

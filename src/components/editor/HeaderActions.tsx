@@ -95,34 +95,24 @@ export default function HeaderActions() {
 				icon={<Save className="w-5 h-5" />}
 				label="저장"
 				onClick={handleSave}
-				color="gray500"
-				size="md"
-				className="hover:bg-slate-400"
 				transparent
 			/>
 			<IconButton
 				icon={<Download className="w-5 h-5" />}
 				label="내보내기"
 				onClick={handleExport}
-				color="gray500"
-				size="md"
-				className="hover:bg-slate-400"
 				transparent
 			/>
 			<IconButton
 				icon={<Upload className="w-5 h-5" />}
 				label="가져오기"
 				onClick={() => alert("가져오기 버튼")}
-				color="gray500"
-				size="md"
 				transparent
 			/>
 			<IconButton
 				icon={<Share2 className="w-5 h-5" />}
 				label="공유"
 				onClick={() => setIsShareOpen(true)}
-				color="gray500"
-				size="md"
 				transparent
 			/>
 			{/* 공유 모달 */}
@@ -133,18 +123,14 @@ export default function HeaderActions() {
 			/>
 			<IconButton
 				icon={<Github className="w-6 h-6" />}
-				label="Info"
+				label="Github"
 				onClick={() => alert("Github 버튼")}
-				color="gray500"
-				size="md"
 				transparent
 			/>
 			<IconButton
 				icon={<QnaIcon className="w-6 h-6" />}
-				label="Info"
+				label="QnA"
 				onClick={() => alert("Info 버튼")}
-				color="gray500"
-				size="md"
 				transparent
 			/>
 		</div>
