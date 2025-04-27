@@ -124,7 +124,7 @@ export default function HeaderActions() {
 			<IconButton
 				icon={<Github className="w-6 h-6" />}
 				label="Github"
-				onClick={() => alert("Github 버튼")}
+				onClick={() => window.open("https://github.com/code-is-evenly-cooked", "_blank")}
 				transparent
 			/>
 			<IconButton
