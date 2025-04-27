@@ -260,7 +260,7 @@ export const MenuIcon = ({ className }: IconProps) => {
 export const MemoIcon = ({ className }: IconProps) => {
 	return (
 		<Image
-			src="/icons/memo-icon.svg"
+			src="/icons/memo.svg"
 			alt="메모 아이콘 미선택"
 			width={16}
 			height={16}
@@ -270,10 +270,10 @@ export const MemoIcon = ({ className }: IconProps) => {
 	);
 };
 
-export const MemoIcon2 = ({ className }: IconProps) => {
+export const SelectedMemoIcon = ({ className }: IconProps) => {
 	return (
 		<Image
-			src="/icons/memo-icon-2.svg"
+			src="/icons/selectedMemo.svg"
 			alt="메모 아이콘 선택"
 			width={16}
 			height={16}
