@@ -4,7 +4,7 @@ import { fetchWithJson } from "@/lib/fetch";
 export const requestAIAnswer = async (
 	prompt: string
 ): Promise<AIChatResponse> => {
-	const accessToken = getAuthCookie().token;
+	const { accessToken } = getAuthCookie();
 	return fetchWithJson("api/ai/ask", {
 		method: "POST",
 		headers: {
