@@ -62,7 +62,7 @@ export default function FileExplorer({
 		}
 
 		try {
-			await updateProjectName(target.projectId, newProjectName, ownerId, token); // API 호출
+			await updateProjectName(target.projectId, newProjectName, ownerId); // API 호출
 
 			const updated = projects.map((p) =>
 				p.id === projectUUID ? { ...p, name: newProjectName } : p

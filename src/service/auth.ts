@@ -10,12 +10,11 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const userSignup = async (
 	credentials: SignupCredentials
-): Promise<SignupResponse> => {
-	return await fetchWithJson(`${API_BASE_URL}/auth/signup`, {
+): Promise<SignupResponse> =>
+	fetchWithJson(`${API_BASE_URL}/auth/signup`, {
 		method: "POST",
 		body: JSON.stringify(credentials),
 	});
-};
 
 export const userLogin = async (
 	credentials: AuthCredentials

@@ -132,7 +132,7 @@ export default function Sidebar() {
 		}
 
 		try {
-			const project = await createProject(trimmed, token, ownerId);
+			const project = await createProject(trimmed, ownerId);
 			addProject({
 				id: project.id,
 				name: project.name,
@@ -213,7 +213,7 @@ export default function Sidebar() {
 			}
 
 			try {
-				await deleteProject(project.projectId, token); // 서버에서 삭제
+				await deleteProject(project.projectId); // 서버에서 삭제
 				removeProject(selectedProjectId); // 상태에서도 삭제
 				setSelectedProjectId(null); // 선택 해제
 			} catch (err) {
