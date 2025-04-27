@@ -7,11 +7,16 @@ import { useState } from "react";
 import { useProjectStore } from "@/stores/useProjectStore";
 import { updateFileCode } from "@/service/file";
 import { getAuthCookie } from "@/lib/cookie";
+import ManualModal from "../modal/ManualModal";
+
 
 export default function HeaderActions() {
 	const [isShareOpen, setIsShareOpen] = useState(false);
 	const { files, currentFileId } = useIdeStore.getState();
 	const { projects } = useProjectStore();
+
+	const [modalOpen, setModalOpen] = useState(false);
+
 
 	// 확장자 별 MIME 타입 (내보내기에서 사용)
 	const getMimeType = (filename: string): string => {
@@ -124,15 +129,22 @@ export default function HeaderActions() {
 			<IconButton
 				icon={<Github className="w-6 h-6" />}
 				label="Github"
-				onClick={() => alert("Github 버튼")}
+				onClick={() => window.open("https://github.com/code-is-evenly-cooked", "_blank")}
 				transparent
 			/>
 			<IconButton
 				icon={<QnaIcon className="w-6 h-6" />}
 				label="QnA"
-				onClick={() => alert("Info 버튼")}
+				onClick={() => setModalOpen(true)}
 				transparent
 			/>
+			<ManualModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={""}
+      />
+			
+
 		</div>
 	);
 }
