@@ -270,7 +270,7 @@ export default function Sidebar() {
 				</div>
 			)}
 
-			<div className="flex-1 overflow-y-auto">
+			<div className="flex-1 overflow-y-auto scrollbar-thumb">
 				<FileExplorer
 					onProjectClick={(id) => {
 						setSelectedProjectId(id); // 프로젝트 선택
