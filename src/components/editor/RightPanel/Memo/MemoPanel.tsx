@@ -1,14 +1,33 @@
 "use client";
 
+import { useEffect } from "react";
 import { useMemoStore } from "@/stores/useMemoStore";
 import MemoTitle from "./MemoTitle";
 import MemoList from "./MemoList";
 import MemoInput from "./MemoInput";
+import { fetchMemos } from "@/service/memo";
+import { useProjectStore } from "@/stores/useProjectStore";
+import { useIdeStore } from "@/stores/useIdeStore";
 
 const MemoPanel = () => {
-    const { isVisible, viewMode } = useMemoStore();
+    const { isVisible, setMemos } = useMemoStore(); // viewMode 삭제
+    const { projectId } = useProjectStore();
+    const { currentFileId } = useIdeStore();
 
-    if (!isVisible || viewMode !== "panel") return null;
+    useEffect(() => {
+        if (isVisible && projectId && currentFileId) {
+            (async () => {
+                try {
+                    const memos = await fetchMemos(projectId, currentFileId);
+                    setMemos(memos);
+                } catch (error) {
+                    console.error("메모 목록 불러오기 실패", error);
+                }
+            })();
+        }
+    }, [isVisible, projectId, currentFileId]);
+
+    if (!isVisible) return null;
 
     return (
         <aside className="w-[320px] h-full bg-gray800 border-none flex flex-col">
