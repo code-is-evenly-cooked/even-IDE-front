@@ -6,12 +6,13 @@ import {
 	SignupResponse,
 } from "@/types/auth";
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 export const userSignup = async (
 	credentials: SignupCredentials
 ): Promise<SignupResponse> => {
-	return await fetchWithJson("/api/auth/signup", {
+	return await fetchWithJson(`${API_BASE_URL}/auth/signup`, {
 		method: "POST",
-		headers: { "Content-Type": "application/json" },
 		body: JSON.stringify(credentials),
 	});
 };
@@ -19,16 +20,14 @@ export const userSignup = async (
 export const userLogin = async (
 	credentials: AuthCredentials
 ): Promise<AuthResponse> =>
-	fetchWithJson("/api/auth/login", {
+	fetchWithJson(`${API_BASE_URL}/auth/login`, {
 		method: "POST",
-		headers: { "Content-Type": "application/json" },
 		body: JSON.stringify(credentials),
 	});
 
 export const forgotPassword = async (email: string): Promise<MessageResponse> =>
-	fetchWithJson("/api/auth/forgot-password", {
+	fetchWithJson(`${API_BASE_URL}/auth/forgot-password`, {
 		method: "POST",
-		headers: { "Content-Type": "application/json" },
 		body: JSON.stringify({ email }),
 	});
 
@@ -36,8 +35,7 @@ export const resetPassword = async (
 	token: string,
 	newPassword: string
 ): Promise<MessageResponse> =>
-	fetchWithJson("/api/auth/password-reset", {
+	fetchWithJson(`${API_BASE_URL}/auth/password-reset`, {
 		method: "POST",
-		headers: { "Content-Type": "application/json" },
 		body: JSON.stringify({ token, newPassword }),
 	});
