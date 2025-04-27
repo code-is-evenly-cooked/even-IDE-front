@@ -2,7 +2,7 @@
 
 import { Editor } from "@monaco-editor/react";
 import { useIdeStore } from "@/stores/useIdeStore";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useLanguageStore } from "@/stores/useLanguageStore";
 import { createPortal } from "react-dom";
 import type * as monacoEditor from "monaco-editor";
@@ -11,6 +11,7 @@ import { getAuthCookie } from "@/lib/cookie";
 import EditLockToggle from "./EditLockToggle";
 import { requestToggleEditLock } from "@/service/file";
 import { useProjectStore } from "@/stores/useProjectStore";
+import { ChatContext } from "@/providers/ChatProvider";
 
 const CodeEditor = () => {
   const { files, currentFileId, updateFileContent, updateEditLock } =
@@ -31,6 +32,11 @@ const CodeEditor = () => {
 
   const token = getAuthCookie().token;
   const userId = getAuthCookie().userId;
+
+  const chatContext = useContext(ChatContext);
+  const sendCodeUpdate = chatContext?.sendCodeUpdate;
+
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // 외부 클릭 감지하여 메모창 닫기
   useEffect(() => {
@@ -96,40 +102,50 @@ const CodeEditor = () => {
         value={currentFile?.content ?? ""}
         theme="vs-dark"
         options={{
-			fontSize: 14,
-			minimap: { enabled: false },
-			automaticLayout: true,
-			glyphMargin: true,
-			readOnly:
-			  currentFile.editLocked && currentFile.ownerId !== Number(userId),
-		  }}
-		  onChange={(value) => {
-			if (!currentFile.editLocked) {
-			  updateFileContent(currentFile.id, value ?? "");
-			}
-		  }}
-		  onMount={(editor, monaco) => {
-			setEditorInstance(editor);
-			setMonacoInstance(monaco);
-  
-			editor.onMouseDown((e) => {
-			  if (
-				e.target.type ===
-				monaco.editor.MouseTargetType.GUTTER_GLYPH_MARGIN
-			  ) {
-				return;
-			  }
-  
-			  if (e.target.position) {
-				setSelectedLine(e.target.position.lineNumber);
-			  }
-			});
-  
-			editor.onDidChangeCursorPosition((e) => {
-			  setSelectedLine(e.position.lineNumber);
-			});
-		  }}
-		/>
+          fontSize: 14,
+          minimap: { enabled: false },
+          automaticLayout: true,
+          glyphMargin: true,
+          readOnly:
+            currentFile.editLocked && currentFile.ownerId !== Number(userId),
+        }}
+        onChange={(value) => {
+          if (!currentFile.editLocked) {
+            updateFileContent(currentFile.id, value ?? "");
+            // 디바운스 적용
+            if (typingTimeoutRef.current) {
+              clearTimeout(typingTimeoutRef.current);
+            }
+
+            typingTimeoutRef.current = setTimeout(() => {
+              if (sendCodeUpdate && value !== undefined) {
+                sendCodeUpdate(value);
+              }
+            }, 500);
+          }
+        }}
+        onMount={(editor, monaco) => {
+          setEditorInstance(editor);
+          setMonacoInstance(monaco);
+
+          editor.onMouseDown((e) => {
+            if (
+              e.target.type ===
+              monaco.editor.MouseTargetType.GUTTER_GLYPH_MARGIN
+            ) {
+              return;
+            }
+
+            if (e.target.position) {
+              setSelectedLine(e.target.position.lineNumber);
+            }
+          });
+
+          editor.onDidChangeCursorPosition((e) => {
+            setSelectedLine(e.position.lineNumber);
+          });
+        }}
+      />
       {/* 메모 입력창 */}
       {openedMemoLine !== null &&
         editorInstance &&

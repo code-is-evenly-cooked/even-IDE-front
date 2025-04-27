@@ -9,13 +9,15 @@ import {
 	ChatJoinResponse,
 	ChatSendPayload,
 } from "@/types/chat";
-import { Client } from "@stomp/stompjs";
+import { Client, type StompSubscription } from "@stomp/stompjs";
 import { createContext, useEffect, useRef } from "react";
 import SockJS from "sockjs-client";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useIdeStore } from "@/stores/useIdeStore";
 
 interface ChatContextValue {
 	sendMessage: (content: string) => void;
+	sendCodeUpdate: (content: string) => void; 
 }
 
 export const ChatContext = createContext<ChatContextValue | null>(null);
@@ -29,6 +31,8 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
 	const sendMessagePathRef = useRef<string | null>(null);
 	const { setSenderInfo, appendMessage, setMessages, sender, nickname } =
 		useChatStore();
+	const currentFileSubscriptionRef = useRef<StompSubscription | null>(null);
+	const { currentFileId, updateFileContent } = useIdeStore();
 
 	const accessToken = useAuthStore((state) => state.accessToken);
 	const projectId = useProjectStore((state) => state.projectId);
@@ -133,6 +137,51 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
 		});
 	};
 
+	// 파일별 웹소켓 구독
+	const subscribeToFile = () => {
+		const client = clientRef.current;
+	
+		if (!client || !client.connected || !projectId || !currentFileId) return;
+	
+		// 기존 구독 해제
+		currentFileSubscriptionRef.current?.unsubscribe();
+	
+		const destination: string = `/topic/project/${projectId}/file/${currentFileId}`;
+
+		console.log(`구독 시작 destination: ${destination}`);
+	
+		const subscription = client.subscribe(destination, (message) => {
+			const data = JSON.parse(message.body);
+			updateFileContent(currentFileId, data.content); // 현재 파일 id에 내용 업데이트
+		});
+	
+		currentFileSubscriptionRef.current = subscription;
+	};
+
+	//코드 수정시
+	const sendCodeUpdate = (content: string) => {
+		const client = clientRef.current;
+	
+		if (!client || !client.connected || !projectId || !currentFileId || !sender || !nickname) return;
+	
+		const payload = {
+			type: "CODE_UPDATE",
+			projectId,
+			fileId: currentFileId,
+			sender,
+			nickname,
+			content,
+			timestamp: new Date().toISOString(),
+		};
+
+		console.log("코드 업데이트 전송:", payload);
+	
+		client.publish({
+			destination: `/app/code.update`,
+			body: JSON.stringify(payload),
+		});
+	};
+
 	useEffect(() => {
 		if (!projectId) return;
 		connect();
@@ -142,8 +191,14 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
 		};
 	}, [projectId, accessToken]);
 
+	useEffect(() => {
+		if (clientRef.current?.connected && currentFileId) {
+			subscribeToFile();
+		}
+	}, [currentFileId]);
+
 	return (
-		<ChatContext.Provider value={{ sendMessage }}>
+		<ChatContext.Provider value={{ sendMessage, sendCodeUpdate }}>
 			{children}
 		</ChatContext.Provider>
 	);
