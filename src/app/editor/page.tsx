@@ -9,7 +9,6 @@ import Tabbar from "@/components/editor/Tabbar";
 import Toolbox from "@/components/editor/Toolbox/Toolbox";
 import RightPanel from "@/components/editor/RightPanel/RightPanel";
 import { useProjectStore } from "@/stores/useProjectStore";
-import { getAuthCookie } from "@/lib/cookie";
 import { fetchAllProjects } from "@/service/project";
 import { useIdeStore } from "@/stores/useIdeStore";
 
@@ -47,10 +46,7 @@ export default function EditorPage() {
 	const { setFiles } = useIdeStore();
 
 	useEffect(() => {
-		const { accessToken: token } = getAuthCookie();
-		if (!token) return;
-
-		fetchAllProjects(token)
+		fetchAllProjects()
 			.then((data) => {
 				const projectList = data.map((project: ProjectResponse) => ({
 					id: project.sharedUUID,
