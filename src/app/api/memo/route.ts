@@ -1,10 +1,10 @@
 import { handleAPIResponse } from "@/lib/api";
 import { createErrorResponse } from "@/lib/response";
 import { NextRequest, NextResponse } from "next/server";
+import { getAuthCookie } from "@/lib/cookie";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-// 메모 리스트 조회 (GET)
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const projectId = searchParams.get("projectId");
@@ -17,11 +17,17 @@ export async function GET(req: NextRequest) {
         );
     }
 
+    const { accessToken } = getAuthCookie();
+
     try {
         const response = await fetch(
-            `${API_BASE_URL}/projects/${projectId}/file/${fileId}/memos`
+            `${API_BASE_URL}/projects/${projectId}/file/${fileId}/memos`,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            }
         );
-
         return await handleAPIResponse(response, "메모 조회 실패");
     } catch (err) {
         console.error("[GET /memos]", err);
@@ -29,7 +35,6 @@ export async function GET(req: NextRequest) {
     }
 }
 
-// 메모 생성 (POST)
 export async function POST(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const projectId = searchParams.get("projectId");
@@ -42,6 +47,8 @@ export async function POST(req: NextRequest) {
         );
     }
 
+    const { accessToken } = getAuthCookie();
+
     try {
         const { memo } = await req.json();
 
@@ -51,11 +58,11 @@ export async function POST(req: NextRequest) {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    Authorization: `Bearer ${accessToken}`,
                 },
                 body: JSON.stringify({ memo }),
             }
         );
-
         return await handleAPIResponse(response, "메모 생성 실패");
     } catch (err) {
         console.error("[POST /memos]", err);
