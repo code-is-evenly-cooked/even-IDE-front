@@ -29,20 +29,10 @@ export default function ProjectPage() {
 	const { setProjects, setProjectId } = useProjectStore();
 	const { setFiles } = useIdeStore();
 
-	// 로그인 사용자 여부 확인 콘솔 (임시)
-	useEffect(() => {
-		const { accessToken: token } = getAuthCookie();
-
-		if (token) {
-			console.log("🔐 로그인된 사용자입니다.");
-		} else {
-			console.log("🚪 로그인되지 않은 사용자입니다.");
-		}
-	}, []);
-
 	// 프로젝트 단 건 조회 (비로그인 사용자도 가능)
 	useEffect(() => {
 		const { accessToken: token } = getAuthCookie();
+		if (!token) return;
 
 		fetchProject(projectId, token)
 			.then((data) => {
