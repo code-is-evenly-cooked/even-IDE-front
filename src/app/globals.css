@@ -3,33 +3,39 @@
 @tailwind utilities;
 
 :root {
-  --background: #1e1e1e;
-  --foreground: #ffffff;
+	--background: #1e1e1e;
+	--foreground: #ffffff;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+	background: var(--background);
+	color: var(--foreground);
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-  display: none;
+	display: none;
 }
 
-.scrollbar-thumb::-webkit-scrollbar {
-  width: 6px;
+.scrollbar-thumb::-webkit-scrollbar,
+.overflow-auto::-webkit-scrollbar,
+.overflow-y-auto::-webkit-scrollbar {
+	width: 6px;
 }
-.scrollbar-thumb::-webkit-scrollbar-thumb {
-  background-color: #3f3f46;
-  border-radius: 6px;
+.scrollbar-thumb::-webkit-scrollbar-thumb,
+.overflow-auto::-webkit-scrollbar-thumb,
+.overflow-y-auto::-webkit-scrollbar-thumb {
+	background-color: #3f3f46;
+	border-radius: 6px;
 }
-.scrollbar-thumb::-webkit-scrollbar-track {
-  background: transparent;
+.scrollbar-thumb::-webkit-scrollbar-track,
+.overflow-auto::-webkit-scrollbar-track,
+.overflow-y-auto::-webkit-scrollbar-track {
+	background: transparent;
 }
 
 .memo-icon {
-	background: url('/icons/memo-icon.svg') center center no-repeat;
+	background: url("/icons/memo-icon.svg") center center no-repeat;
 	background-size: contain;
 	width: 16px;
 	height: 16px;
@@ -38,18 +44,18 @@ body {
 
 /* 터미널 디자인 (별도) */
 .xterm .xterm-viewport::-webkit-scrollbar {
-  width: 6px;
+	width: 6px;
 }
 
 .xterm .xterm-viewport::-webkit-scrollbar-track {
-  background-color: transparent;
+	background-color: transparent;
 }
 
 .xterm .xterm-viewport::-webkit-scrollbar-thumb {
-  background-color: #3f3f46;
-  border-radius: 6px;
+	background-color: #3f3f46;
+	border-radius: 6px;
 }
 
 .xterm-screen {
-  width: 100% !important;
+	width: 100% !important;
 }
