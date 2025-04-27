@@ -10,9 +10,11 @@ import { useProjectStore } from "@/stores/useProjectStore";
 import { useIdeStore } from "@/stores/useIdeStore";
 
 const MemoPanel = () => {
-    const { isVisible, setMemos } = useMemoStore(); // viewMode 삭제
+    const { isVisible, setMemos } = useMemoStore();
     const { projectId } = useProjectStore();
     const { currentFileId } = useIdeStore();
+
+    if (!isVisible) return null;
 
     useEffect(() => {
         if (isVisible && projectId && currentFileId) {
@@ -26,8 +28,6 @@ const MemoPanel = () => {
             })();
         }
     }, [isVisible, projectId, currentFileId]);
-
-    if (!isVisible) return null;
 
     return (
         <aside className="w-[320px] h-full bg-gray800 border-none flex flex-col">
