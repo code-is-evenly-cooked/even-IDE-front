@@ -13,7 +13,7 @@ const ChatPanel = () => {
 	return (
 		<aside className="w-[320px] h-full bg-gray800 border-none flex flex-col">
 			<ChatTitle />
-			<div className="flex-1 overflow-y-auto p-1">
+			<div className="flex-1 overflow-y-auto p-1 scrollbar-thumb">
 				<ChatMessageList />
 			</div>
 			<ChatInput />

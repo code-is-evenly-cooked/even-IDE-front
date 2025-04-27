@@ -42,7 +42,7 @@ export default function RunButton({ terminalRef }: RunButtonProps) {
   return (
     <button
       onClick={handleRun}
-      className="w-[100px] px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-semibold shadow-md transition duration-150"
+      className="w-[100px] px-4 py-2 bg-blue500 hover:bg-violet600 text-white rounded font-semibold shadow-md transition duration-150"
     >
       실행 ▶
     </button>

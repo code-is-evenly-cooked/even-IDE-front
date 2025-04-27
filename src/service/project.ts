@@ -78,6 +78,30 @@ export const fetchProject = async (uuid: string, token?: string) => {
   return await res.json();
 };
 
+// 프로젝트 이름 변경
+export const updateProjectName = async (
+  projectId: number,
+  name: string,
+  ownerId: number,
+  token: string
+) => {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+  const res = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ projectName: name, ownerId: ownerId }),
+  });
+
+  if (!res.ok) {
+    const error = await res.text();
+    throw new Error(`프로젝트 이름 변경 실패: ${error}`);
+  }
+
+  return await res.json();
+};
 
 // 프로젝트 삭제
 export const deleteProject = async (projectId: number, token: string) => {

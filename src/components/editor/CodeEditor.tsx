@@ -7,16 +7,21 @@ import { getAuthCookie } from "@/lib/cookie";
 import EditLockToggle from "./EditLockToggle";
 import { requestToggleEditLock } from "@/service/file";
 import { useProjectStore } from "@/stores/useProjectStore";
+import { useContext, useRef, useState } from "react";
+import { ChatContext } from "@/providers/ChatProvider";
 
 const CodeEditor = () => {
     const { files, currentFileId, updateFileContent, updateEditLock } = useIdeStore();
     const { language } = useLanguageStore();
     const { projectId } = useProjectStore();
+    const [typingTimeoutRef] = useState<React.MutableRefObject<NodeJS.Timeout | null>>(useRef(null)); // ✅ 추가
 
     const currentFile = files.find((f) => f.id === currentFileId);
 
-    const token = getAuthCookie().token;
-    const userId = getAuthCookie().userId;
+    const { accessToken: token, userId } = getAuthCookie();
+
+    const chatContext = useContext(ChatContext);
+    const sendCodeUpdate = chatContext?.sendCodeUpdate;
 
     // 코드 수정 토글
     const handleEditLockToggle = async () => {
@@ -33,7 +38,6 @@ const CodeEditor = () => {
         }
     };
 
-    // 파일이 선택되지 않았을 때 메시지
     if (!currentFile) {
         return (
             <div className="h-[45vh] min-h-[300px] flex items-center justify-center text-gray-400">
@@ -63,12 +67,21 @@ const CodeEditor = () => {
                     minimap: { enabled: false },
                     automaticLayout: true,
                     glyphMargin: true,
-                    readOnly:
-                        currentFile.editLocked && currentFile.ownerId !== Number(userId),
+                    readOnly: currentFile.editLocked && currentFile.ownerId !== Number(userId),
                 }}
                 onChange={(value) => {
                     if (currentFile && !currentFile.editLocked) {
                         updateFileContent(currentFile.id, value ?? "");
+
+                        if (typingTimeoutRef.current) {
+                            clearTimeout(typingTimeoutRef.current);
+                        }
+
+                        typingTimeoutRef.current = setTimeout(() => {
+                            if (sendCodeUpdate && value !== undefined) {
+                                sendCodeUpdate(value);
+                            }
+                        }, 500);
                     }
                 }}
             />

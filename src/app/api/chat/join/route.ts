@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
 			},
 			body: JSON.stringify(body),
 		});
-		console.log(repsonse);
+
 		return await handleAPIResponse<ChatJoinResponse>(repsonse, "입장 실패");
 	} catch (err) {
 		console.error("[POST /chat/join]", err);
