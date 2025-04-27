@@ -2,21 +2,16 @@
 
 import { Editor } from "@monaco-editor/react";
 import { useIdeStore } from "@/stores/useIdeStore";
-import { useState } from "react";
 import { useLanguageStore } from "@/stores/useLanguageStore";
 import { getAuthCookie } from "@/lib/cookie";
 import EditLockToggle from "./EditLockToggle";
 import { requestToggleEditLock } from "@/service/file";
 import { useProjectStore } from "@/stores/useProjectStore";
-import type * as monacoEditor from "monaco-editor";
 
 const CodeEditor = () => {
-    const { files, currentFileId, updateFileContent, updateEditLock } =
-        useIdeStore();
+    const { files, currentFileId, updateFileContent, updateEditLock } = useIdeStore();
     const { language } = useLanguageStore();
     const { projectId } = useProjectStore();
-    const [editorInstance, setEditorInstance] =
-        useState<monacoEditor.editor.IStandaloneCodeEditor | null>(null);
 
     const currentFile = files.find((f) => f.id === currentFileId);
 
@@ -72,21 +67,9 @@ const CodeEditor = () => {
                         currentFile.editLocked && currentFile.ownerId !== Number(userId),
                 }}
                 onChange={(value) => {
-                    if (!currentFile.editLocked) {
+                    if (currentFile && !currentFile.editLocked) {
                         updateFileContent(currentFile.id, value ?? "");
                     }
-                }}
-                onMount={(editor, monaco) => {
-                    setEditorInstance(editor);
-
-                    editor.onMouseDown((e) => {
-                        if (
-                            e.target.type ===
-                            monaco.editor.MouseTargetType.GUTTER_GLYPH_MARGIN
-                        ) {
-                            return;
-                        }
-                    });
                 }}
             />
         </div>
