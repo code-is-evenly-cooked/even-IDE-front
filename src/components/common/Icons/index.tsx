@@ -273,7 +273,7 @@ export const MemoIcon = ({ className }: IconProps) => {
 export const SelectedMemoIcon = ({ className }: IconProps) => {
 	return (
 		<Image
-			src="/icons/selectedMemo.svg"
+			src="/icons/selectedMemoIcon.svg"
 			alt="메모 아이콘 선택"
 			width={16}
 			height={16}
