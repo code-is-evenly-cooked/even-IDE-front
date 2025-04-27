@@ -8,7 +8,6 @@ import dynamic from "next/dynamic";
 import Tabbar from "@/components/editor/Tabbar";
 import Toolbox from "@/components/editor/Toolbox/Toolbox";
 import RightPanel from "@/components/editor/RightPanel/RightPanel";
-import { getAuthCookie } from "@/lib/cookie";
 import { fetchProject } from "@/service/project";
 import { useProjectStore } from "@/stores/useProjectStore";
 import { useIdeStore } from "@/stores/useIdeStore";
@@ -31,10 +30,7 @@ export default function ProjectPage() {
 
 	// 프로젝트 단 건 조회 (비로그인 사용자도 가능)
 	useEffect(() => {
-		const { accessToken: token } = getAuthCookie();
-		if (!token) return;
-
-		fetchProject(projectId, token)
+		fetchProject(projectId)
 			.then((data) => {
 				console.log("📦 fetchProject 응답:", data);
 				setProjects([

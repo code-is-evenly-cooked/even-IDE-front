@@ -50,6 +50,7 @@ const IconButton = memo(
 					aria-pressed={isActive}
 					disabled={disabled || isLoading}
 					className={finalClassName}
+					title={label}
 					{...props}
 				>
 					{isLoading ? <LoadingSpinner className="h-5 w-5" /> : icon}

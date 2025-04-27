@@ -7,6 +7,7 @@ interface AuthState {
 	provider: AuthProvider | null;
 	nickname: string | null;
 	userId: number | null;
+	initialized: boolean;
 
 	setAuth: (
 		token: string,
@@ -15,6 +16,8 @@ interface AuthState {
 	) => void;
 
 	clearAuth: () => void;
+
+	setLoginState: (isLoggedIn: boolean, accessToken: string | null) => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -23,6 +26,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 	provider: null,
 	nickname: null,
 	userId: null,
+	initialized: false,
 
 	setAuth: (token, provider, options) =>
 		set(() => ({
@@ -41,4 +45,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 			nickname: null,
 			userId: null,
 		})),
+
+	setLoginState: (isLoggedIn, accessToken) =>
+		set({ isLoggedIn, accessToken, initialized: true }),
 }));
