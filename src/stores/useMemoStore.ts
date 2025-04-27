@@ -1,6 +1,4 @@
-import { create } from "zustand";
-
-type ViewMode = "panel" | "modal";
+import {create} from "zustand";
 
 export interface Memo {
     id: number;
@@ -10,40 +8,32 @@ export interface Memo {
     content: string;
     code_snapshot: string;
     created_at: string;
-
     writerId?: string;
     writerNickName?: string;
 }
 
 interface MemoStore {
     isVisible: boolean;
-    viewMode: ViewMode;
     memos: Memo[];
     setVisible: (visible: boolean) => void;
-    setViewMode: (mode: ViewMode) => void;
-    addMemo: (content: string, fileName: string, fileId: string | null) => void;
+    setMemos: (memos: Memo[]) => void;
+    addMemo: (memo: Memo) => void;
+    updateMemo: (memo: Memo) => void;
+    deleteMemo: (memoId: number) => void;
 }
 
 export const useMemoStore = create<MemoStore>((set) => ({
     isVisible: false,
-    viewMode: "panel",
-    memos: [], // 초기값 빈 배열로 설정
-    setVisible: (visible) => set({ isVisible: visible }),
-    setViewMode: (mode) => set({ viewMode: mode }),
-
-    addMemo: (content: string, fileName: string, fileId: string) =>
+    memos: [],
+    setVisible: (visible) => set({isVisible: visible}),
+    setMemos: (memos) => set({memos}),
+    addMemo: (memo) => set((state) => ({memos: [memo, ...state.memos]})),
+    updateMemo: (updatedMemo) =>
         set((state) => ({
-            memos: [
-                ...state.memos,
-                {
-                    id: Date.now(),
-                    file_id: Number(fileId), // fileId는 string → number 변환
-                    file_name: fileName,
-                    line_number: 1,
-                    content,
-                    code_snapshot: "",
-                    created_at: new Date().toISOString(),
-                },
-            ],
+            memos: state.memos.map((m) => (m.id === updatedMemo.id ? updatedMemo : m)),
+        })),
+    deleteMemo: (memoId) =>
+        set((state) => ({
+            memos: state.memos.filter((m) => m.id !== memoId),
         })),
 }));
