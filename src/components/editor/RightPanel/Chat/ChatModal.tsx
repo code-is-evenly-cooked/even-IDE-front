@@ -13,7 +13,7 @@ const ChatModal = () => {
 	return (
 		<div className="fixed right-11 top-11 w-[320px] h-[480px] shadow-lg border-none bg-gray700 z-50 flex flex-col">
 			<ChatTitle />
-			<div className="flex-1 overflow-y-auto p-1">
+			<div className="flex-1 overflow-y-auto p-1 scrollbar-thumb">
 				<ChatMessageList />
 			</div>
 			<ChatInput />
