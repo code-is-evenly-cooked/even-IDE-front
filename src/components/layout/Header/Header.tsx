@@ -4,7 +4,7 @@ import Link from "next/link";
 import React, { useEffect } from "react";
 import RunButton from "@/components/editor/RunButton";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { removeAuthCookie } from "@/lib/cookie";
+import { getAuthCookie, removeAuthCookie } from "@/lib/cookie";
 import HeaderActions from "@/components/editor/HeaderActions";
 import LanguageDropdown from "@/components/editor/LanguageDropdown";
 import { useChatStore } from "@/stores/useChatStore";
@@ -13,13 +13,16 @@ import { useAIChatStore } from "@/stores/useAIChatStore";
 import type { Terminal as XtermType } from "xterm";
 import { MenuIcon } from "@/components/common/Icons";
 import { isTokenExpired } from "@/lib/token";
+import IconButton from "@/components/common/Button/IconButton";
+import { LogInIcon, LogOutIcon } from "lucide-react";
 
 type HeaderProps = {
 	terminalRef: React.RefObject<XtermType>;
 };
 
 const Header = ({ terminalRef }: HeaderProps) => {
-	const { isLoggedIn, accessToken, clearAuth } = useAuthStore();
+	const { isLoggedIn, accessToken, clearAuth, setLoginState, initialized } =
+		useAuthStore();
 
 	useEffect(() => {
 		if (accessToken && isTokenExpired(accessToken)) {
@@ -27,6 +30,15 @@ const Header = ({ terminalRef }: HeaderProps) => {
 			handleLogout();
 		}
 	}, [accessToken, clearAuth]);
+
+	useEffect(() => {
+		const { accessToken } = getAuthCookie();
+		if (accessToken) {
+			setLoginState(true, accessToken);
+		} else {
+			setLoginState(false, null);
+		}
+	}, []);
 
 	const handleLogout = async () => {
 		removeAuthCookie();
@@ -37,6 +49,12 @@ const Header = ({ terminalRef }: HeaderProps) => {
 
 		window.location.reload();
 	};
+
+	if (!initialized) {
+		return (
+			<header className="h-[3rem] flex justify-between items-center p-4"></header>
+		);
+	}
 
 	return (
 		<header className="h-[3rem] flex justify-between items-center p-4">
@@ -55,14 +73,17 @@ const Header = ({ terminalRef }: HeaderProps) => {
 			<div className="flex">
 				{isLoggedIn ? (
 					<div className="flex items-center gap-2">
-						<span className="gray-200">반갑습니다.</span>
-						<button onClick={handleLogout} className="text-link text-sm">
-							로그아웃
-						</button>
+						<span className="hidden xl:inline text-white">반갑습니다.</span>
+						<IconButton
+							icon={<LogOutIcon />}
+							label="로그아웃"
+							transparent
+							onClick={handleLogout}
+						/>
 					</div>
 				) : (
 					<Link href="/login">
-						<span className="text-link">로그인</span>
+						<LogInIcon />
 					</Link>
 				)}
 			</div>
