@@ -2,7 +2,7 @@ import { getAuthCookie } from "@/lib/cookie";
 import { getLocalNickname, setLocalNickname } from "@/lib/chatStorage";
 
 export const resolveNickname = (nicknameFromServer: string): string => {
-	const accessToken = getAuthCookie().token;
+	const { accessToken } = getAuthCookie();
 	const localNickname = getLocalNickname();
 
 	if (accessToken) return nicknameFromServer;

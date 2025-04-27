@@ -17,7 +17,7 @@ import { useIdeStore } from "@/stores/useIdeStore";
 
 interface ChatContextValue {
 	sendMessage: (content: string) => void;
-	sendCodeUpdate: (content: string) => void; 
+	sendCodeUpdate: (content: string) => void;
 }
 
 export const ChatContext = createContext<ChatContextValue | null>(null);
@@ -42,7 +42,7 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
 		if (clientRef.current?.connected) {
 			clientRef.current.deactivate();
 		}
-		const accessToken = getAuthCookie().token;
+		const { accessToken } = getAuthCookie();
 
 		try {
 			// 입장 API 호출
@@ -140,30 +140,38 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
 	// 파일별 웹소켓 구독
 	const subscribeToFile = () => {
 		const client = clientRef.current;
-	
+
 		if (!client || !client.connected || !projectId || !currentFileId) return;
-	
+
 		// 기존 구독 해제
 		currentFileSubscriptionRef.current?.unsubscribe();
-	
+
 		const destination: string = `/topic/project/${projectId}/file/${currentFileId}`;
 
 		console.log(`구독 시작 destination: ${destination}`);
-	
+
 		const subscription = client.subscribe(destination, (message) => {
 			const data = JSON.parse(message.body);
 			updateFileContent(currentFileId, data.content); // 현재 파일 id에 내용 업데이트
 		});
-	
+
 		currentFileSubscriptionRef.current = subscription;
 	};
 
 	//코드 수정시
 	const sendCodeUpdate = (content: string) => {
 		const client = clientRef.current;
-	
-		if (!client || !client.connected || !projectId || !currentFileId || !sender || !nickname) return;
-	
+
+		if (
+			!client ||
+			!client.connected ||
+			!projectId ||
+			!currentFileId ||
+			!sender ||
+			!nickname
+		)
+			return;
+
 		const payload = {
 			type: "CODE_UPDATE",
 			projectId,
@@ -175,7 +183,7 @@ export const ChatProvider = ({ children }: ChatProviderProps) => {
 		};
 
 		console.log("코드 업데이트 전송:", payload);
-	
+
 		client.publish({
 			destination: `/app/code.update`,
 			body: JSON.stringify(payload),
