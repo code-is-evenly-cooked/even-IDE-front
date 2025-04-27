@@ -8,24 +8,28 @@ import {
 import { useChatStore } from "@/stores/useChatStore";
 import { usePanelStore } from "@/stores/usePanelState";
 import { useLoginModalStore } from "@/stores/useLoginModalStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import React from "react";
 
 const ChatTitle = () => {
   const { viewMode, setViewMode } = useChatStore();
   const { closePanel } = usePanelStore();
   const { open } = useLoginModalStore();
+  const { isLoggedIn } = useAuthStore();
 
   return (
     <div className="p-4 text-md font-semibold text-white text-center flex justify-between items-center">
       {viewMode === "panel" && <span>채팅</span>}
       <div className="ml-auto">
-        <IconButton
-          icon={<Ellipsis className="w-8 h-8" />}
-          size="sm"
-          label="로그인 모달"
-          transparent
-          onClick={open}
-        />
+        {!isLoggedIn && (
+          <IconButton
+            icon={<Ellipsis className="w-8 h-8" />}
+            size="sm"
+            label="로그인 모달"
+            transparent
+            onClick={open}
+          />
+        )}
         <IconButton
           icon={<ChatTransferIcon />}
           size="sm"
