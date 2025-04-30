@@ -1,9 +1,9 @@
 import { create } from "zustand";
 
-export type PanelType = "chat" | "ai" | null;
+export type PanelType = "chat" | "memo" | "ai";
 
 interface PanelState {
-	activePanel: PanelType;
+	activePanel: PanelType | null;
 	togglePanel: (panel: PanelType) => void;
 	closePanel: () => void;
 }

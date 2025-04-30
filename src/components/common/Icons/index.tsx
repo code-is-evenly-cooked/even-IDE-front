@@ -198,19 +198,6 @@ export const ChatTransferIcon = ({ className }: IconProps) => {
 	);
 };
 
-export const MemoIcon = ({ className }: IconProps) => {
-	return (
-		<Image
-			src="/icons/memo-icon.svg"
-			alt="메모 아이콘"
-			width={16}
-			height={16}
-			className={className}
-			priority
-		/>
-	);
-};
-
 export const AIIcon = ({ className }: IconProps) => {
 	return (
 		<Image
@@ -264,6 +251,32 @@ export const MenuIcon = ({ className }: IconProps) => {
 			alt="닫기"
 			width={30}
 			height={30}
+			className={className}
+			priority
+		/>
+	);
+};
+
+export const MemoIcon = ({ className }: IconProps) => {
+	return (
+		<Image
+			src="/icons/memo.svg"
+			alt="메모 아이콘 미선택"
+			width={16}
+			height={16}
+			className={className}
+			priority
+		/>
+	);
+};
+
+export const SelectedMemoIcon = ({ className }: IconProps) => {
+	return (
+		<Image
+			src="/icons/selectedMemoIcon.svg"
+			alt="메모 아이콘 선택"
+			width={16}
+			height={16}
 			className={className}
 			priority
 		/>
